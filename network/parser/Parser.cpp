@@ -1,5 +1,6 @@
 #include "Parser.h"
 
+ // вычленение информации из реквеста
 Parser::Parser(std::string request) {
 
 }
