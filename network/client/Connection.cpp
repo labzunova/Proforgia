@@ -31,11 +31,10 @@ void Connection::stop()
 void Connection::handle_read( const Connection::error_code &e, std::size_t bytes_transferred )
 {
     // чтение, парсинг, положить в очередь, передав callback
-
-    // це для эхо-сервера
     boost::asio::async_write(socket_, boost::asio::buffer(buffer_),
                              boost::bind(&Connection::handle_write, shared_from_this(),
                                          boost::asio::placeholders::error));
+    //std::cout << 'im here';
 }
 
 void Connection::handle_write( const Connection::error_code &e )
