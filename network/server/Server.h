@@ -14,12 +14,11 @@ class Server: std::enable_shared_from_this<Server>, boost::asio::noncopyable
         void stop_server();
     private:
         boost::shared_ptr<Connection> connection_;
-        void handle_accept(boost::shared_ptr<Server> client,  const error_code & err); // accepting clients
+        void handle_accept(boost::shared_ptr<Connection> client,  const error_code & err); // accepting clients
         // Каждый раз, когда клиент подключается к серверу, вызывается handle_accept,
         // который начинает асинхронно читать от этого клиента, а так же асинхронно ждет нового клиента.
         boost::asio::io_service service_; // очень важное непонятно что
         boost::asio::ip::tcp::acceptor acceptor_; // акцептор (приемник) — один объект, который принимает клиентские подключения.
-        boost::asio::ip::tcp::socket socket_;
 };
 
 #endif //PROFORGIA_SERVER_H
