@@ -7,4 +7,4 @@ include_directories(include, interface)
 
 add_executable(Proforgia main.cpp)
 
-add_subdirectory(server)
+add_subdirectory(api)
