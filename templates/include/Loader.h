@@ -12,8 +12,8 @@ namespace templates {
     class Loader {
     public:
         explicit Loader(const std::string &path); //view дает пути
-        void loadFile(const std::string &filename); //оисходит загрузка данного файла
-        std::string get_result() const;
+        void loadFile(const std::string &filename); //происходит загрузка данного файла
+        std::string get_result() const; //геттер результата
     private:
         std::string templatesPath; //переменные для хранения путей(возможно использованеи  boost::filesystem::path )
         std::string includesPath;

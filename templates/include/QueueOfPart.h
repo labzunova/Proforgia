@@ -10,12 +10,12 @@
 #include "Context.h"
 
 namespace templates{
-    class QueueOfPart{
+    class QueueOfPart{ //очередь из созданных частей для объединения их в одну структуру
         bool IsEmpty() const;
-        void render(templates::Context & context);
-        std::string get_result() const;
-        void pop();
-        void push(Part *ptr);
+        void render(templates::Context & context); //рендеринг каждой части
+        std::string get_result() const;  //геттер результата
+        void pop();                      //взять элемент из очереди
+        void push(Part *ptr);            //добавление в очередь
     private:
         std::string result;
     };

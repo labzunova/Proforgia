@@ -9,11 +9,11 @@
 #include "Loader.h"
 
 namespace templates {
-    class View{       //агрегирует в себе рендеринг странички(это вызовет сервер, передав контекст), в свою очередь загрузит сраничку и распарсит то, что надо
+    class View{       //агрегирует в себе рендеринг странички(его вызовет сервер, передав контекст), в свою очередь загрузит сраничку и распарсит то, что надо
     public:
-        explicit View(const std::string &path) : loader(path) {}; //в конструкторе мы устанавливаем путь(да его лоадеру)
-        std::string render(templates::Context &context); //происходит заполнение контекста разными данными и он отдается на рендеринг в страничку,имя через set, вызывает сервис
-        void setFileName(const std::string &filename);  //установление имени html файла
+        explicit View(const std::string &path) : loader(path) {}; //в конструкторе мы устанавливаем путь(даем его лоадеру)
+        std::string render(templates::Context &context); //происходит заполнение контекста разными данными и он отдается на рендеринг в страничку, вызывает сервис
+        void setFileName(const std::string &filename);  //установление имени файла
     private:
         Loader loader;
         Parser parser;
