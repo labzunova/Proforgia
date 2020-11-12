@@ -1,5 +1,11 @@
 file(REMOVE_RECURSE
   "CMakeFiles/Proforgia.dir/main.cpp.o"
+  "CMakeFiles/Proforgia.dir/templates/src/Context.cpp.o"
+  "CMakeFiles/Proforgia.dir/templates/src/Loader.cpp.o"
+  "CMakeFiles/Proforgia.dir/templates/src/Parser.cpp.o"
+  "CMakeFiles/Proforgia.dir/templates/src/Part.cpp.o"
+  "CMakeFiles/Proforgia.dir/templates/src/QueueOfPart.cpp.o"
+  "CMakeFiles/Proforgia.dir/templates/src/View.cpp.o"
   "Proforgia"
   "Proforgia.pdb"
 )

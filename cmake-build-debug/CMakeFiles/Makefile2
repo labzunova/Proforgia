@@ -64,28 +64,48 @@ RM = /snap/clion/129/bin/cmake/linux/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/home/labzunova/Рабочий стол/Proforgia"
+CMAKE_SOURCE_DIR = /home/nina/учеба/технопарк/Proforgia
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/home/labzunova/Рабочий стол/Proforgia/cmake-build-debug"
+CMAKE_BINARY_DIR = /home/nina/учеба/технопарк/Proforgia/cmake-build-debug
 
 #=============================================================================
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
 all: CMakeFiles/Proforgia.dir/all
+all: templates/src/all
 
 .PHONY : all
 
 # The main recursive "preinstall" target.
-preinstall:
+preinstall: templates/src/preinstall
 
 .PHONY : preinstall
 
 # The main recursive "clean" target.
 clean: CMakeFiles/Proforgia.dir/clean
+clean: templates/src/clean
 
 .PHONY : clean
+
+#=============================================================================
+# Directory level rules for directory templates/src
+
+# Recursive "all" directory target.
+templates/src/all: templates/src/CMakeFiles/templates.dir/all
+
+.PHONY : templates/src/all
+
+# Recursive "preinstall" directory target.
+templates/src/preinstall:
+
+.PHONY : templates/src/preinstall
+
+# Recursive "clean" directory target.
+templates/src/clean: templates/src/CMakeFiles/templates.dir/clean
+
+.PHONY : templates/src/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/Proforgia.dir
@@ -94,14 +114,14 @@ clean: CMakeFiles/Proforgia.dir/clean
 CMakeFiles/Proforgia.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Proforgia.dir/build.make CMakeFiles/Proforgia.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Proforgia.dir/build.make CMakeFiles/Proforgia.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir="/home/labzunova/Рабочий стол/Proforgia/cmake-build-debug/CMakeFiles" --progress-num=1,2 "Built target Proforgia"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/nina/учеба/технопарк/Proforgia/cmake-build-debug/CMakeFiles --progress-num=1,2,3,4,5,6,7,8 "Built target Proforgia"
 .PHONY : CMakeFiles/Proforgia.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/Proforgia.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/labzunova/Рабочий стол/Proforgia/cmake-build-debug/CMakeFiles" 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/nina/учеба/технопарк/Proforgia/cmake-build-debug/CMakeFiles 8
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/Proforgia.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/labzunova/Рабочий стол/Proforgia/cmake-build-debug/CMakeFiles" 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/nina/учеба/технопарк/Proforgia/cmake-build-debug/CMakeFiles 0
 .PHONY : CMakeFiles/Proforgia.dir/rule
 
 # Convenience name for target.
@@ -113,6 +133,33 @@ Proforgia: CMakeFiles/Proforgia.dir/rule
 CMakeFiles/Proforgia.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Proforgia.dir/build.make CMakeFiles/Proforgia.dir/clean
 .PHONY : CMakeFiles/Proforgia.dir/clean
+
+#=============================================================================
+# Target rules for target templates/src/CMakeFiles/templates.dir
+
+# All Build rule for target.
+templates/src/CMakeFiles/templates.dir/all:
+	$(MAKE) $(MAKESILENT) -f templates/src/CMakeFiles/templates.dir/build.make templates/src/CMakeFiles/templates.dir/depend
+	$(MAKE) $(MAKESILENT) -f templates/src/CMakeFiles/templates.dir/build.make templates/src/CMakeFiles/templates.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/nina/учеба/технопарк/Proforgia/cmake-build-debug/CMakeFiles --progress-num=9,10,11,12,13,14,15 "Built target templates"
+.PHONY : templates/src/CMakeFiles/templates.dir/all
+
+# Build rule for subdir invocation for target.
+templates/src/CMakeFiles/templates.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/nina/учеба/технопарк/Proforgia/cmake-build-debug/CMakeFiles 7
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 templates/src/CMakeFiles/templates.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/nina/учеба/технопарк/Proforgia/cmake-build-debug/CMakeFiles 0
+.PHONY : templates/src/CMakeFiles/templates.dir/rule
+
+# Convenience name for target.
+templates: templates/src/CMakeFiles/templates.dir/rule
+
+.PHONY : templates
+
+# clean rule for target.
+templates/src/CMakeFiles/templates.dir/clean:
+	$(MAKE) $(MAKESILENT) -f templates/src/CMakeFiles/templates.dir/build.make templates/src/CMakeFiles/templates.dir/clean
+.PHONY : templates/src/CMakeFiles/templates.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

@@ -68,10 +68,10 @@ RM = /snap/clion/129/bin/cmake/linux/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/home/labzunova/Рабочий стол/Proforgia"
+CMAKE_SOURCE_DIR = /home/nina/учеба/технопарк/Proforgia
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/home/labzunova/Рабочий стол/Proforgia/cmake-build-debug"
+CMAKE_BINARY_DIR = /home/nina/учеба/технопарк/Proforgia/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -100,9 +100,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/labzunova/Рабочий стол/Proforgia/cmake-build-debug/CMakeFiles" "/home/labzunova/Рабочий стол/Proforgia/cmake-build-debug/CMakeFiles/progress.marks"
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/nina/учеба/технопарк/Proforgia/cmake-build-debug/CMakeFiles /home/nina/учеба/технопарк/Proforgia/cmake-build-debug/CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/labzunova/Рабочий стол/Proforgia/cmake-build-debug/CMakeFiles" 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/nina/учеба/технопарк/Proforgia/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -143,6 +143,19 @@ Proforgia/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Proforgia.dir/build.make CMakeFiles/Proforgia.dir/build
 .PHONY : Proforgia/fast
 
+#=============================================================================
+# Target rules for targets named templates
+
+# Build rule for target.
+templates: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 templates
+.PHONY : templates
+
+# fast build rule for target.
+templates/fast:
+	$(MAKE) $(MAKESILENT) -f templates/src/CMakeFiles/templates.dir/build.make templates/src/CMakeFiles/templates.dir/build
+.PHONY : templates/fast
+
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -170,6 +183,168 @@ main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Proforgia.dir/build.make CMakeFiles/Proforgia.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+templates/src/Context.o: templates/src/Context.cpp.o
+
+.PHONY : templates/src/Context.o
+
+# target to build an object file
+templates/src/Context.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Proforgia.dir/build.make CMakeFiles/Proforgia.dir/templates/src/Context.cpp.o
+.PHONY : templates/src/Context.cpp.o
+
+templates/src/Context.i: templates/src/Context.cpp.i
+
+.PHONY : templates/src/Context.i
+
+# target to preprocess a source file
+templates/src/Context.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Proforgia.dir/build.make CMakeFiles/Proforgia.dir/templates/src/Context.cpp.i
+.PHONY : templates/src/Context.cpp.i
+
+templates/src/Context.s: templates/src/Context.cpp.s
+
+.PHONY : templates/src/Context.s
+
+# target to generate assembly for a file
+templates/src/Context.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Proforgia.dir/build.make CMakeFiles/Proforgia.dir/templates/src/Context.cpp.s
+.PHONY : templates/src/Context.cpp.s
+
+templates/src/Loader.o: templates/src/Loader.cpp.o
+
+.PHONY : templates/src/Loader.o
+
+# target to build an object file
+templates/src/Loader.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Proforgia.dir/build.make CMakeFiles/Proforgia.dir/templates/src/Loader.cpp.o
+.PHONY : templates/src/Loader.cpp.o
+
+templates/src/Loader.i: templates/src/Loader.cpp.i
+
+.PHONY : templates/src/Loader.i
+
+# target to preprocess a source file
+templates/src/Loader.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Proforgia.dir/build.make CMakeFiles/Proforgia.dir/templates/src/Loader.cpp.i
+.PHONY : templates/src/Loader.cpp.i
+
+templates/src/Loader.s: templates/src/Loader.cpp.s
+
+.PHONY : templates/src/Loader.s
+
+# target to generate assembly for a file
+templates/src/Loader.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Proforgia.dir/build.make CMakeFiles/Proforgia.dir/templates/src/Loader.cpp.s
+.PHONY : templates/src/Loader.cpp.s
+
+templates/src/Parser.o: templates/src/Parser.cpp.o
+
+.PHONY : templates/src/Parser.o
+
+# target to build an object file
+templates/src/Parser.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Proforgia.dir/build.make CMakeFiles/Proforgia.dir/templates/src/Parser.cpp.o
+.PHONY : templates/src/Parser.cpp.o
+
+templates/src/Parser.i: templates/src/Parser.cpp.i
+
+.PHONY : templates/src/Parser.i
+
+# target to preprocess a source file
+templates/src/Parser.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Proforgia.dir/build.make CMakeFiles/Proforgia.dir/templates/src/Parser.cpp.i
+.PHONY : templates/src/Parser.cpp.i
+
+templates/src/Parser.s: templates/src/Parser.cpp.s
+
+.PHONY : templates/src/Parser.s
+
+# target to generate assembly for a file
+templates/src/Parser.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Proforgia.dir/build.make CMakeFiles/Proforgia.dir/templates/src/Parser.cpp.s
+.PHONY : templates/src/Parser.cpp.s
+
+templates/src/Part.o: templates/src/Part.cpp.o
+
+.PHONY : templates/src/Part.o
+
+# target to build an object file
+templates/src/Part.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Proforgia.dir/build.make CMakeFiles/Proforgia.dir/templates/src/Part.cpp.o
+.PHONY : templates/src/Part.cpp.o
+
+templates/src/Part.i: templates/src/Part.cpp.i
+
+.PHONY : templates/src/Part.i
+
+# target to preprocess a source file
+templates/src/Part.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Proforgia.dir/build.make CMakeFiles/Proforgia.dir/templates/src/Part.cpp.i
+.PHONY : templates/src/Part.cpp.i
+
+templates/src/Part.s: templates/src/Part.cpp.s
+
+.PHONY : templates/src/Part.s
+
+# target to generate assembly for a file
+templates/src/Part.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Proforgia.dir/build.make CMakeFiles/Proforgia.dir/templates/src/Part.cpp.s
+.PHONY : templates/src/Part.cpp.s
+
+templates/src/QueueOfPart.o: templates/src/QueueOfPart.cpp.o
+
+.PHONY : templates/src/QueueOfPart.o
+
+# target to build an object file
+templates/src/QueueOfPart.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Proforgia.dir/build.make CMakeFiles/Proforgia.dir/templates/src/QueueOfPart.cpp.o
+.PHONY : templates/src/QueueOfPart.cpp.o
+
+templates/src/QueueOfPart.i: templates/src/QueueOfPart.cpp.i
+
+.PHONY : templates/src/QueueOfPart.i
+
+# target to preprocess a source file
+templates/src/QueueOfPart.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Proforgia.dir/build.make CMakeFiles/Proforgia.dir/templates/src/QueueOfPart.cpp.i
+.PHONY : templates/src/QueueOfPart.cpp.i
+
+templates/src/QueueOfPart.s: templates/src/QueueOfPart.cpp.s
+
+.PHONY : templates/src/QueueOfPart.s
+
+# target to generate assembly for a file
+templates/src/QueueOfPart.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Proforgia.dir/build.make CMakeFiles/Proforgia.dir/templates/src/QueueOfPart.cpp.s
+.PHONY : templates/src/QueueOfPart.cpp.s
+
+templates/src/View.o: templates/src/View.cpp.o
+
+.PHONY : templates/src/View.o
+
+# target to build an object file
+templates/src/View.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Proforgia.dir/build.make CMakeFiles/Proforgia.dir/templates/src/View.cpp.o
+.PHONY : templates/src/View.cpp.o
+
+templates/src/View.i: templates/src/View.cpp.i
+
+.PHONY : templates/src/View.i
+
+# target to preprocess a source file
+templates/src/View.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Proforgia.dir/build.make CMakeFiles/Proforgia.dir/templates/src/View.cpp.i
+.PHONY : templates/src/View.cpp.i
+
+templates/src/View.s: templates/src/View.cpp.s
+
+.PHONY : templates/src/View.s
+
+# target to generate assembly for a file
+templates/src/View.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Proforgia.dir/build.make CMakeFiles/Proforgia.dir/templates/src/View.cpp.s
+.PHONY : templates/src/View.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -179,9 +354,28 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... Proforgia"
+	@echo "... templates"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... templates/src/Context.o"
+	@echo "... templates/src/Context.i"
+	@echo "... templates/src/Context.s"
+	@echo "... templates/src/Loader.o"
+	@echo "... templates/src/Loader.i"
+	@echo "... templates/src/Loader.s"
+	@echo "... templates/src/Parser.o"
+	@echo "... templates/src/Parser.i"
+	@echo "... templates/src/Parser.s"
+	@echo "... templates/src/Part.o"
+	@echo "... templates/src/Part.i"
+	@echo "... templates/src/Part.s"
+	@echo "... templates/src/QueueOfPart.o"
+	@echo "... templates/src/QueueOfPart.i"
+	@echo "... templates/src/QueueOfPart.s"
+	@echo "... templates/src/View.o"
+	@echo "... templates/src/View.i"
+	@echo "... templates/src/View.s"
 .PHONY : help
 
 

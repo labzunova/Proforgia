@@ -63,10 +63,10 @@ RM = /snap/clion/129/bin/cmake/linux/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/home/labzunova/Рабочий стол/Proforgia"
+CMAKE_SOURCE_DIR = /home/nina/учеба/технопарк/Proforgia
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/home/labzunova/Рабочий стол/Proforgia/cmake-build-debug"
+CMAKE_BINARY_DIR = /home/nina/учеба/технопарк/Proforgia/cmake-build-debug
 
 # Include any dependencies generated for this target.
 include CMakeFiles/Proforgia.dir/depend.make
@@ -79,28 +79,118 @@ include CMakeFiles/Proforgia.dir/flags.make
 
 CMakeFiles/Proforgia.dir/main.cpp.o: CMakeFiles/Proforgia.dir/flags.make
 CMakeFiles/Proforgia.dir/main.cpp.o: ../main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/home/labzunova/Рабочий стол/Proforgia/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Proforgia.dir/main.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Proforgia.dir/main.cpp.o -c "/home/labzunova/Рабочий стол/Proforgia/main.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nina/учеба/технопарк/Proforgia/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Proforgia.dir/main.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Proforgia.dir/main.cpp.o -c /home/nina/учеба/технопарк/Proforgia/main.cpp
 
 CMakeFiles/Proforgia.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Proforgia.dir/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/labzunova/Рабочий стол/Proforgia/main.cpp" > CMakeFiles/Proforgia.dir/main.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nina/учеба/технопарк/Proforgia/main.cpp > CMakeFiles/Proforgia.dir/main.cpp.i
 
 CMakeFiles/Proforgia.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Proforgia.dir/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/labzunova/Рабочий стол/Proforgia/main.cpp" -o CMakeFiles/Proforgia.dir/main.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nina/учеба/технопарк/Proforgia/main.cpp -o CMakeFiles/Proforgia.dir/main.cpp.s
+
+CMakeFiles/Proforgia.dir/templates/src/Context.cpp.o: CMakeFiles/Proforgia.dir/flags.make
+CMakeFiles/Proforgia.dir/templates/src/Context.cpp.o: ../templates/src/Context.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nina/учеба/технопарк/Proforgia/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Proforgia.dir/templates/src/Context.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Proforgia.dir/templates/src/Context.cpp.o -c /home/nina/учеба/технопарк/Proforgia/templates/src/Context.cpp
+
+CMakeFiles/Proforgia.dir/templates/src/Context.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Proforgia.dir/templates/src/Context.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nina/учеба/технопарк/Proforgia/templates/src/Context.cpp > CMakeFiles/Proforgia.dir/templates/src/Context.cpp.i
+
+CMakeFiles/Proforgia.dir/templates/src/Context.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Proforgia.dir/templates/src/Context.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nina/учеба/технопарк/Proforgia/templates/src/Context.cpp -o CMakeFiles/Proforgia.dir/templates/src/Context.cpp.s
+
+CMakeFiles/Proforgia.dir/templates/src/View.cpp.o: CMakeFiles/Proforgia.dir/flags.make
+CMakeFiles/Proforgia.dir/templates/src/View.cpp.o: ../templates/src/View.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nina/учеба/технопарк/Proforgia/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/Proforgia.dir/templates/src/View.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Proforgia.dir/templates/src/View.cpp.o -c /home/nina/учеба/технопарк/Proforgia/templates/src/View.cpp
+
+CMakeFiles/Proforgia.dir/templates/src/View.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Proforgia.dir/templates/src/View.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nina/учеба/технопарк/Proforgia/templates/src/View.cpp > CMakeFiles/Proforgia.dir/templates/src/View.cpp.i
+
+CMakeFiles/Proforgia.dir/templates/src/View.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Proforgia.dir/templates/src/View.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nina/учеба/технопарк/Proforgia/templates/src/View.cpp -o CMakeFiles/Proforgia.dir/templates/src/View.cpp.s
+
+CMakeFiles/Proforgia.dir/templates/src/Parser.cpp.o: CMakeFiles/Proforgia.dir/flags.make
+CMakeFiles/Proforgia.dir/templates/src/Parser.cpp.o: ../templates/src/Parser.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nina/учеба/технопарк/Proforgia/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/Proforgia.dir/templates/src/Parser.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Proforgia.dir/templates/src/Parser.cpp.o -c /home/nina/учеба/технопарк/Proforgia/templates/src/Parser.cpp
+
+CMakeFiles/Proforgia.dir/templates/src/Parser.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Proforgia.dir/templates/src/Parser.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nina/учеба/технопарк/Proforgia/templates/src/Parser.cpp > CMakeFiles/Proforgia.dir/templates/src/Parser.cpp.i
+
+CMakeFiles/Proforgia.dir/templates/src/Parser.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Proforgia.dir/templates/src/Parser.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nina/учеба/технопарк/Proforgia/templates/src/Parser.cpp -o CMakeFiles/Proforgia.dir/templates/src/Parser.cpp.s
+
+CMakeFiles/Proforgia.dir/templates/src/Part.cpp.o: CMakeFiles/Proforgia.dir/flags.make
+CMakeFiles/Proforgia.dir/templates/src/Part.cpp.o: ../templates/src/Part.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nina/учеба/технопарк/Proforgia/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/Proforgia.dir/templates/src/Part.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Proforgia.dir/templates/src/Part.cpp.o -c /home/nina/учеба/технопарк/Proforgia/templates/src/Part.cpp
+
+CMakeFiles/Proforgia.dir/templates/src/Part.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Proforgia.dir/templates/src/Part.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nina/учеба/технопарк/Proforgia/templates/src/Part.cpp > CMakeFiles/Proforgia.dir/templates/src/Part.cpp.i
+
+CMakeFiles/Proforgia.dir/templates/src/Part.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Proforgia.dir/templates/src/Part.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nina/учеба/технопарк/Proforgia/templates/src/Part.cpp -o CMakeFiles/Proforgia.dir/templates/src/Part.cpp.s
+
+CMakeFiles/Proforgia.dir/templates/src/QueueOfPart.cpp.o: CMakeFiles/Proforgia.dir/flags.make
+CMakeFiles/Proforgia.dir/templates/src/QueueOfPart.cpp.o: ../templates/src/QueueOfPart.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nina/учеба/технопарк/Proforgia/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/Proforgia.dir/templates/src/QueueOfPart.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Proforgia.dir/templates/src/QueueOfPart.cpp.o -c /home/nina/учеба/технопарк/Proforgia/templates/src/QueueOfPart.cpp
+
+CMakeFiles/Proforgia.dir/templates/src/QueueOfPart.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Proforgia.dir/templates/src/QueueOfPart.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nina/учеба/технопарк/Proforgia/templates/src/QueueOfPart.cpp > CMakeFiles/Proforgia.dir/templates/src/QueueOfPart.cpp.i
+
+CMakeFiles/Proforgia.dir/templates/src/QueueOfPart.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Proforgia.dir/templates/src/QueueOfPart.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nina/учеба/технопарк/Proforgia/templates/src/QueueOfPart.cpp -o CMakeFiles/Proforgia.dir/templates/src/QueueOfPart.cpp.s
+
+CMakeFiles/Proforgia.dir/templates/src/Loader.cpp.o: CMakeFiles/Proforgia.dir/flags.make
+CMakeFiles/Proforgia.dir/templates/src/Loader.cpp.o: ../templates/src/Loader.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nina/учеба/технопарк/Proforgia/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/Proforgia.dir/templates/src/Loader.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Proforgia.dir/templates/src/Loader.cpp.o -c /home/nina/учеба/технопарк/Proforgia/templates/src/Loader.cpp
+
+CMakeFiles/Proforgia.dir/templates/src/Loader.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Proforgia.dir/templates/src/Loader.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nina/учеба/технопарк/Proforgia/templates/src/Loader.cpp > CMakeFiles/Proforgia.dir/templates/src/Loader.cpp.i
+
+CMakeFiles/Proforgia.dir/templates/src/Loader.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Proforgia.dir/templates/src/Loader.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nina/учеба/технопарк/Proforgia/templates/src/Loader.cpp -o CMakeFiles/Proforgia.dir/templates/src/Loader.cpp.s
 
 # Object files for target Proforgia
 Proforgia_OBJECTS = \
-"CMakeFiles/Proforgia.dir/main.cpp.o"
+"CMakeFiles/Proforgia.dir/main.cpp.o" \
+"CMakeFiles/Proforgia.dir/templates/src/Context.cpp.o" \
+"CMakeFiles/Proforgia.dir/templates/src/View.cpp.o" \
+"CMakeFiles/Proforgia.dir/templates/src/Parser.cpp.o" \
+"CMakeFiles/Proforgia.dir/templates/src/Part.cpp.o" \
+"CMakeFiles/Proforgia.dir/templates/src/QueueOfPart.cpp.o" \
+"CMakeFiles/Proforgia.dir/templates/src/Loader.cpp.o"
 
 # External object files for target Proforgia
 Proforgia_EXTERNAL_OBJECTS =
 
 Proforgia: CMakeFiles/Proforgia.dir/main.cpp.o
+Proforgia: CMakeFiles/Proforgia.dir/templates/src/Context.cpp.o
+Proforgia: CMakeFiles/Proforgia.dir/templates/src/View.cpp.o
+Proforgia: CMakeFiles/Proforgia.dir/templates/src/Parser.cpp.o
+Proforgia: CMakeFiles/Proforgia.dir/templates/src/Part.cpp.o
+Proforgia: CMakeFiles/Proforgia.dir/templates/src/QueueOfPart.cpp.o
+Proforgia: CMakeFiles/Proforgia.dir/templates/src/Loader.cpp.o
 Proforgia: CMakeFiles/Proforgia.dir/build.make
 Proforgia: CMakeFiles/Proforgia.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/home/labzunova/Рабочий стол/Proforgia/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable Proforgia"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/nina/учеба/технопарк/Proforgia/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX executable Proforgia"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/Proforgia.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -113,6 +203,6 @@ CMakeFiles/Proforgia.dir/clean:
 .PHONY : CMakeFiles/Proforgia.dir/clean
 
 CMakeFiles/Proforgia.dir/depend:
-	cd "/home/labzunova/Рабочий стол/Proforgia/cmake-build-debug" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/home/labzunova/Рабочий стол/Proforgia" "/home/labzunova/Рабочий стол/Proforgia" "/home/labzunova/Рабочий стол/Proforgia/cmake-build-debug" "/home/labzunova/Рабочий стол/Proforgia/cmake-build-debug" "/home/labzunova/Рабочий стол/Proforgia/cmake-build-debug/CMakeFiles/Proforgia.dir/DependInfo.cmake" --color=$(COLOR)
+	cd /home/nina/учеба/технопарк/Proforgia/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/nina/учеба/технопарк/Proforgia /home/nina/учеба/технопарк/Proforgia /home/nina/учеба/технопарк/Proforgia/cmake-build-debug /home/nina/учеба/технопарк/Proforgia/cmake-build-debug /home/nina/учеба/технопарк/Proforgia/cmake-build-debug/CMakeFiles/Proforgia.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/Proforgia.dir/depend
 

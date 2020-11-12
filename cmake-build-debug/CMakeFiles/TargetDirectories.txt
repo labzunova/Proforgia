@@ -1,3 +1,6 @@
-/home/labzunova/Рабочий стол/Proforgia/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/labzunova/Рабочий стол/Proforgia/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/labzunova/Рабочий стол/Proforgia/cmake-build-debug/CMakeFiles/Proforgia.dir
+/home/nina/учеба/технопарк/Proforgia/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/nina/учеба/технопарк/Proforgia/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/nina/учеба/технопарк/Proforgia/cmake-build-debug/CMakeFiles/Proforgia.dir
+/home/nina/учеба/технопарк/Proforgia/cmake-build-debug/templates/src/CMakeFiles/rebuild_cache.dir
+/home/nina/учеба/технопарк/Proforgia/cmake-build-debug/templates/src/CMakeFiles/edit_cache.dir
+/home/nina/учеба/технопарк/Proforgia/cmake-build-debug/templates/src/CMakeFiles/templates.dir
