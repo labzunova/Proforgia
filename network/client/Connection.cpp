@@ -2,19 +2,22 @@
 #include "../parser/Parser.h"
 #include <boost/asio.hpp>
 
-void Connection::do_read() {
- // читаем, отправляем на обработку в API
- // вызываем do_write чтобы записать ответ
+Connection::Connection(boost::asio::io_context &io_context, Connection_manager &manager, API &api) {
+
 }
 
-void Connection::do_write(const std::string &msg) {
- // запись ответа в сокет
+void Connection::start() {
+
 }
 
-void Connection::start_client() {
- // запуск асинхронного чтения
+void Connection::stop() {
+
+}
+void Connection::do_read(const Connection::error_code &e, std::size_t bytes_transferred) {
+
 }
 
-void Connection::stop_client() {
- // закрытие коннекта если что-то пошло не так
+void Connection::do_write(const Connection::error_code &e) {
+
 }
+
