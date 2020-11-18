@@ -12,7 +12,7 @@ public:
     std::string parse_purpose();
 private:
     std::string request;
-    std::string purpose; // what should we do after this request
+    std::string purpose; // what should we do after this Request
     std::string cookies; // or array?
     std::string user;
 };
