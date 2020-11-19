@@ -1,5 +1,0 @@
-enum Status {
-	OK,
-	DB_ERROR,
-	INVALID_INPUT_ERROR
-}

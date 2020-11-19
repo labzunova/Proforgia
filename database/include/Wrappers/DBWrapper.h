@@ -1,3 +1,8 @@
+/*
+Идея:
+сделать абстрактный класс сущности с методами типа add() all() remove() get() на подобии QuerySet в Django и наследоваться всеми сущностями от него
+*/
+
 class DBWrapper {
 public:
 	DBWrapper() = default;
