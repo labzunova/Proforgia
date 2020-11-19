@@ -1,11 +1,12 @@
 #include "Connection.h"
 #include "../parser/Parser.h"
 #include <boost/asio.hpp>
+#include <iostream>
+#include "boost/bind.hpp"
 
-Connection::Connection( boost::asio::io_service &io_service, Connection_manager &manager, API &api_ ):
+Connection::Connection( boost::asio::io_service &io_service, Connection_loop &loop ):
 socket_( io_service ),
-connection_manager( manager ),
-api( api_ )
+connection_loop( loop )
 {
 }
 
@@ -17,7 +18,7 @@ boost::asio::ip::tcp::socket &Connection::get_socket()
 void Connection::start()
 {
     socket_.async_read_some(boost::asio::buffer(buffer_),
-                            boost::bind(&connection::handle_read, shared_from_this(),
+                            boost::bind(&Connection::handle_read, shared_from_this(),
                             boost::asio::placeholders::error,
                             boost::asio::placeholders::bytes_transferred));
 }
@@ -29,10 +30,14 @@ void Connection::stop()
 
 void Connection::handle_read( const Connection::error_code &e, std::size_t bytes_transferred )
 {
-    // чтение, парсинг, запуск асинхронного чтения
+    // чтение, парсинг, положить в очередь, передав callback
+    boost::asio::async_write(socket_, boost::asio::buffer(buffer_),
+                             boost::bind(&Connection::handle_write, shared_from_this(),
+                                         boost::asio::placeholders::error));
+    //std::cout << 'im here';
 }
 
-void Connection::do_write( const Connection::error_code &e )
+void Connection::handle_write( const Connection::error_code &e )
 {
     // выполняющаяся при чтении функция, которая биндится при запуске асинхронного чтения
     if (!e)
@@ -44,7 +49,7 @@ void Connection::do_write( const Connection::error_code &e )
 
     if (e != boost::asio::error::operation_aborted)
     {
-        connection_manager.stop(shared_from_this());
+       // connection_loop.stop(shared_from_this());
     }
 }
 
