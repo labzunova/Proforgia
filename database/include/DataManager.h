@@ -1,12 +1,3 @@
-// Status - структура, хранящая в себе виды ошибок
-
-// TODO: обернуть в namespace
-struct User;
-struct Room;
-enum Rights;
-struct Post;
-struct Session;
-
 class DataManager {
 private:
 	DBWrapper* database;
