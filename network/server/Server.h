@@ -21,7 +21,7 @@ private:
     // который начинает асинхронно читать от этого клиента, а так же асинхронно ждет нового клиента.
 
     /// Handle a request to stop the server. ???????????????????
-    void handle_stop(); // TODO: не поняла зачем это и stop_server
+    void handle_stop();
 
     boost::asio::io_service io_service_; // очень важная штука для исполнения асинхронных операций
     boost::asio::ip::tcp::acceptor acceptor_; // акцептор (приемник) — один объект, который принимает клиентские подключения.

@@ -14,7 +14,6 @@ public:
     unordered_map<string, string> parse_cookies();
     unordered_map<string, string> parse_data();
     string parse_method();
-
 private:
     string request;
 };

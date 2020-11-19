@@ -9,7 +9,7 @@ class Reply
 {
 public:
     void set_header(string header);
-    void set_body(string body_); // TODO: ???
+    void set_body(string body_);
     void set_cookie(string cookie, string type);
     void set_status(int status); // 200, 404 итд
 private:

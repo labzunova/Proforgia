@@ -14,7 +14,6 @@ public:
     string get_data( string type );
     string get_cookie( string type );
     string get_method(); // GET or POST
-
 private:
     std::unordered_map<std::string, std::string> data;
     std::unordered_map<std::string, std::string> cookies;

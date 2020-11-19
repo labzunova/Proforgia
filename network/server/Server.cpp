@@ -18,7 +18,9 @@ void Server::start_server()
 
 void Server::stop_server()
 {
-    // stop server
+    // Post a call to the stop function so that server::stop() is safe to call
+    // from any thread.
+    io_service_.post(boost::bind(&Server::handle_stop, this)); // TODO: разобраться, почему так
 }
 
 void Server::handle_accept( error_code &err )
@@ -33,5 +35,10 @@ void Server::handle_accept( error_code &err )
 }
 
 void Server::handle_stop() {
-    // TODO: что это...........
+    // биндится
+    // The server is stopped by cancelling all outstanding asynchronous
+    // operations. Once all operations have finished the io_service::run() call
+    // will exit.
+    acceptor_.close();
+    connection_manager.stop_all();
 }
