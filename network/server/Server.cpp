@@ -1,17 +1,30 @@
 #include "Server.h"
 #include <boost/asio.hpp>
 
-void Server::start_server() {
-// runserver
+Server::Server( const std::string &address, const std::string &port ):
+    io_service_(),
+    acceptor_()( io_service_ ),
+    connection_manager(),
+    new_connection_( new Connection( io_service_, connection_manager, api ) ),
+    api()
+{
+    // даем акцептору нужну информацию и запускаем async_accept
 }
 
-void Server::stop_server() {
-// stop server
+void Server::start_server()
+{
+    // run server (run io_service)
 }
 
-void Server::handle_accept(boost::shared_ptr<Connection> client, const Server::error_code &err) {
+void Server::stop_server()
+{
+    // stop server
+}
+
+void Server::handle_accept( error_code &err )
+{
+    // запускаем connection_manager,
     // записыавем колиента в вектор клиентов
-    // запускаем асинхронное чтение на нем
 
     // async_accept для нового клиента
     // (вызываю ожидание подключения нового клиента вроде как)
@@ -19,6 +32,6 @@ void Server::handle_accept(boost::shared_ptr<Connection> client, const Server::e
     // которая вызовется, когда он подключится
 }
 
-Server::Server(): service_(), acceptor_(service_) {
-
+void Server::handle_stop() {
+    // TODO: что это...........
 }

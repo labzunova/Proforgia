@@ -2,22 +2,35 @@
 #include "../parser/Parser.h"
 #include <boost/asio.hpp>
 
-Connection::Connection(boost::asio::io_context &io_context, Connection_manager &manager, API &api) {
-
+Connection::Connection( boost::asio::io_service &io_service, Connection_manager &manager, API &api_ ):
+socket_( io_service ),
+connection_manager( manager ),
+api( api_ )
+{
 }
 
-void Connection::start() {
-
+boost::asio::ip::tcp::socket &Connection::get_socket()
+{
+    return socket_;
 }
 
-void Connection::stop() {
-
-}
-void Connection::do_read(const Connection::error_code &e, std::size_t bytes_transferred) {
-
+void Connection::start()
+{
+    // начать асинхронное чтение
 }
 
-void Connection::do_write(const Connection::error_code &e) {
-
+void Connection::stop()
+{
+    // закрыть сокет
 }
+void Connection::do_read( const Connection::error_code &e, std::size_t bytes_transferred )
+{
+    // чтение, парсинг, запуск асинхронного чтения
+}
+
+void Connection::do_write( const Connection::error_code &e )
+{
+    // выполняющаяся при чтении функция, которая биндится при запуске асинхронного чтения
+}
+
 

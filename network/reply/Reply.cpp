@@ -1,5 +1,12 @@
-//
-// Created by labzunova on 18.11.2020.
-//
-
 #include "Reply.h"
+
+
+void Reply::set_status(int status)
+{
+
+}
+
+void Reply::set_header( string header )
+{
+
+}
