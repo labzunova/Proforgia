@@ -1,6 +1,8 @@
 #include <iostream>
+#include "network/server/Server.h"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    Server server("127.0.0.1", "5000");
+    server.start_server();
     return 0;
 }
