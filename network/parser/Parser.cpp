@@ -1,21 +1,20 @@
 #include "Parser.h"
 
-Parser::Parser( std::string request_ )
+Parser::Parser()
 {
-    request = request_;
 }
 
-unordered_map<string, string> Parser::parse_cookies()
-{
-
-}
-
-unordered_map<string, string> Parser::parse_data()
+unordered_map<string, string> Parser::parse_cookies(string request)
 {
 
 }
 
-string Parser::parse_method()
+unordered_map<string, string> Parser::parse_data(string request)
+{
+
+}
+
+string Parser::parse_method(string request)
 {
 }
 

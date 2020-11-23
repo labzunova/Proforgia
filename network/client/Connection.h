@@ -14,8 +14,8 @@ class Connection: std::enable_shared_from_this<Connection>, boost::asio::noncopy
         explicit Connection( boost::asio::io_service& io_service,
                             Connection_manager& manager, API& api ); // создать коннект
         boost::asio::ip::tcp::socket& get_socket(); // вернуть сокет
-        void start();  // стартовать первые асинхронные операции коннекта
-        void stop();   // остановить всеасинхронные операции коннекта
+        // void start();  // стартовать первые асинхронные операции коннекта - так было в примере буста
+        // void stop();   // остановить всеасинхронные операции коннекта - так было в примере буста
     private:
         typedef boost::system::error_code error_code;
         void do_read( const error_code& e,

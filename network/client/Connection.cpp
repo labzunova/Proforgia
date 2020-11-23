@@ -14,15 +14,6 @@ boost::asio::ip::tcp::socket &Connection::get_socket()
     return socket_;
 }
 
-void Connection::start()
-{
-    // начать асинхронное чтение
-}
-
-void Connection::stop()
-{
-    // закрыть сокет
-}
 void Connection::do_read( const Connection::error_code &e, std::size_t bytes_transferred )
 {
     // чтение, парсинг, запуск асинхронного чтения
