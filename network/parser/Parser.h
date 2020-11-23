@@ -31,12 +31,10 @@ using std::string;
 class Parser // TODO: smth else to parse
 {
 public:
-    Parser( string request_ );
-    unordered_map<string, string> parse_cookies();
-    unordered_map<string, string> parse_data();
-    string parse_method();
-private:
-    string request;
+    Parser();
+    static unordered_map<string, string> parse_cookies(string request);
+    static unordered_map<string, string> parse_data(string request);
+    static string parse_method(string request);
 };
 
 #endif //PROFORGIA_PARSER_H
