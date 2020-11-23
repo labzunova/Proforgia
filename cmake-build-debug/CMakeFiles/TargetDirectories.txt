@@ -1,3 +1,0 @@
-/home/labzunova/Рабочий стол/Proforgia/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/labzunova/Рабочий стол/Proforgia/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/labzunova/Рабочий стол/Proforgia/cmake-build-debug/CMakeFiles/Proforgia.dir
