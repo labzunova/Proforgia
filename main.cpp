@@ -1,6 +1,7 @@
 #include <iostream>
+#include "database/include/DataManager.h"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    
     return 0;
 }

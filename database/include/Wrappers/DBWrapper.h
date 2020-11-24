@@ -1,7 +1,15 @@
+#include <string>
+#include <vector>
+#include "../Utils/InputEntities.h"
+#include "../Utils/DBEntities.h"
+#include "../Utils/ErrorCodes.h"
+
+// TODO: если оберкти будут на стороне сережи, то убрать DBentities а внутренние методы структур вынести как отдельные методы DBWrapper
+
 class DBWrapper {
 public:
 	DBWrapper() = default;
-	virtual ~DBWrapper() {}
+	virtual ~DBWrapper() = default;
 
 	DBWrapper( const DBWrapper& ) = delete;
 	DBWrapper& operator=( const DBWrapper& ) = delete;
@@ -16,7 +24,6 @@ protected:
 		ErrorCodes &error) = 0;
 
 public:
-	// TODO: решить, где будет генерация id для user и room (мб в DataManager)
 	virtual bool add_user( const std::string& user_id, const User& user_info, ErrorCodes &error ) = 0;
 	virtual bool add_room( const std::string& room_id, const Room& room_info, ErrorCodes &error ) = 0;
 	virtual bool add_post( const std::string& post_id, const Post& post_info, ErrorCodes &error ) = 0; // room_id and user_id inside Post
@@ -29,12 +36,12 @@ public:
 	virtual bool remove_user_from_room( const std::string& room_id, const std::string& user_id, ErrorCodes &error ) = 0;
 	virtual bool remove_session( const std::string& session_id, ErrorCodes &error ) = 0;
 
-	virtual User& get_user_info( const std::string& user_id, ErrorCodes &error ) const = 0;
-	virtual Room& get_room_info( const std::string& room_id, ErrorCodes &error ) const = 0;
-	virtual Post& get_post_info( const std::string& post_id, ErrorCodes &error ) const = 0;
-	virtual Session& get_session_info( const std::string& session_id, ErrorCodes &error ) const = 0;
+	virtual DBUser get_user_info( const std::string& user_id, ErrorCodes &error ) const = 0;
+	virtual DBRoom get_room_info( const std::string& room_id, ErrorCodes &error ) const = 0;
+	virtual DBPost get_post_info( const std::string& post_id, ErrorCodes &error ) const = 0;
+	virtual DBSession get_session_info( const std::string& session_id, ErrorCodes &error ) const = 0;
 
 	virtual bool edit_user( const User& user_info, ErrorCodes &error ) = 0;
 	virtual bool edit_room( const Room& room_info, ErrorCodes &error ) = 0;
 	virtual bool edit_post( const Post& post_info, ErrorCodes &error ) = 0;
-}
+};

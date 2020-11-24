@@ -1,5 +1,10 @@
+#ifndef PROFORGIA_ERRORCODES_H
+#define PROFORGIA_ERRORCODES_H
+
 enum ErrorCodes {
 	// example errors
 	INVALID_INPUT_ERROR,
 	NETWORK_ERROR
-}
+};
+
+#endif // PROFORGIA_ERRORCODES_H

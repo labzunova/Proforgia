@@ -1,13 +1,19 @@
 // Вспомогательные структуры. Испуользуются при добавлении новых сущностей в БД
 
+#ifndef PROFORGIA_INPUTENTITIES_H
+#define PROFORGIA_INPUTENTITIES_H
+
+#include <string>
+#include <vector>
+
 struct User {
-	User( std::string& _nick_name, std::string& _email = nullptr ) : 
+	User( std::string& _nick_name, std::string& _email) :
 		nick_name(_nick_name), 
 		email(_email) {}
 
 	std::string nick_name;
 	std::string email;
-}
+};
 
 struct Room {
 	Room( std::string& _room_name, std::string& _description ) : 
@@ -16,7 +22,7 @@ struct Room {
 
 	std::string room_name;
 	std::string description;
-}
+};
 
 struct Post {
 	Post( 
@@ -40,11 +46,12 @@ struct Post {
 	std::string category;
 	std::string text;
 	std::vector<std::string> attachments; // list of files to add to the post in DB
-}
+};
 
 struct Session {
-	Session( std::string& _user_id ) : user_id(_user_id) {}
+    Session( std::string& _user_id ) : user_id(_user_id) {}
 
-	std::string user_id;
-	// ???
-}
+    std::string user_id;
+};
+
+#endif // PROFORGIA_INPUTENTITIES_H

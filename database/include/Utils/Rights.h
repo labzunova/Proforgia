@@ -1,7 +1,10 @@
-
+#ifndef PROFORGIA_RIGHTS_H
+#define PROFORGIA_RIGHTS_H
 
 enum Rights {
 	CREATOR,
 	ADMIN,
 	MEMBER
-}
+};
+
+#endif // PROFORGIA_RIGHTS_H
