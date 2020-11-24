@@ -1,8 +1,3 @@
-/*
-Идея:
-сделать абстрактный класс сущности с методами типа add() all() remove() get() на подобии QuerySet в Django и наследоваться всеми сущностями от него
-*/
-
 class DBWrapper {
 public:
 	DBWrapper() = default;
@@ -34,10 +29,10 @@ public:
 	virtual bool remove_user_from_room( const std::string& room_id, const std::string& user_id, ErrorCodes &error ) = 0;
 	virtual bool remove_session( const std::string& session_id, ErrorCodes &error ) = 0;
 
-	virtual User& get_user_info( const std::string& user_id, ErrorCodes &error ) = 0;
-	virtual Room& get_room_info( const std::string& room_id, ErrorCodes &error ) = 0;
-	virtual Post& get_post_info( const std::string& post_id, ErrorCodes &error ) = 0;
-	virtual Session& get_session_info( const std::string& session_id, ErrorCodes &error ) = 0;
+	virtual User& get_user_info( const std::string& user_id, ErrorCodes &error ) const = 0;
+	virtual Room& get_room_info( const std::string& room_id, ErrorCodes &error ) const = 0;
+	virtual Post& get_post_info( const std::string& post_id, ErrorCodes &error ) const = 0;
+	virtual Session& get_session_info( const std::string& session_id, ErrorCodes &error ) const = 0;
 
 	virtual bool edit_user( const User& user_info, ErrorCodes &error ) = 0;
 	virtual bool edit_room( const Room& room_info, ErrorCodes &error ) = 0;

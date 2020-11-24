@@ -7,6 +7,6 @@ public:
 	AmazonS3StorageWrapper& operator=( const AmazonS3StorageWrapper& ) = delete;
 
 public:
-	std::string& add_file_to_storage( const std::string& filename, const std::string& location /* ? */, ErrorCodes &error ) override; // return location in storage
-	bool remove_file_from_storage( const std::string& filename, const std::string& remote_location /* ? */, ErrorCodes &error ) override;
+	std::string& add_file_to_storage( const std::string& filename, const std::string& location /* ? */, ErrorCodes &error ) const override; // return location in storage
+	bool remove_file_from_storage( const std::string& filename, const std::string& remote_location /* ? */, ErrorCodes &error ) const override;
 }
