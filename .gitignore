@@ -1,4 +1,8 @@
-.idea/dictionaries/
+.idea/
+
+
+database/aws-sdk/
+
 cmake-build-debug/
 
 .DS_Store

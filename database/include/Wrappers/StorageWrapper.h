@@ -4,6 +4,12 @@
 #include "../Utils/DBEntities.h"
 #include "../Utils/ErrorCodes.h"
 
+/*
+В каком виде будут приходить на сервер данные?
+Скорее всего сеть будет принимать по сети буфер данных изображения/другого файла и располагать его в файле на сервере. 
+ServerApi даст Datamanger путь к этому файлу и его Datamanger будет брать для отправки в хранилище
+*/
+
 class StorageWrapper {
 public:
     StorageWrapper() = default;
