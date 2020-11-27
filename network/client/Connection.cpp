@@ -2,22 +2,50 @@
 #include "../parser/Parser.h"
 #include <boost/asio.hpp>
 
-Connection::Connection(boost::asio::io_context &io_context, Connection_manager &manager, API &api) {
-
+Connection::Connection( boost::asio::io_service &io_service, Connection_manager &manager, API &api_ ):
+socket_( io_service ),
+connection_manager( manager ),
+api( api_ )
+{
 }
 
-void Connection::start() {
-
+boost::asio::ip::tcp::socket &Connection::get_socket()
+{
+    return socket_;
 }
 
-void Connection::stop() {
-
+void Connection::start()
+{
+    socket_.async_read_some(boost::asio::buffer(buffer_),
+                            boost::bind(&connection::handle_read, shared_from_this(),
+                            boost::asio::placeholders::error,
+                            boost::asio::placeholders::bytes_transferred));
 }
-void Connection::do_read(const Connection::error_code &e, std::size_t bytes_transferred) {
 
+void Connection::stop()
+{
+    socket_.close();
 }
 
-void Connection::do_write(const Connection::error_code &e) {
-
+void Connection::handle_read( const Connection::error_code &e, std::size_t bytes_transferred )
+{
+    // чтение, парсинг, запуск асинхронного чтения
 }
+
+void Connection::do_write( const Connection::error_code &e )
+{
+    // выполняющаяся при чтении функция, которая биндится при запуске асинхронного чтения
+    if (!e)
+    {
+        // Initiate graceful connection closure.
+        boost::system::error_code ignored_ec;
+        socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored_ec);
+    }
+
+    if (e != boost::asio::error::operation_aborted)
+    {
+        connection_manager.stop(shared_from_this());
+    }
+}
+
 

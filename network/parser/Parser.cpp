@@ -1,18 +1,20 @@
 #include "Parser.h"
 
- // вычленение информации из реквеста
-Parser::Parser(std::string request) {
+Parser::Parser()
+{
+}
+
+unordered_map<string, string> Parser::parse_cookies(string request)
+{
 
 }
 
-std::string Parser::parse_cookies() {
-    return cookies;
+unordered_map<string, string> Parser::parse_data(string request)
+{
+
 }
 
-std::string Parser::parse_user() {
-    return user;
+string Parser::parse_method(string request)
+{
 }
 
-std::string Parser::parse_purpose() {
-    return purpose;
-}
