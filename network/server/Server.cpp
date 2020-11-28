@@ -41,8 +41,7 @@ void Server::handle_accept( error_code err ) // TODO: or &?
         // записыавем колиента в вектор клиентов
         new_connection->start();
        /// connection_loop.start(new_connection);
-        new_connection.reset(new Connection(io_service_,
-                                             connection_loop));
+        new_connection.reset(new Connection(io_service_,connection_loop));
         // async_accept для нового клиента
         // (вызываю ожидание подключения нового клиента вроде как)
         // и тут же с помощью bind связываю с функцией handle_accept,
