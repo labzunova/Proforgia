@@ -19,8 +19,6 @@ private:
     void handle_accept( error_code e ); // принять новый коннект
     // Каждый раз, когда клиент подключается к серверу, вызывается handle_accept,
     // который начинает асинхронно читать от этого клиента, а так же асинхронно ждет нового клиента.
-
-    /// Handle a request to stop the server. ???????????????????
     void handle_stop();
 
     boost::asio::io_service io_service_; // очень важная штука для исполнения асинхронных операций
