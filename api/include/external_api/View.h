@@ -1,10 +1,12 @@
 #pragma once
 
-#include "Context.h"
+//#include "Context.h"
 #include <string>
 
 class View {
 public:
+    View() = default;
+
     enum Page {
         MAIN,
         LOGIN,
@@ -15,6 +17,5 @@ public:
 
 public:
     void SetPage(Page);
-    std::string Render(Context context);
     std::string Render();
 };
