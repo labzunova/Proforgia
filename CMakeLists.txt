@@ -16,4 +16,3 @@ include_directories("${PROJECT_SOURCE_DIR}/network/server")
 include_directories("${PROJECT_SOURCE_DIR}/network/request")
 include_directories("${PROJECT_SOURCE_DIR}/network/reply")
 include_directories("${PROJECT_SOURCE_DIR}/network/parser")
-
