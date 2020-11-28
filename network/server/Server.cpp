@@ -33,13 +33,14 @@ void Server::stop_server()
     io_service_.post(boost::bind(&Server::handle_stop, this)); // TODO: разобраться, почему так
 }
 
-void Server::handle_accept( error_code &err )
+void Server::handle_accept( error_code err ) // TODO: or &?
 {
     if ( !err )
     {
         // запускаем connection_loop,
         // записыавем колиента в вектор клиентов
-        connection_loop.start(new_connection);
+        new_connection->start();
+       /// connection_loop.start(new_connection);
         new_connection.reset(new Connection(io_service_,
                                              connection_loop));
         // async_accept для нового клиента
@@ -58,5 +59,5 @@ void Server::handle_stop() {
     // operations. Once all operations have finished the io_service::run() call
     // will exit.
     acceptor_.close();
-    connection_loop.stop_all();
+    /// connection_loop.stop_all();
 }

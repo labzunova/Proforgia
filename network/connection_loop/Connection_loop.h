@@ -1,14 +1,14 @@
 #ifndef PROFORGIA_CONNECTION_LOOP_H
 #define PROFORGIA_CONNECTION_LOOP_H
 #include <vector>
-#include "Connection.h"
+#include "../client/Connection.h"
 
 class Connection_loop: private boost::asio::noncopyable
 {
 public:
-    void start( std::shared_ptr<Connection> connection ); // добавить connection в manager и запустить его
-    void stop( std::shared_ptr<Connection> connection ); // остановить конкретный connection
-    void stop_all();
+    ///void start( std::shared_ptr<Connection> connection ); // добавить connection в manager и запустить его
+    ///void stop( std::shared_ptr<Connection> connection ); // остановить конкретный connection
+    ///void stop_all();
 private:
     struct Event {
         Event(/* Connection c,*/ std::string &data): /*_client(c),*/ _data(data) {}

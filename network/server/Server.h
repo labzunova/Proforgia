@@ -3,7 +3,7 @@
 #include <boost/asio.hpp>
 #include <string>
 //#include "Connection.h"
-#include "Connection_loop.h"
+#include "../connection_loop/Connection_loop.h"
 
 typedef boost::system::error_code error_code;
 class Server: boost::asio::noncopyable
@@ -16,7 +16,7 @@ public:
     void stop_server(); // Остановить сервер
 
 private:
-    void handle_accept( error_code& e ); // принять новый коннект
+    void handle_accept( error_code e ); // принять новый коннект
     // Каждый раз, когда клиент подключается к серверу, вызывается handle_accept,
     // который начинает асинхронно читать от этого клиента, а так же асинхронно ждет нового клиента.
 

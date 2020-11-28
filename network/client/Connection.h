@@ -4,9 +4,9 @@
 #include <boost/asio.hpp>
 //#include "boost/enable_shared_from_this.hpp"
 //#include "Connection_loop.h"
-#include "Request.h"
-#include "Reply.h"
-#include "Parser.h"
+#include "../request/Request.h"
+#include "../reply/Reply.h"
+#include "../parser/Parser.h"
 
 class Connection_loop;
 

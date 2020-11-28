@@ -32,6 +32,7 @@ void Connection::stop()
 void Connection::handle_read( const Connection::error_code &e, std::size_t bytes_transferred )
 {
     // чтение, парсинг, положить в очередь, передав callback
+    std::cout << 'im here';
 }
 
 /*
