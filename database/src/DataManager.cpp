@@ -4,8 +4,11 @@
 
 #include "../include/DataManager.h"
 
-DataManager::DataManager() {
-    // TODO: create database and storage instances
+DataManager::DataManager() :
+    database(std::make_shared<PostgreDBWrapper>()),
+    storage(std::make_shared<AmazonS3StorageWrapper>())
+{
+
 }
 
 DataManager& DataManager::getInstance() {

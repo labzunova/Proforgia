@@ -2,8 +2,6 @@
 #include "Wrappers/DBWrapperRealisations/PostgreDBWrapper.h"
 #include "Wrappers/StorageWrapperRealisations/AmazonS3StorageWrapper.h"
 
-// TODO: если оберкти будут убраны, то убрать DBentities а внутренние методы структур вынести как отдельные методы DataManager
-
 // TODO: спроектировать и реализовать логику генерации id для user, room и остальных сущностей БД
 
 class DataManager {
