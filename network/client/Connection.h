@@ -1,25 +1,12 @@
-<<<<<<< HEAD
 // single connection from a client
 #ifndef PROFORGIA_CONNECTION_H
 #define PROFORGIA_CONNECTION_H
 #include <boost/asio.hpp>
 //#include "boost/enable_shared_from_this.hpp"
 //#include "Connection_loop.h"
-<<<<<<< HEAD
-<<<<<<< HEAD
 #include "../request/Request.h"
 #include "../reply/Reply.h"
 #include "../parser/Parser.h"
-=======
-#include "Request.h"
-#include "Reply.h"
-#include "Parser.h"
->>>>>>> Very messy code. Starting to redo the queue
-=======
-#include "../request/Request.h"
-#include "../reply/Reply.h"
-#include "../parser/Parser.h"
->>>>>>> server is compilling and starts but does nothing
 
 class Connection_loop;
 
@@ -34,15 +21,7 @@ class Connection : public std::enable_shared_from_this<Connection> {
         typedef boost::system::error_code error_code;
         void handle_read( const error_code& e,
                      std::size_t bytes_transferred );  // reading from socket and doing necessary operations
-<<<<<<< HEAD
-<<<<<<< HEAD
         void handle_write( const error_code& e ); // write in socket
-=======
-        //void do_write( const error_code& e ); // write in socket
->>>>>>> Very messy code. Starting to redo the queue
-=======
-        void handle_write( const error_code& e ); // write in socket
->>>>>>> echo-server is done
         boost::asio::ip::tcp::socket socket_;
         Connection_loop& connection_loop; // The manager for this connection.
 
@@ -57,42 +36,3 @@ typedef boost::shared_ptr<Connection> connection_ptr;
 
 
 #endif //PROFORGIA_CONNECTION_H
-=======
-// single connection from a client
-#ifndef PROFORGIA_CONNECTION_H
-#define PROFORGIA_CONNECTION_H
-#include <boost/asio.hpp>
-#include "../connection_manager/Connection_manager.h"
-#include "../request/Request.h"
-#include "../reply/Reply.h"
-#include "../parser/Parser.h"
-#define BOFFER 1024
-
-class Connection: std::enable_shared_from_this<Connection>, boost::asio::noncopyable
-{
-    public:
-        explicit Connection( boost::asio::io_service& io_service,
-                            Connection_manager& manager, API& api ); // создать коннект
-        boost::asio::ip::tcp::socket& get_socket(); // вернуть сокет
-        // void start();  // стартовать первые асинхронные операции коннекта - так было в примере буста
-        // void stop();   // остановить всеасинхронные операции коннекта - так было в примере буста
-    private:
-        typedef boost::system::error_code error_code;
-        void do_read( const error_code& e,
-                     std::size_t bytes_transferred );  // reading from socket and doing necessary operations
-        void do_write( const error_code& e ); // write in socket
-        boost::asio::ip::tcp::socket socket_;
-        Connection_manager& connection_manager; // The manager for this connection.
-
-        // Для обработки входящего запроса request_handler& request_handler_; (не он, а строчка ниже)
-        API api; // тут будет объект класса логики сервера, который напишет Сережа
-
-        boost::array<char, 8192> buffer_; // Буфер для приходящих данных
-        Request request; // Прихдящий запрос
-        Reply reply; // ответ, который мы отправим обратно
-};
-typedef boost::shared_ptr<Connection> connection_ptr;
-
-
-#endif //PROFORGIA_CONNECTION_H
->>>>>>> cascass improved

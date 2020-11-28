@@ -1,34 +1,14 @@
 #ifndef PROFORGIA_CONNECTION_LOOP_H
 #define PROFORGIA_CONNECTION_LOOP_H
 #include <vector>
-<<<<<<< HEAD
-<<<<<<< HEAD
 #include "../client/Connection.h"
-=======
-#include "Connection.h"
->>>>>>> Very messy code. Starting to redo the queue
-=======
-#include "../client/Connection.h"
->>>>>>> server is compilling and starts but does nothing
 
 class Connection_loop: private boost::asio::noncopyable
 {
 public:
-<<<<<<< HEAD
-<<<<<<< HEAD
     ///void start( std::shared_ptr<Connection> connection ); // добавить connection в manager и запустить его
     ///void stop( std::shared_ptr<Connection> connection ); // остановить конкретный connection
     ///void stop_all();
-=======
-    void start( std::shared_ptr<Connection> connection ); // добавить connection в manager и запустить его
-    void stop( std::shared_ptr<Connection> connection ); // остановить конкретный connection
-    void stop_all();
->>>>>>> Very messy code. Starting to redo the queue
-=======
-    ///void start( std::shared_ptr<Connection> connection ); // добавить connection в manager и запустить его
-    ///void stop( std::shared_ptr<Connection> connection ); // остановить конкретный connection
-    ///void stop_all();
->>>>>>> server is compilling and starts but does nothing
 private:
     struct Event {
         Event(/* Connection c,*/ std::string &data): /*_client(c),*/ _data(data) {}
