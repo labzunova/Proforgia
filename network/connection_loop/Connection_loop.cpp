@@ -2,11 +2,7 @@
 #include "boost/bind.hpp"
 
 
-<<<<<<< HEAD
 /*void Connection_loop::start( std::shared_ptr<Connection> connection )
-=======
-void Connection_loop::start( std::shared_ptr<Connection> connection )
->>>>>>> Very messy code. Starting to redo the queue
 {
     //  добавить коннект в вектор и запустить
    // Event event = new Event(s)
@@ -28,8 +24,4 @@ void Connection_loop::stop_all()
         connections.at(i)._client.stop();
    // std::for_each(connections.begin(), connections.end(), boost::bind(&Connection::stop(), _1));
     connections.clear();
-<<<<<<< HEAD
 }*/
-=======
-}
->>>>>>> Very messy code. Starting to redo the queue
