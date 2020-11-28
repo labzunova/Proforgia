@@ -21,7 +21,7 @@ class Connection : public std::enable_shared_from_this<Connection> {
         typedef boost::system::error_code error_code;
         void handle_read( const error_code& e,
                      std::size_t bytes_transferred );  // reading from socket and doing necessary operations
-        //void do_write( const error_code& e ); // write in socket
+        void handle_write( const error_code& e ); // write in socket
         boost::asio::ip::tcp::socket socket_;
         Connection_loop& connection_loop; // The manager for this connection.
 
