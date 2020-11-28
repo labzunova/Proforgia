@@ -5,10 +5,14 @@
 #include <string>
 //#include "Connection.h"
 <<<<<<< HEAD
+<<<<<<< HEAD
 #include "../connection_loop/Connection_loop.h"
 =======
 #include "Connection_loop.h"
 >>>>>>> Very messy code. Starting to redo the queue
+=======
+#include "../connection_loop/Connection_loop.h"
+>>>>>>> server is compilling and starts but does nothing
 
 typedef boost::system::error_code error_code;
 class Server: boost::asio::noncopyable

@@ -6,6 +6,7 @@
 //#include "boost/enable_shared_from_this.hpp"
 //#include "Connection_loop.h"
 <<<<<<< HEAD
+<<<<<<< HEAD
 #include "../request/Request.h"
 #include "../reply/Reply.h"
 #include "../parser/Parser.h"
@@ -14,6 +15,11 @@
 #include "Reply.h"
 #include "Parser.h"
 >>>>>>> Very messy code. Starting to redo the queue
+=======
+#include "../request/Request.h"
+#include "../reply/Reply.h"
+#include "../parser/Parser.h"
+>>>>>>> server is compilling and starts but does nothing
 
 class Connection_loop;
 

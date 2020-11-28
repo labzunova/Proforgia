@@ -34,6 +34,7 @@ void Connection::handle_read( const Connection::error_code &e, std::size_t bytes
 {
     // чтение, парсинг, положить в очередь, передав callback
 <<<<<<< HEAD
+<<<<<<< HEAD
     boost::asio::async_write(socket_, boost::asio::buffer(buffer_),
                              boost::bind(&Connection::handle_write, shared_from_this(),
                                          boost::asio::placeholders::error));
@@ -42,6 +43,9 @@ void Connection::handle_read( const Connection::error_code &e, std::size_t bytes
 
 void Connection::handle_write( const Connection::error_code &e )
 =======
+=======
+    std::cout << 'im here';
+>>>>>>> server is compilling and starts but does nothing
 }
 
 /*
