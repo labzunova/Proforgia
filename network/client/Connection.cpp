@@ -22,7 +22,6 @@ void Connection::start()
                             boost::bind(&Connection::handle_read, shared_from_this(),
                             boost::asio::placeholders::error,
                             boost::asio::placeholders::bytes_transferred));
-    std::cout << 'im here';
 }
 
 void Connection::stop()
@@ -35,10 +34,14 @@ void Connection::handle_read( const Connection::error_code &e, std::size_t bytes
     // чтение, парсинг, положить в очередь, передав callback
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> echo-server is done
     boost::asio::async_write(socket_, boost::asio::buffer(buffer_),
                              boost::bind(&Connection::handle_write, shared_from_this(),
                                          boost::asio::placeholders::error));
     //std::cout << 'im here';
+<<<<<<< HEAD
 }
 
 void Connection::handle_write( const Connection::error_code &e )
@@ -51,6 +54,11 @@ void Connection::handle_write( const Connection::error_code &e )
 /*
 void Connection::do_write( const Connection::error_code &e )
 >>>>>>> Very messy code. Starting to redo the queue
+=======
+}
+
+void Connection::handle_write( const Connection::error_code &e )
+>>>>>>> echo-server is done
 {
     // выполняющаяся при чтении функция, которая биндится при запуске асинхронного чтения
     if (!e)
@@ -63,13 +71,16 @@ void Connection::do_write( const Connection::error_code &e )
     if (e != boost::asio::error::operation_aborted)
     {
 <<<<<<< HEAD
+<<<<<<< HEAD
        // connection_loop.stop(shared_from_this());
 =======
         connection_loop.stop(shared_from_this());
 >>>>>>> Very messy code. Starting to redo the queue
+=======
+       // connection_loop.stop(shared_from_this());
+>>>>>>> echo-server is done
     }
 }
-*/
 
 
 =======

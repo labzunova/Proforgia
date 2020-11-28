@@ -35,10 +35,14 @@ class Connection : public std::enable_shared_from_this<Connection> {
         void handle_read( const error_code& e,
                      std::size_t bytes_transferred );  // reading from socket and doing necessary operations
 <<<<<<< HEAD
+<<<<<<< HEAD
         void handle_write( const error_code& e ); // write in socket
 =======
         //void do_write( const error_code& e ); // write in socket
 >>>>>>> Very messy code. Starting to redo the queue
+=======
+        void handle_write( const error_code& e ); // write in socket
+>>>>>>> echo-server is done
         boost::asio::ip::tcp::socket socket_;
         Connection_loop& connection_loop; // The manager for this connection.
 
