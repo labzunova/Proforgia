@@ -40,8 +40,12 @@ void Server::handle_accept( error_code err ) // TODO: or &?
     {
         // запускаем connection_loop,
         // записыавем колиента в вектор клиентов
+<<<<<<< HEAD
         new_connection->start();
        /// connection_loop.start(new_connection);
+=======
+        connection_loop.start(new_connection);
+>>>>>>> Very messy code. Starting to redo the queue
         new_connection.reset(new Connection(io_service_,
                                              connection_loop));
         // async_accept для нового клиента
@@ -60,6 +64,7 @@ void Server::handle_stop() {
     // operations. Once all operations have finished the io_service::run() call
     // will exit.
     acceptor_.close();
+<<<<<<< HEAD
     /// connection_loop.stop_all();
 }
 =======
@@ -108,3 +113,7 @@ void Server::handle_stop() {
     connection_manager.stop_all();
 }
 >>>>>>> new casrass
+=======
+    connection_loop.stop_all();
+}
+>>>>>>> Very messy code. Starting to redo the queue

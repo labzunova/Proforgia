@@ -4,7 +4,11 @@
 #include <boost/asio.hpp>
 #include <string>
 //#include "Connection.h"
+<<<<<<< HEAD
 #include "../connection_loop/Connection_loop.h"
+=======
+#include "Connection_loop.h"
+>>>>>>> Very messy code. Starting to redo the queue
 
 typedef boost::system::error_code error_code;
 class Server: boost::asio::noncopyable
