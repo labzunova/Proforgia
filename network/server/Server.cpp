@@ -1,12 +1,12 @@
 #include "Server.h"
 #include <boost/asio.hpp>
+#include "boost/bind.hpp"
 
 Server::Server( const std::string &address, const std::string &port ):
     io_service_(),
-    acceptor_()( io_service_ ),
-    connection_manager(),
-    new_connection( new Connection( io_service_, connection_manager, api ) ),
-    api()
+    acceptor_( io_service_ ),
+    connection_loop(),
+    new_connection( new Connection( io_service_, connection_loop ) )
 {
     boost::asio::ip::tcp::resolver resolver(io_service_);
     boost::asio::ip::tcp::resolver::query query( address, port );
@@ -16,7 +16,7 @@ Server::Server( const std::string &address, const std::string &port ):
     acceptor_.bind( endpoint );
     acceptor_.listen();
     acceptor_.async_accept( new_connection->get_socket(),
-                           boost::bind(&server::handle_accept, this,
+                           boost::bind(&Server::handle_accept, this,
                                        boost::asio::placeholders::error ) );
     // даем акцептору нужну информацию и запускаем async_accept
 }
@@ -37,17 +37,17 @@ void Server::handle_accept( error_code &err )
 {
     if ( !err )
     {
-        // запускаем connection_manager,
+        // запускаем connection_loop,
         // записыавем колиента в вектор клиентов
-        connection_manager.start(new_connection);
+        connection_loop.start(new_connection);
         new_connection.reset(new Connection(io_service_,
-                                             connection_manager, api));
+                                             connection_loop));
         // async_accept для нового клиента
         // (вызываю ожидание подключения нового клиента вроде как)
         // и тут же с помощью bind связываю с функцией handle_accept,
         // которая вызовется, когда он подключится
-        acceptor_.async_accept(new_connection->socket(),
-                               boost::bind(&server::handle_accept, this,
+        acceptor_.async_accept(new_connection->get_socket(),
+                               boost::bind(&Server::handle_accept, this,
                                            boost::asio::placeholders::error));
     }
 }
@@ -58,5 +58,5 @@ void Server::handle_stop() {
     // operations. Once all operations have finished the io_service::run() call
     // will exit.
     acceptor_.close();
-    connection_manager.stop_all();
+    connection_loop.stop_all();
 }

@@ -2,8 +2,8 @@
 #define PROFORGIA_SERVER_H
 #include <boost/asio.hpp>
 #include <string>
-#include "../client/Connection.h"
-# include "../connection_manager/Connection_manager.h"
+//#include "Connection.h"
+#include "Connection_loop.h"
 
 typedef boost::system::error_code error_code;
 class Server: boost::asio::noncopyable
@@ -25,9 +25,8 @@ private:
 
     boost::asio::io_service io_service_; // очень важная штука для исполнения асинхронных операций
     boost::asio::ip::tcp::acceptor acceptor_; // акцептор (приемник) — один объект, который принимает клиентские подключения.
-    Connection_manager connection_manager; // менеджер для всех коннектов, содержащий вектор коннектов
-    connection_ptr new_connection; // The next connection to be accepted.
-    API api; // исполнитель для всех запросов - API Серёжи
+    Connection_loop connection_loop; // менеджер для всех коннектов, содержащий вектор коннектов
+    std::shared_ptr<Connection> new_connection; // The next connection to be accepted.
 };
 
 #endif //PROFORGIA_SERVER_H
