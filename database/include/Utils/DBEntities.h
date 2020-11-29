@@ -84,6 +84,29 @@ struct DBRoom : public DBEntity {
 };
 
 struct DBPost : public DBEntity {
+	// class for representation file in filesystem on server
+	class FileFS {
+		FileFS(const std::string& storage_filename) : path(_path) {
+			filename = path.takeOnlyFilename
+			auto path_to_file_in_storage = "root/path/to/storage/folder/" + this->id + "/" + storage_filename;
+			ErrorCodes error;
+			path = db_manager.get_file(storage_filename, path_to_file_in_storage, error);
+			if (path == FAILURE_STRING) {
+				assert(false);
+			}
+		}
+
+		~FileFS() {
+			ErrorCodes error;
+			if (!db_manager.clean_file(filename, path, error)) {
+				assert(false);
+			}
+		}
+
+		std::string filename;
+		std::string path;
+	}
+
 	struct Post {
 		Post( 
 			std::string& _room_id, 
@@ -137,7 +160,7 @@ struct DBPost : public DBEntity {
 	// методы получения связанных полей 
 	DBRoom get_room(ErrorCodes &error) {}
 	DBUser get_author(ErrorCodes &error) {}
-	std::vector<std::string> get_attachments(ErrorCodes &error) {} // list of storage locations of files, that is attached to post
+	std::vector<FileFS> get_attachments(ErrorCodes &error) {} // list of storage locations of files, that is attached to post
 };
 
 struct DBSession : public DBEntity {
