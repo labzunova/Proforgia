@@ -2,7 +2,7 @@
 
 build/
 
-
+database/aws-sdk/install/
 cmake-build-debug/
 
 .DS_Store
