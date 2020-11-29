@@ -15,6 +15,13 @@ First application build:
 - project-root/build $  make
 - project-root/build $  ./{{ build target name }}  ($ ./Proforgia)
 
+Storage access credentials:
+- install aws cli
+- run $ aws configure and enter info (access key and other credentials can be found in ~/.aws on already working machine)
+- this credentials should be placed in ~/.aws/config and ~/.aws/credentials files
+
+
+
 Encountered issues:
 - “aws sdk for c++ is missing” problem:
 for find_package to run, I hardcoded my path to Aws.h to .cmake file
