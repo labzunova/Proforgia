@@ -1,6 +1,7 @@
 .idea/
 
 build/
+default-cmake-build-debug/
 
 database/aws-sdk/install/
 cmake-build-debug/
