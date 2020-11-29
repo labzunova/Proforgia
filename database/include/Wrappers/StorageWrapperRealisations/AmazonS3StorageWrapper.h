@@ -9,11 +9,27 @@ public:
 	AmazonS3StorageWrapper& operator=( const AmazonS3StorageWrapper& ) = delete;
 
 public:
-	bool add_file_to_storage( const std::string& filename, const std::string& location /* ? */, ErrorCodes &error ) const override; // return location in storage
+    /*
+     * USING SAMPLE
+    AmazonS3StorageWrapper storageWrapper;
+    ErrorCodes error;
+    if (!storageWrapper.add_file_to_storage("my-file-name-in-storage", "path/to/my/file", error)) {
+        switch (error) {
+            case ErrorCodes::UNKNOWN_STORAGE_ERROR:
+                std::cout << "handled" << std::endl;
+                break;
+        }
+    }
+    */
+	bool add_file_to_storage( const std::string& filename, const std::string& location, ErrorCodes &error ) const override;
+
+    std::string get_file( const std::string& filename, ErrorCodes &error ) const override;
+
 	bool remove_file_from_storage( const std::string& filename, const std::string& remote_location /* ? */, ErrorCodes &error ) const override;
 
 private:
     const std::string bucket_name;
+    const std::string region;
 };
 
 
