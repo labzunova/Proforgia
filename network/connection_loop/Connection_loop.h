@@ -1,22 +1,23 @@
 #ifndef PROFORGIA_CONNECTION_LOOP_H
 #define PROFORGIA_CONNECTION_LOOP_H
-#include <vector>
-#include "../client/Connection.h"
+#include <utility>
+#include <queue>
+#include "Connection.h"
 
 class Connection_loop: private boost::asio::noncopyable
 {
-public:
-    ///void start( std::shared_ptr<Connection> connection ); // добавить connection в manager и запустить его
-    ///void stop( std::shared_ptr<Connection> connection ); // остановить конкретный connection
-    ///void stop_all();
 private:
     struct Event {
-        Event(/* Connection c,*/ std::string &data): /*_client(c),*/ _data(data) {}
-        //Connection _client; // WANT_READ, WANT_WRITE
-        std::function<void(int)> _callback;
-        std::reference_wrapper<std::string> _data; // read or write buffer
+        Event( std::map<std::string, std::string> data_ ): data( std::move( data_ ) ) {} // TODO by link
+        std::function<void(int)> callback;
+        std::map<std::string, std::string> data; // TODO maybe reference_wrapper?
     };
-    std::vector<Event> connections;
+    void set_callback( Event * event, std::function<void(int)> callback ); // TODO good link AND TODO or callback will be the same?
+    std::queue<Event> connections;
+public:
+    void push_back(std::map<std::string, std::string> data, std::function<void(int)> callback);
+    Event pop_front();
+    int get_size();
 };
 
 

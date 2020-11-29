@@ -1,9 +1,7 @@
-// single connection from a client
+// single connection from a connection
 #ifndef PROFORGIA_CONNECTION_H
 #define PROFORGIA_CONNECTION_H
 #include <boost/asio.hpp>
-//#include "boost/enable_shared_from_this.hpp"
-//#include "Connection_loop.h"
 #include "../request/Request.h"
 #include "../reply/Reply.h"
 #include "../parser/Parser.h"
@@ -13,8 +11,8 @@ class Connection_loop;
 class Connection : public std::enable_shared_from_this<Connection> {
     public:
         explicit Connection( boost::asio::io_service& io_service,
-                            Connection_loop& loop ); // создать коннект
-        boost::asio::ip::tcp::socket& get_socket(); // вернуть сокет
+                            Connection_loop& loop );
+        boost::asio::ip::tcp::socket& get_socket();
         void start();  // стартовать первые асинхронные операции коннекта
         void stop();   // остановить всеасинхронные операции коннекта
     private:
@@ -23,10 +21,9 @@ class Connection : public std::enable_shared_from_this<Connection> {
                      std::size_t bytes_transferred );  // reading from socket and doing necessary operations
         void handle_write( const error_code& e ); // write in socket
         boost::asio::ip::tcp::socket socket_;
-        Connection_loop& connection_loop; // The manager for this connection.
+        Connection_loop& connection_loop;
 
-        // Для обработки входящего запроса request_handler& request_handler_; (не он, а строчка ниже)
-        // API api; // тут будет объект класса логики сервера, который напишет Сережа
+        // Для обработки входящего запроса request_handler& request_handler_;
 
         std::array<char, 8192> buffer_; // Буфер для приходящих данных
        // Request request; // Прихдящий запрос
