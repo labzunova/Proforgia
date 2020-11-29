@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include "Rights.h"
 
+// TODO: добавить ко всем классам время создания
 
 struct DBEntity {
 	DBEntity(std::string& _id) : db_manager(DataManager::getInstance()), id(_id) {}
@@ -40,6 +41,8 @@ struct DBUser : public DBEntity {
 	std::string email;
 
 	static DBUser get(std::string& _id, ErrorCodes &error);
+	static DBUser get(std::string& _email, ErrorCodes &error); // !!!
+	static DBUser get(std::string& _nick_name, ErrorCodes &error); // !!!
 	static std::string add(User _user, ErrorCodes &error); // return id in DB on success, а при неудаче, вернет строку специального вида
 	static bool remove(std::string& id, ErrorCodes &error);
 	bool update(ErrorCodes &error) override;
@@ -47,6 +50,7 @@ struct DBUser : public DBEntity {
 	// методы получения связанных полей 
 	std::unordered_map<DBRoom, Rights> get_rooms(ErrorCodes &error) {}
 };
+
 
 
 struct DBRoom : public DBEntity {
@@ -82,6 +86,12 @@ struct DBRoom : public DBEntity {
 	std::unordered_map<DBUser, Rights> get_users(ErrorCodes &error) {}
 	std::vector<DBPost> get_posts(ErrorCodes &error) {}
 };
+
+
+/*
+
+
+*/
 
 struct DBPost : public DBEntity {
 	// class for representation file in filesystem on server
@@ -148,11 +158,18 @@ struct DBPost : public DBEntity {
 
 	std::string room_id; 
 	std::string user_id; // post author
+
+	/*
+	TODO:consider to remove and replace with tags
 	std::string discipline;
 	std::string category;
+	*/
 	std::string text;
 
+	// std::vector<std:string> tags;
+
 	static DBPost get(std::string& _id, ErrorCodes &error);
+	// static std::vector<DBPost> get(std::vector<std::string>& _tag, ErrorCodes &error);
 	static std::string add(Post _post, ErrorCodes &error); // return id in DB on success, а при неудаче, вернет строку специального вида
 	static bool remove(std::string& id, ErrorCodes &error);
 	bool update(ErrorCodes &error) override;
@@ -174,6 +191,9 @@ struct DBSession : public DBEntity {
 	DBSession( std::string& _user_id ) : id(_id), user_id(_user_id) {}
 
 	std::string user_id;
+	/*
+	TODO: добавить время создания
+	*/
 
 	static DBSession get(std::string& _id, ErrorCodes &error);
 	static std::string add(Session _session, ErrorCodes &error); // return id in DB on success, а при неудаче, вернет строку специального вида
