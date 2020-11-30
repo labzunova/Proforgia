@@ -1,4 +1,3 @@
-// TODO: Сделать static методы чтобы полностью покрыть функционал DataManager
 // TODO: убрать пустые контрукторы-заглушки как только в них не будет надобности (напишу реализацию DBWrapper)
 
 #ifndef PROFORGIA_DBENTITIES_H
@@ -9,7 +8,6 @@
 #include <unordered_map>
 #include "Rights.h"
 
-// TODO: добавить ко всем классам время создания
 
 struct DBEntity {
 	DBEntity(std::string& _id) : db_manager(DataManager::getInstance()), id(_id) {}
@@ -17,6 +15,7 @@ struct DBEntity {
 	DataManager& db_manager;
 
 	std::string id;
+	boost::date date_of_creation;
 
 	virtual bool update(ErrorCodes &error) = 0; // аналог save() в API UML
 }
@@ -41,8 +40,10 @@ struct DBUser : public DBEntity {
 	std::string email;
 
 	static DBUser get(std::string& _id, ErrorCodes &error);
-	static DBUser get(std::string& _email, ErrorCodes &error); // !!!
-	static DBUser get(std::string& _nick_name, ErrorCodes &error); // !!!
+
+	// TODO: email, nickname should be unique to allow this get methods
+	static DBUser get(std::string& _email, ErrorCodes &error);
+	static DBUser get(std::string& _nick_name, ErrorCodes &error);
 	static std::string add(User _user, ErrorCodes &error); // return id in DB on success, а при неудаче, вернет строку специального вида
 	static bool remove(std::string& id, ErrorCodes &error);
 	bool update(ErrorCodes &error) override;
@@ -50,6 +51,15 @@ struct DBUser : public DBEntity {
 	// методы получения связанных полей 
 	std::unordered_map<DBRoom, Rights> get_rooms(ErrorCodes &error) {}
 };
+
+class DBTag : public DBEntity {
+private:
+	size_t use_count; // счетчик количества упоминаний тэга для более эффективной сортировки тэгов по популярности
+
+
+public:
+	std::string name;
+}
 
 
 
@@ -83,15 +93,11 @@ struct DBRoom : public DBEntity {
 	bool update(ErrorCodes &error) override;
 
 	// методы получения связанных полей 
-	std::unordered_map<DBUser, Rights> get_users(ErrorCodes &error) {}
-	std::vector<DBPost> get_posts(ErrorCodes &error) {}
+	std::unordered_map<DBUser, Rights> get_users(ErrorCodes &error);
+	std::vector<DBPost> get_posts(ErrorCodes &error);
+	std::vector<DBTag> get_tags(ErrorCodes &error); // возвращает тэги, принадлежащие комнате, отсортированные по популярности (мб сделать выбор сортировки по дате или популярности)
 };
 
-
-/*
-
-
-*/
 
 struct DBPost : public DBEntity {
 	// class for representation file in filesystem on server
@@ -159,24 +165,26 @@ struct DBPost : public DBEntity {
 	std::string room_id; 
 	std::string user_id; // post author
 
-	/*
-	TODO:consider to remove and replace with tags
-	std::string discipline;
-	std::string category;
-	*/
+	std::string title;
 	std::string text;
 
-	// std::vector<std:string> tags;
-
 	static DBPost get(std::string& _id, ErrorCodes &error);
-	// static std::vector<DBPost> get(std::vector<std::string>& _tag, ErrorCodes &error);
 	static std::string add(Post _post, ErrorCodes &error); // return id in DB on success, а при неудаче, вернет строку специального вида
 	static bool remove(std::string& id, ErrorCodes &error);
 	bool update(ErrorCodes &error) override;
 
+	static std::vector<DBPost> get(std::vector<std::string>& _tags, ErrorCodes &error);
+	static std::vector<DBTag> get_associated_tags(std::vector<std::string>& _tags, ErrorCodes &error); // в порядке убывания упоминаний в других постах
+
 	// методы получения связанных полей 
-	DBRoom get_room(ErrorCodes &error) {}
-	DBUser get_author(ErrorCodes &error) {}
+	DBRoom get_room(ErrorCodes &error)
+	DBUser get_author(ErrorCodes &error);
+	std::vector<DBTag> get_tags(ErrorCodes &error);
+	/* 
+	Если API будет нужно работать с vector<FileFS> вне стэка, в котором был вызыван метод get_attachments,
+	то можно как вариант сделать модификацию метода, который будет отдавать ссылку на вектор, 
+	выделенный в динамической памяти
+	*/
 	std::vector<FileFS> get_attachments(ErrorCodes &error) {} // list of storage locations of files, that is attached to post
 };
 
@@ -191,9 +199,6 @@ struct DBSession : public DBEntity {
 	DBSession( std::string& _user_id ) : id(_id), user_id(_user_id) {}
 
 	std::string user_id;
-	/*
-	TODO: добавить время создания
-	*/
 
 	static DBSession get(std::string& _id, ErrorCodes &error);
 	static std::string add(Session _session, ErrorCodes &error); // return id in DB on success, а при неудаче, вернет строку специального вида
