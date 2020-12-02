@@ -15,7 +15,6 @@ add_executable(Proforgia main.cpp
 
         database/include/Utils/DBEntities.h
         database/include/Utils/ErrorCodes.h
-        database/include/Utils/InputEntities.h
         database/include/Utils/Rights.h
 
         database/include/Wrappers/DBWrapperRealisations/PostgreDBWrapper.h

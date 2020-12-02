@@ -23,9 +23,11 @@ public:
     */
 	bool add_file_to_storage( const std::string& filename, const std::string& location, ErrorCodes &error ) const override;
 
-    std::string get_file( const std::string& filename, ErrorCodes &error ) const override;
+    bool remove_file_from_storage( const std::string& filename, const std::string& remote_location /* ? */, ErrorCodes &error ) const override;
 
-	bool remove_file_from_storage( const std::string& filename, const std::string& remote_location /* ? */, ErrorCodes &error ) const override;
+    std::string get_file( const std::string& filename, const std::string& location_on_server, ErrorCodes &error ) const override;
+
+    virtual bool clean_file( const std::string& filename, const std::string& location_on_server, ErrorCodes &error ) const override;
 
 private:
     const std::string bucket_name;
@@ -34,11 +36,3 @@ private:
 
 
 
-/*
- TODO: aws-sdk folder ADDED IN .gitignore FOR NOW !!!
-
- Progress setting up s3:
- + aws sdk det up
- + aws credentials provided (throw aws configure in ~/.aws folder
- CURRENT: Using the AWS SDK for C++: https://docs.aws.amazon.com/sdk-for-cpp/v1/developer-guide/basic-use.html
-*/
