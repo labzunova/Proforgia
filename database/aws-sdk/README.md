@@ -6,18 +6,20 @@ https://docs.aws.amazon.com/sdk-for-cpp/v1/developer-guide/setup.html
 https://docs.aws.amazon.com/sdk-for-cpp/v1/developer-guide/build-cmake.html
 
 Lib build:
-- project-root/database/aws-sdk $ mkdir install
-- project-root/database/aws-sdk/aws-sdk-cpp $ cmake . -DCMAKE_BUILD_TYPE=Debug -DBUILD_ONLY="s3"  -DCMAKE_INSTALL_PREFIX=path/to/project/Proforgia/database/aws-sdk/install
-- project-root/database/aws-sdk/aws-sdk-cpp/build $ make
-- project-root/database/aws-sdk/aws-sdk-cpp/build $ make install
+- Proforgia/database/aws-sdk $ mkdir install
+- Proforgia/database/aws-sdk/aws-sdk-cpp $ mkdir build
+- Proforgia/database/aws-sdk/aws-sdk-cpp/build $ cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_ONLY="s3"  -DCMAKE_INSTALL_PREFIX=$HOME/path/to/project/Proforgia/database/aws-sdk/install
+- Proforgia/database/aws-sdk/aws-sdk-cpp/build $ make
+- Proforgia/database/aws-sdk/aws-sdk-cpp/build $ make install
 
 CMakeLists.txt:
 - include_directories(/root/to/project/Proforgia/database/aws-sdk/install/include)
 
 First application build:
-- project-root $  cmake . -DCMAKE_PREFIX_PATH=path/to/project/Proforgia/database/aws-sdk/install
-- project-root/build $  make
-- project-root/build $  ./{{ build target name }}  ($ ./Proforgia)
+- Proforgia $ mkdir build & cd build
+- Proforgia/build $  cmake .. -DCMAKE_PREFIX_PATH=$HOME/path/to/project/Proforgia/database/aws-sdk/install
+- Proforgia $  make
+- Proforgia $  ./{{ build target name }}  ($ ./Proforgia)
 
 Storage access credentials:
 - install aws cli
