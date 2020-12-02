@@ -21,6 +21,6 @@ public:
 	virtual bool add_file_to_storage( const std::string& filename, const std::string& location /* ? */, ErrorCodes &error ) const = 0; // return location in storage
 	virtual bool remove_file_from_storage( const std::string& filename, const std::string& remote_location /* ? */, ErrorCodes &error ) const = 0;
 
-	virtual std::string get_file( const std::string& filename, const std::string& location_on_server, ErrorCodes &error ) const = 0;
+	virtual std::string get_file( const std::string& filename, ErrorCodes &error ) const = 0;
 	virtual bool clean_file( const std::string& filename, const std::string& location_on_server, ErrorCodes &error ) const = 0;
 };

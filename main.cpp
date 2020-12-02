@@ -1,12 +1,8 @@
 #include <iostream>
 
-#include "database/include/DataManager.h"
+#include "database/include/Utils/DBEntities.h"
 
-#include <fstream>
-#include <sys/stat.h>
-#include <aws/core/Aws.h>
-#include <aws/s3/S3Client.h>
-#include <aws/s3/model/PutObjectRequest.h>
+#include "database/include/Wrappers/StorageWrapperRealisations/AmazonS3StorageWrapper.h"
 
 
 

@@ -4,6 +4,8 @@
 
 // TODO: спроектировать и реализовать логику генерации id для user, room и остальных сущностей БД
 
+#include "Utils/DBEntities.h"
+
 class DataManager {
 private:
 	std::shared_ptr<DBWrapper> database;
@@ -27,10 +29,10 @@ public:
 
 	// при неудаче методов, возвращающих строку, вернется строка специального вида
 	// при неудаче методов, возвращающих bool, вернется false
-	std::string add_user( const User& user_info, ErrorCodes &error ) const;
-	std::string add_room( const Room& room_info, ErrorCodes &error ) const;
-	std::string add_post( const Post& post_info, ErrorCodes &error ) const;
-	std::string add_session( const Session& session_info, ErrorCodes &error ) const;
+	std::string add_user( const DBUser::User& user_info, ErrorCodes &error ) const;
+	std::string add_room( const DBRoom::Room& room_info, ErrorCodes &error ) const;
+	std::string add_post( const DBPost::Post& post_info, ErrorCodes &error ) const;
+	std::string add_session( const DBSession::Session& session_info, ErrorCodes &error ) const;
 	bool add_user_to_room( const std::string& room_id, const std::string& user_id, ErrorCodes &error ) const;
 	bool add_discipline( const std::string& discipline_name, const std::string& room_id, const std::string& user_id ) const;
 	bool add_category(const std::string& category_name, const std::string& discipline_name, const std::string& room_id, const std::string& user_id ) const;

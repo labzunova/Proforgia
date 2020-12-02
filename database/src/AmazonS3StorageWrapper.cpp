@@ -149,4 +149,9 @@ bool AmazonS3StorageWrapper::remove_file_from_storage(const std::string &filenam
     return false;
 }
 
+bool AmazonS3StorageWrapper::clean_file(const std::string &filename, const std::string &location_on_server,
+                                        ErrorCodes &error) const {
+    return false;
+}
+
 #endif // PROFORGIA_AMAZONS3STORAGEWRAPPER_H

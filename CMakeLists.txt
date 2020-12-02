@@ -23,6 +23,9 @@ add_executable(Proforgia main.cpp
         database/include/Wrappers/DBWrapper.h
         database/include/Wrappers/StorageWrapper.h
 
-        database/src/AmazonS3StorageWrapper.cpp database/src/PostgreDBWrapper.cpp database/src/DataManager.cpp)
+        database/src/AmazonS3StorageWrapper.cpp
+        database/src/PostgreDBWrapper.cpp
+        database/src/DataManager.cpp
+        database/src/DBEntities.cpp)
 
 target_link_libraries(Proforgia ${AWSSDK_LINK_LIBRARIES})

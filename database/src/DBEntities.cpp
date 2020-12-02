@@ -1,9 +1,12 @@
-#include "DBEntites.h"
+#include "../include/Utils/DBEntities.h"
+#include "../include/DataManager.h"
+
 
 // TODO: дописать псевдокод и сделать рабочий метод
-std::vector<FileFS> DBPost::get_attachments(ErrorCodes &error) {
+std::vector<DBPost::FileFS> DBPost::get_attachments(ErrorCodes &error) {
+    /*
 	auto storage_filenames = db_manager.get_post_attachments_storagenames(this->id, error);
-	if (false /* failure */) {
+	if ( failure ) {
 		// handle
 	}
 
@@ -14,7 +17,7 @@ std::vector<FileFS> DBPost::get_attachments(ErrorCodes &error) {
 	}
 
 	return files;
-
+    */
 }
 
 std::vector<DBPost> DBPost::get(std::vector<std::string>& _tags, ErrorCodes &error) {
@@ -28,3 +31,5 @@ std::vector<DBTag> DBPost::get_associated_tags(std::vector<std::string>& _tags, 
 	// sort tags by popularity (via unordered map?)
 	// return tags in sorted order
 }
+
+DBEntity::DBEntity(std::string &_id) : db_manager(DataManager::getInstance()), id(_id) {}

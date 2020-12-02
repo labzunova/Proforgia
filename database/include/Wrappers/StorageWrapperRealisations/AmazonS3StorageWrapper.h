@@ -25,9 +25,9 @@ public:
 
     bool remove_file_from_storage( const std::string& filename, const std::string& remote_location /* ? */, ErrorCodes &error ) const override;
 
-    std::string get_file( const std::string& filename, const std::string& location_on_server, ErrorCodes &error ) const override;
+    std::string get_file( const std::string& filename, ErrorCodes &error ) const override;
 
-    virtual bool clean_file( const std::string& filename, const std::string& location_on_server, ErrorCodes &error ) const override;
+    bool clean_file( const std::string& filename, const std::string& location_on_server, ErrorCodes &error ) const override;
 
 private:
     const std::string bucket_name;

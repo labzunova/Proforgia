@@ -7,19 +7,24 @@
 #include <vector>
 #include <unordered_map>
 #include "Rights.h"
+#include "ErrorCodes.h"
 
+
+class DataManager;
 
 struct DBEntity {
-	DBEntity(std::string& _id) : db_manager(DataManager::getInstance()), id(_id) {}
+	DBEntity(std::string& _id);
 
 	DataManager& db_manager;
 
 	std::string id;
-	boost::date date_of_creation;
+	// boost::date date_of_creation;
 
 	virtual bool update(ErrorCodes &error) = 0; // аналог save() в API UML
-}
+};
 
+
+class DBRoom;
 
 struct DBUser : public DBEntity {
 	struct User {
@@ -29,27 +34,26 @@ struct DBUser : public DBEntity {
 
 		std::string nick_name;
 		std::string email;
-	}
+	};
 
-    DBUser() {}
-	DBUser( std::string& _nick_name, std::string& _email) :
-		nick_name(_nick_name), 
-		email(_email) {}
+
+	DBUser(std::string &id, std::string &_nick_name, std::string &_email) :
+            DBEntity(id), nick_name(_nick_name), email(_email) {
+
+	}
 
 	std::string nick_name;
 	std::string email;
 
-	static DBUser get(std::string& _id, ErrorCodes &error);
+    // TODO: email, nickname should be unique to allow this get methods
+	static DBUser get(std::string& _id, ErrorCodes &error); // by id or email or nickname
 
-	// TODO: email, nickname should be unique to allow this get methods
-	static DBUser get(std::string& _email, ErrorCodes &error);
-	static DBUser get(std::string& _nick_name, ErrorCodes &error);
 	static std::string add(User _user, ErrorCodes &error); // return id in DB on success, а при неудаче, вернет строку специального вида
 	static bool remove(std::string& id, ErrorCodes &error);
 	bool update(ErrorCodes &error) override;
 
 	// методы получения связанных полей 
-	std::unordered_map<DBRoom, Rights> get_rooms(ErrorCodes &error) {}
+	std::unordered_map<DBRoom, Rights> get_rooms(ErrorCodes &error);
 };
 
 class DBTag : public DBEntity {
@@ -59,9 +63,9 @@ private:
 
 public:
 	std::string name;
-}
+};
 
-
+class DBPost;
 
 struct DBRoom : public DBEntity {
 	struct Room {
@@ -71,12 +75,10 @@ struct DBRoom : public DBEntity {
 
 		std::string room_name;
 		std::string description;
-	}
+	};
 
-    DBRoom() {}
-	DBRoom( std::string& _room_name, std::string& _description ) :
-	room_name(_room_name),
-	description(_description) {}
+	DBRoom(std::string &id, std::string &_room_name, std::string &_description) :
+            DBEntity(id), room_name(_room_name), description(_description) {}
 
 	std::string room_name;
 	std::string description;
@@ -102,26 +104,34 @@ struct DBRoom : public DBEntity {
 struct DBPost : public DBEntity {
 	// class for representation file in filesystem on server
 	class FileFS {
-		FileFS(const std::string& storage_filename) : path(_path) {
+		FileFS(const std::string& storage_filename);
+		/*
+		: path(_path) {
 			filename = path.takeOnlyFilename
 			auto path_to_file_in_storage = "root/path/to/storage/folder/" + this->id + "/" + storage_filename;
 			ErrorCodes error;
 			path = db_manager.get_file(storage_filename, path_to_file_in_storage, error);
-			if (path == FAILURE_STRING) {
+			if (path == ERROR_STRING) {
 				assert(false);
 			}
 		}
+		*/
 
-		~FileFS() {
+		~FileFS();
+		/*
+		{
 			ErrorCodes error;
 			if (!db_manager.clean_file(filename, path, error)) {
 				assert(false);
 			}
 		}
+		 */
+
+        DataManager& db_manager;
 
 		std::string filename;
 		std::string path;
-	}
+	};
 
 	struct Post {
 		Post( 
@@ -145,21 +155,10 @@ struct DBPost : public DBEntity {
 		std::string category;
 		std::string text;
 		std::vector<std::string> attachments; // list of files to add to the post in DB
-	}
+	};
 
-    DBPost() {}
-	DBPost( 
-		std::string& _room_id, 
-		std::string& _user_id, 
-		std::string& _discipline, 
-		std::string& _category, 
-		std::string& _text ) : 
-			id(_id),
-			room_id(_room_id), 
-			user_id(_user_id), 
-			discipline(_discipline), 
-			category(_category), 
-			text(_text)
+	DBPost(std::string &id, std::string &_room_id, std::string &_user_id, std::string &_title, std::string &_text) :
+            DBEntity(id), room_id(_room_id), user_id(_user_id), title(_title), text(_text)
 	{}
 
 	std::string room_id; 
@@ -177,7 +176,7 @@ struct DBPost : public DBEntity {
 	static std::vector<DBTag> get_associated_tags(std::vector<std::string>& _tags, ErrorCodes &error); // в порядке убывания упоминаний в других постах
 
 	// методы получения связанных полей 
-	DBRoom get_room(ErrorCodes &error)
+	DBRoom get_room(ErrorCodes &error);
 	DBUser get_author(ErrorCodes &error);
 	std::vector<DBTag> get_tags(ErrorCodes &error);
 	/* 
@@ -185,7 +184,7 @@ struct DBPost : public DBEntity {
 	то можно как вариант сделать модификацию метода, который будет отдавать ссылку на вектор, 
 	выделенный в динамической памяти
 	*/
-	std::vector<FileFS> get_attachments(ErrorCodes &error) {} // list of storage locations of files, that is attached to post
+	std::vector<FileFS> get_attachments(ErrorCodes &error); // list of storage locations of files, that is attached to post
 };
 
 struct DBSession : public DBEntity {
@@ -193,10 +192,9 @@ struct DBSession : public DBEntity {
 	    Session( std::string& _user_id ) : user_id(_user_id) {}
 
 	    std::string user_id;
-	}
+	};
 
-    DBSession() {}
-	DBSession( std::string& _user_id ) : id(_id), user_id(_user_id) {}
+	DBSession(std::string &id, std::string &_user_id) : DBEntity(id), user_id(_user_id) {}
 
 	std::string user_id;
 
@@ -206,7 +204,7 @@ struct DBSession : public DBEntity {
 	bool update(ErrorCodes &error) override;
 
 	// методы получения связанных полей 
-	DBUser get_user(ErrorCodes &error) {}
+	DBUser get_user(ErrorCodes &error);
 };
 
 #endif // PROFORGIA_DBENTITIES_H
