@@ -102,57 +102,24 @@ struct DBRoom : public DBEntity {
 
 
 struct DBPost : public DBEntity {
-	// class for representation file in filesystem on server
-	class FileFS {
-		FileFS(const std::string& storage_filename);
-		/*
-		: path(_path) {
-			filename = path.takeOnlyFilename
-			auto path_to_file_in_storage = "root/path/to/storage/folder/" + this->id + "/" + storage_filename;
-			ErrorCodes error;
-			path = db_manager.get_file(storage_filename, path_to_file_in_storage, error);
-			if (path == ERROR_STRING) {
-				assert(false);
-			}
-		}
-		*/
-
-		~FileFS();
-		/*
-		{
-			ErrorCodes error;
-			if (!db_manager.clean_file(filename, path, error)) {
-				assert(false);
-			}
-		}
-		 */
-
-        DataManager& db_manager;
-
-		std::string filename;
-		std::string path;
-	};
-
 	struct Post {
 		Post( 
 			std::string& _room_id, 
 			std::string& _user_id, 
-			std::string& _discipline, 
-			std::string& _category, 
+			std::string& _title,
 			std::string& _text,
 			std::vector<std::string>& _attachments ) : 
 				room_id(_room_id), 
-				user_id(_user_id), 
-				discipline(_discipline), 
-				category(_category), 
+				user_id(_user_id),
+				title(_title),
 				text(_text),
 				attachments(_attachments)
 		{}
 
 		std::string room_id; 
 		std::string user_id; // post author
-		std::string discipline;
-		std::string category;
+
+        std::string title;
 		std::string text;
 		std::vector<std::string> attachments; // list of files to add to the post in DB
 	};
@@ -173,18 +140,13 @@ struct DBPost : public DBEntity {
 	bool update(ErrorCodes &error) override;
 
 	static std::vector<DBPost> get(std::vector<std::string>& _tags, ErrorCodes &error);
-	static std::vector<DBTag> get_associated_tags(std::vector<std::string>& _tags, ErrorCodes &error); // в порядке убывания упоминаний в других постах
 
 	// методы получения связанных полей 
 	DBRoom get_room(ErrorCodes &error);
 	DBUser get_author(ErrorCodes &error);
 	std::vector<DBTag> get_tags(ErrorCodes &error);
-	/* 
-	Если API будет нужно работать с vector<FileFS> вне стэка, в котором был вызыван метод get_attachments,
-	то можно как вариант сделать модификацию метода, который будет отдавать ссылку на вектор, 
-	выделенный в динамической памяти
-	*/
-	std::vector<FileFS> get_attachments(ErrorCodes &error); // list of storage locations of files, that is attached to post
+
+	std::vector<std::string> get_attachments(ErrorCodes &error); // list of links to storage locations of files
 };
 
 struct DBSession : public DBEntity {

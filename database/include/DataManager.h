@@ -53,9 +53,10 @@ public:
 	DBPost get_post_info( const std::string& post_id ) const;
 	DBSession get_session_info( const std::string& session_id ) const;
 
-	std::vector<std::string> get_post_attachments_storagenames( const std::string& post_id, ErrorCodes &error ) const;
+	std::vector<std::string> get_post_attachments_links( const std::string& post_id, ErrorCodes &error ) const;
 
-	std::string get_file( const std::string& filename, const std::string& location_on_server, ErrorCodes &error ) const;
-	bool clean_file( const std::string& filename, const std::string& location_on_server, ErrorCodes &error ) const;
+	std::string get_file_link( const std::string& filename, ErrorCodes &error ) const;
+	std::string get_file_upload_link( const std::string& filename, ErrorCodes &error ) const;
+	bool remove_file_from_storage( const std::string& filename, const std::string& remote_location /* ? */, ErrorCodes &error ) const;
 };
 

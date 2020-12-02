@@ -15,15 +15,161 @@
 
 #define DEFAULT_BUCKET "my-test-bucket-proforgia"
 #define DEFAULT_REGION "eu-central-1"
-
-AmazonS3StorageWrapper::AmazonS3StorageWrapper() : bucket_name(DEFAULT_BUCKET), region(DEFAULT_REGION) {}
+#define DEFAULT_TO_CLIENT_PATH "/Users/Ivan/Proforgia-files/files-to-client/"
+#define DEFAULT_FROM_CLIENT_PATH "/Users/Ivan/Proforgia-files/files-from-client/"
 
 bool put_object(const Aws::String& bucketName,
                 const Aws::String& objectName,
                 const Aws::String& filename,
                 const Aws::String& region,
                 ErrorCodes &error
-               )
+);
+std::string get_object(const Aws::String& objectKey, const Aws::String& fromBucket, const std::string& path_to_file, ErrorCodes &error);
+std::string get_upload_link(const Aws::String& region, const Aws::String& bucket);
+
+AmazonS3StorageWrapper::AmazonS3StorageWrapper() :
+    bucket_name(DEFAULT_BUCKET),
+    region(DEFAULT_REGION),
+    files_to_client_path(DEFAULT_TO_CLIENT_PATH),
+    files_from_client_path(DEFAULT_FROM_CLIENT_PATH) {}
+
+// TODO: implement folder for every entity with files
+// TODO: test method
+std::string AmazonS3StorageWrapper::get_file_link(const std::string &filename, ErrorCodes &error) const {
+    Aws::SDKOptions options;
+    Aws::InitAPI(options);
+    Aws::String url;
+    {
+        Aws::Client::ClientConfiguration config;
+
+        if (!region.empty())
+        {
+            config.region = region;
+        }
+
+        Aws::S3::S3Client s3_client(config);
+        // TODO: consider POST http method
+        url = s3_client.GeneratePresignedUrl((Aws::String)this->bucket_name, (Aws::String)filename, Aws::Http::HttpMethod::HTTP_GET, 2000);
+        std::cout << "Get file URL for " << filename << ":" << std::endl << url << std::endl;
+    }
+
+    Aws::ShutdownAPI(options);
+}
+
+// TODO: implement folder for every entity with files
+// TODO: test method
+std::string AmazonS3StorageWrapper::get_file_upload_link(const std::string &filename, ErrorCodes &error) const {
+    Aws::SDKOptions options;
+    Aws::InitAPI(options);
+    Aws::String url;
+    {
+        Aws::Client::ClientConfiguration config;
+
+        if (!region.empty())
+        {
+            config.region = region;
+        }
+
+        Aws::S3::S3Client s3_client(config);
+        // TODO: consider POST http method
+        url = s3_client.GeneratePresignedUrl((Aws::String)this->bucket_name, (Aws::String)filename, Aws::Http::HttpMethod::HTTP_PUT, 2000);
+        std::cout << "Upload URL for " << filename << ":" << std::endl << url << std::endl;
+    }
+
+    Aws::ShutdownAPI(options);
+    return (std::string) url;
+}
+
+// TODO: implement
+bool AmazonS3StorageWrapper::remove_file_from_storage(const std::string &filename, const std::string &remote_location,
+                                                      ErrorCodes &error) const {
+    return false;
+}
+
+// get_upload_link((Aws::String)this->region, (Aws::String)this->bucket_name);
+std::string get_upload_link(const Aws::String& region, const Aws::String& bucket) {
+    Aws::Client::ClientConfiguration config;
+
+    if (!region.empty())
+    {
+        config.region = region;
+    }
+
+    Aws::S3::S3Client s3_client(config);
+    Aws::String url = s3_client.GeneratePresignedUrl(bucket, "smilee.jpg", Aws::Http::HttpMethod::HTTP_PUT, 2000);
+    std::cout << url << std::endl;
+    return (std::string) url;
+}
+
+
+
+/*
+     * USING SAMPLE
+    AmazonS3StorageWrapper storageWrapper;
+    ErrorCodes error;
+    if (!storageWrapper.add_file_to_storage("my-file-name", error)) {
+        switch (error) {
+            case ErrorCodes::UNKNOWN_STORAGE_ERROR:
+                std::cout << "handled" << std::endl;
+                break;
+        }
+    }
+    */
+bool add_file_to_storage(const std::string &filename, ErrorCodes &error) {
+    Aws::SDKOptions options;
+    Aws::InitAPI(options);
+    {
+        const Aws::String bucket_name = (Aws::String)DEFAULT_BUCKET;
+        const Aws::String region = (Aws::String)DEFAULT_REGION;
+        const Aws::String path_to_file = (Aws::String) (DEFAULT_FROM_CLIENT_PATH + filename);
+        const Aws::String file_name = (Aws::String) filename;
+
+        if (!put_object(bucket_name, path_to_file, file_name, region, error)) {
+            return false;
+        }
+
+    }
+
+    Aws::ShutdownAPI(options);
+    return true;
+}
+
+
+/*
+     * USING SAMPLE
+    AmazonS3StorageWrapper storageWrapper;
+    ErrorCodes error;
+    if (storageWrapper.get_file_beginning("myfile.pdf", error) == ERROR_STRING) {
+        switch (error) {
+            case ErrorCodes::UNKNOWN_STORAGE_ERROR:
+                std::cout << "handled" << std::endl;
+                break;
+        }
+    }
+     */
+std::string get_file_beginning( const std::string& filename, ErrorCodes &error ) {
+    Aws::SDKOptions options;
+    Aws::InitAPI(options);
+
+    const Aws::String bucket_name = (Aws::String) DEFAULT_BUCKET;
+    const Aws::String file_name = (Aws::String) filename;
+
+    std::string result = get_object(file_name, bucket_name, DEFAULT_TO_CLIENT_PATH + filename, error);
+    if (result == ERROR_STRING) {
+        // maybe do smth to handle at this point or remove if it''ll only be handled on the upper level
+        return ERROR_STRING;
+    }
+
+    Aws::ShutdownAPI(options);
+    return result;
+}
+
+bool put_object(const Aws::String& bucketName,
+                const Aws::String& objectName,
+                const Aws::String& filename,
+                const Aws::String& region,
+                ErrorCodes &error
+)
 {
     // Verify that the file exists.
     struct stat buffer;
@@ -44,6 +190,7 @@ bool put_object(const Aws::String& bucketName,
     }
 
     Aws::S3::S3Client s3_client(config);
+
 
     Aws::S3::Model::PutObjectRequest request;
     request.SetBucket(bucketName);
@@ -72,27 +219,7 @@ bool put_object(const Aws::String& bucketName,
     }
 }
 
-bool AmazonS3StorageWrapper::add_file_to_storage(const std::string &filename, const std::string &location,
-                                                         ErrorCodes &error) const {
-    Aws::SDKOptions options;
-    Aws::InitAPI(options);
-    {
-        const Aws::String bucket_name = (Aws::String) this->bucket_name;
-        const Aws::String region = (Aws::String) this->region;
-        const Aws::String path_to_file = (Aws::String) location;
-        const Aws::String file_name = (Aws::String) filename;
-
-        if (!put_object(bucket_name, path_to_file, file_name, region, error)) {
-            return false;
-        }
-
-    }
-    Aws::ShutdownAPI(options);
-    return true;
-}
-
-
-std::string get_object(const Aws::String& objectKey, const Aws::String& fromBucket, ErrorCodes &error)
+std::string get_object(const Aws::String& objectKey, const Aws::String& fromBucket, const std::string& path_to_file, ErrorCodes &error)
 {
     Aws::S3::S3Client s3_client;
     Aws::S3::Model::GetObjectRequest object_request;
@@ -104,10 +231,7 @@ std::string get_object(const Aws::String& objectKey, const Aws::String& fromBuck
 
     if (get_object_outcome.IsSuccess())
     {
-        // TODO: put retrieved file on server filesystem
-        auto& retrieved_file = get_object_outcome.GetResultWithOwnership().
-                GetBody();
-
+        auto& retrieved_file = get_object_outcome.GetResultWithOwnership().GetBody();
         // Print a beginning portion of the text file.
         std::cout << "Beginning of file contents:\n";
         char file_data[255] = { 0 };
@@ -127,31 +251,5 @@ std::string get_object(const Aws::String& objectKey, const Aws::String& fromBuck
     }
 }
 
-std::string AmazonS3StorageWrapper::get_file( const std::string& filename, ErrorCodes &error ) const {
-    Aws::SDKOptions options;
-    Aws::InitAPI(options);
-
-    const Aws::String bucket_name = (Aws::String) this->bucket_name;
-    const Aws::String file_name = (Aws::String) filename;
-
-    std::string result = get_object(file_name, bucket_name, error);
-    if (result == ERROR_STRING) {
-        // maybe do smth to handle at this point or remove if it''ll only be handled on the upper level
-        return ERROR_STRING;
-    }
-
-    Aws::ShutdownAPI(options);
-    return result;
-}
-
-bool AmazonS3StorageWrapper::remove_file_from_storage(const std::string &filename, const std::string &remote_location,
-                                                      ErrorCodes &error) const {
-    return false;
-}
-
-bool AmazonS3StorageWrapper::clean_file(const std::string &filename, const std::string &location_on_server,
-                                        ErrorCodes &error) const {
-    return false;
-}
 
 #endif // PROFORGIA_AMAZONS3STORAGEWRAPPER_H
