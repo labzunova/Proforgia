@@ -7,9 +7,12 @@ https://docs.aws.amazon.com/sdk-for-cpp/v1/developer-guide/build-cmake.html
 
 Lib build:
 - project-root/database/aws-sdk $ mkdir install
-- project-root/database/aws-sdk/aws-sdk-cpp/build $ cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_ONLY="s3"  -DCMAKE_INSTALL_PREFIX=path/to/project/Proforgia/database/aws-sdk/install
+- project-root/database/aws-sdk/aws-sdk-cpp $ cmake . -DCMAKE_BUILD_TYPE=Debug -DBUILD_ONLY="s3"  -DCMAKE_INSTALL_PREFIX=path/to/project/Proforgia/database/aws-sdk/install
 - project-root/database/aws-sdk/aws-sdk-cpp/build $ make
 - project-root/database/aws-sdk/aws-sdk-cpp/build $ make install
+
+CMakeLists.txt:
+- include_directories(/root/to/project/Proforgia/database/aws-sdk/install/include)
 
 First application build:
 - project-root $  cmake . -DCMAKE_PREFIX_PATH=path/to/project/Proforgia/database/aws-sdk/install

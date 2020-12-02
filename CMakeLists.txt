@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 
-include_directories(/Users/Ivan/TPark-SEM1/Proforgia/database/aws-sdk/install/include)
+include_directories(/Users/Ivan/Proforgia/database/aws-sdk/install/include)
 
 find_package(AWSSDK REQUIRED COMPONENTS s3)
 
