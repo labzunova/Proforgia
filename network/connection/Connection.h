@@ -3,7 +3,6 @@
 #define PROFORGIA_CONNECTION_H
 #include "Request.h"
 #include "Connection_loop.h"
-#include "Reply.h"
 #include "Parser.h"
 
 class Connection_loop;
