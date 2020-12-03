@@ -1,12 +1,13 @@
-#include "Server.h"
 #include <boost/asio.hpp>
 #include "boost/bind.hpp"
 
-Server::Server( const std::string &address, const std::string &port,  Connection_loop &loop  ):
-    io_service_(),
-    acceptor_( io_service_ ),
-    connection_loop( loop ),
-    new_connection( new Connection( io_service_, connection_loop ) )
+#include "Server.h"
+
+Server::Server(const std::string &address, const std::string &port, Connection_queue &loop  ):
+        io_service_(),
+        acceptor_( io_service_ ),
+        connection_queue(loop ),
+        new_connection( new Connection(io_service_, connection_queue ) )
 {
     boost::asio::ip::tcp::resolver resolver(io_service_);
     boost::asio::ip::tcp::resolver::query query( address, port );
@@ -37,7 +38,7 @@ void Server::handle_accept( error_code err ) // TODO: or &?
     {
         new_connection->start();
         new_connection.reset(new Connection(io_service_,
-                                             connection_loop));
+                                            connection_queue));
         // async_accept для нового клиента
         // (вызываю ожидание подключения нового клиента)
         // и тут же с помощью bind связываю с функцией handle_accept,

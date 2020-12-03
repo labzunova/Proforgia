@@ -1,11 +1,13 @@
-#ifndef PROFORGIA_CONNECTION_LOOP_H
-#define PROFORGIA_CONNECTION_LOOP_H
+#ifndef PROFORGIA_CONNECTION_QUEUE_H
+#define PROFORGIA_CONNECTION_QUEUE_H
+
 #include <utility>
 #include <queue>
+
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 
-class Connection_loop: private boost::asio::noncopyable
+class Connection_queue: private boost::asio::noncopyable
 {
 private:
     struct Event { // событие, которое может по вызову callback записать данные в нужный сокет
@@ -36,4 +38,4 @@ public:
 };
 
 
-#endif //PROFORGIA_CONNECTION_LOOP_H
+#endif //PROFORGIA_CONNECTION_QUEUE_H

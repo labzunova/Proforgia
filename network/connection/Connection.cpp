@@ -1,12 +1,15 @@
-#include "Connection.h"
-#include <boost/asio.hpp>
 #include <iostream>
-#include "boost/bind.hpp"
+
+#include <boost/asio.hpp>
+#include <boost/bind.hpp>
+
+#include "Connection.h"
+
 using std::string;
 
-Connection::Connection( boost::asio::io_service &io_service, Connection_loop &loop ):
-socket_( io_service ),
-connection_loop( loop )
+Connection::Connection(boost::asio::io_service &io_service, Connection_queue &loop ):
+        socket_( io_service ),
+        connection_queue(loop )
 {
 }
 
@@ -80,7 +83,7 @@ void Connection::handle_read( const Connection::error_code &e, std::size_t bytes
         //to_put_in_loop.insert(std::pair<string, string>("file",request.get_data("file"))); TODO!!!!! тут будет добавка файла но надо разобраться как
     }
 
-    connection_loop.push_back( to_put_in_loop, socket_ ); // пихаем в очередь мапу и сокет для колбэка: моя обработка данного запроса окончена, отправит уже колбэк
+    connection_queue.push_back(to_put_in_loop, socket_ ); // пихаем в очередь мапу и сокет для колбэка: моя обработка данного запроса окончена, отправит уже колбэк
 }
 
 void Connection::callback_to_write(std::array<char, 8192> buffer) {
@@ -100,7 +103,7 @@ void Connection::handle_write( const Connection::error_code &e )
 
     if (e != boost::asio::error::operation_aborted)
     {
-       // connection_loop.stop(shared_from_this());
+       // connection_queue.stop(shared_from_this());
     }
 }
 

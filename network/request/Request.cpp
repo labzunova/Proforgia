@@ -1,5 +1,5 @@
 #include "Request.h"
-#include "../parser/Parser.h"
+#include "parser/Parser.h"
 
 Request::Request( const string &request )
 {
@@ -7,21 +7,21 @@ Request::Request( const string &request )
 // методы парсинга разных частей запроса
 }
 
-string Request::get_data( string type )
+const string Request::get_data( string type )
 {
     return data[type];
 }
 
-string Request::get_cookie( string type )
+const string Request::get_cookie( string type )
 {
     return cookies[type];
 }
 
-string Request::get_method()
+const string Request::get_method()
 {
     return method;
 }
 
-string Request::get_action() {
+const string Request::get_action() {
     return action;
 }

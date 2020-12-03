@@ -1,7 +1,6 @@
 #ifndef PROFORGIA_REQUEST_H
 #define PROFORGIA_REQUEST_H
 
-
 #include <string>
 #include <unordered_map>
 
@@ -11,10 +10,10 @@ class Request
 {
 public:
     explicit Request( const string &request );
-    string get_data( string type );
-    string get_cookie( string type );
-    string get_action();
-    string get_method(); // GET or POST
+    const string get_data( string type );
+    const string get_cookie( string type );
+    const string get_action();
+    const string get_method(); // GET or POST
 private:
     std::unordered_map<std::string, std::string> data;
     std::unordered_map<std::string, std::string> cookies;
