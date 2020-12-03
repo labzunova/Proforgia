@@ -1,10 +1,10 @@
 // single connection from a connection
 #ifndef PROFORGIA_CONNECTION_H
 #define PROFORGIA_CONNECTION_H
-#include <boost/asio.hpp>
-#include "../request/Request.h"
-#include "../reply/Reply.h"
-#include "../parser/Parser.h"
+#include "Request.h"
+#include "Connection_loop.h"
+#include "Reply.h"
+#include "Parser.h"
 
 class Connection_loop;
 
@@ -22,12 +22,8 @@ class Connection : public std::enable_shared_from_this<Connection> {
         void handle_write( const error_code& e ); // write in socket
         boost::asio::ip::tcp::socket socket_;
         Connection_loop& connection_loop;
-
-        // Для обработки входящего запроса request_handler& request_handler_;
-
+        void callback_to_write( std::array<char, 8192> buffer_ );
         std::array<char, 8192> buffer_; // Буфер для приходящих данных
-       // Request request; // Прихдящий запрос
-       // Reply reply; // ответ, который мы отправим обратно
 };
 typedef boost::shared_ptr<Connection> connection_ptr;
 

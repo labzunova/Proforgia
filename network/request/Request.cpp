@@ -21,3 +21,7 @@ string Request::get_method()
 {
     return method;
 }
+
+string Request::get_action() {
+    return action;
+}

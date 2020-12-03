@@ -2,10 +2,10 @@
 #include <boost/asio.hpp>
 #include "boost/bind.hpp"
 
-Server::Server( const std::string &address, const std::string &port ):
+Server::Server( const std::string &address, const std::string &port,  Connection_loop &loop  ):
     io_service_(),
     acceptor_( io_service_ ),
-    connection_loop(),
+    connection_loop( loop ),
     new_connection( new Connection( io_service_, connection_loop ) )
 {
     boost::asio::ip::tcp::resolver resolver(io_service_);

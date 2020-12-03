@@ -1,14 +1,13 @@
 #ifndef PROFORGIA_SERVER_H
 #define PROFORGIA_SERVER_H
-#include <boost/asio.hpp>
 #include <string>
-#include "Connection_loop.h"
+#include "Connection.h"
 
 typedef boost::system::error_code error_code;
 class Server: boost::asio::noncopyable
 {
 public:
-    explicit Server( const std::string& address, const std::string& port );
+    explicit Server( const std::string& address, const std::string& port,  Connection_loop &loop );
 
     void start_server(); // Run the server's io_service loop.
     void stop_server();
@@ -22,7 +21,7 @@ private:
 
     boost::asio::io_service io_service_; // очень важная штука для исполнения асинхронных операций
     boost::asio::ip::tcp::acceptor acceptor_; // акцептор (приемник) — один объект, который принимает клиентские подключения.
-    Connection_loop connection_loop;
+    Connection_loop& connection_loop;
     std::shared_ptr<Connection> new_connection;
 };
 
