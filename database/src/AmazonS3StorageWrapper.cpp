@@ -12,6 +12,7 @@
 #include <aws/s3/S3Client.h>
 #include <aws/s3/model/PutObjectRequest.h>
 #include <aws/s3/model/GetObjectRequest.h>
+#include <aws/s3/model/DeleteObjectRequest.h>
 
 #define DEFAULT_BUCKET "my-test-bucket-proforgia"
 #define DEFAULT_REGION "eu-central-1"
@@ -33,8 +34,8 @@ AmazonS3StorageWrapper::AmazonS3StorageWrapper() :
     files_to_client_path(DEFAULT_TO_CLIENT_PATH),
     files_from_client_path(DEFAULT_FROM_CLIENT_PATH) {}
 
-// TODO: implement folder for every entity with files
-// TODO: test method
+// TODO: implement folder for every entity with files (probably for every post)
+// TODO: test method with private release bucket
 std::string AmazonS3StorageWrapper::get_file_link(const std::string &filename, ErrorCodes &error) const {
     Aws::SDKOptions options;
     Aws::InitAPI(options);
@@ -56,8 +57,8 @@ std::string AmazonS3StorageWrapper::get_file_link(const std::string &filename, E
     Aws::ShutdownAPI(options);
 }
 
-// TODO: implement folder for every entity with files
-// TODO: test method
+// TODO: implement folder for every entity with files (probably for every post)
+// TODO: test method with private release bucket
 std::string AmazonS3StorageWrapper::get_file_upload_link(const std::string &filename, ErrorCodes &error) const {
     Aws::SDKOptions options;
     Aws::InitAPI(options);
@@ -80,11 +81,53 @@ std::string AmazonS3StorageWrapper::get_file_upload_link(const std::string &file
     return (std::string) url;
 }
 
-// TODO: implement
-bool AmazonS3StorageWrapper::remove_file_from_storage(const std::string &filename, const std::string &remote_location,
-                                                      ErrorCodes &error) const {
-    return false;
+// pre-declaration
+bool DeleteObject(const Aws::String& objectKey, const Aws::String& fromBucket, const Aws::String& region);
+
+bool AmazonS3StorageWrapper::remove_file_from_storage(const std::string &filename, ErrorCodes &error) const {
+
+    Aws::SDKOptions options;
+    Aws::InitAPI(options);
+    {
+        if (DeleteObject((Aws::String) filename, (Aws::String) this->bucket_name, (Aws::String) this->region))
+        {
+            std::cout << "Deleted object " << filename << " from " << this->bucket_name << "." << std::endl;
+        } else {
+            error = ErrorCodes::UNKNOWN_STORAGE_ERROR;
+            ShutdownAPI(options);
+            return false;
+        }
+    }
+    ShutdownAPI(options);
+    return true;
 }
+
+
+bool DeleteObject(const Aws::String& objectKey, const Aws::String& fromBucket, const Aws::String& region)
+{
+    Aws::S3::S3Client s3_client;
+    Aws::S3::Model::DeleteObjectRequest request;
+
+    request.WithKey(objectKey)
+            .WithBucket(fromBucket);
+
+    Aws::S3::Model::DeleteObjectOutcome outcome =
+            s3_client.DeleteObject(request);
+
+    if (!outcome.IsSuccess())
+    {
+        auto err = outcome.GetError();
+        std::cout << "Error: DeleteObject: " <<
+                  err.GetExceptionName() << ": " << err.GetMessage() << std::endl;
+
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}
+
 
 // get_upload_link((Aws::String)this->region, (Aws::String)this->bucket_name);
 std::string get_upload_link(const Aws::String& region, const Aws::String& bucket) {

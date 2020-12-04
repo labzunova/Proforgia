@@ -11,7 +11,10 @@ public:
 public:
     std::string get_file_link( const std::string& filename, ErrorCodes &error ) const override;
     std::string get_file_upload_link( const std::string& filename, ErrorCodes &error ) const override;
-    bool remove_file_from_storage( const std::string& filename, const std::string& remote_location /* ? */, ErrorCodes &error ) const override;
+
+    // true if file was deleted, or there was not such file to delete
+    // able to remove folders
+    bool remove_file_from_storage( const std::string& filename, ErrorCodes &error ) const override;
 
 private:
     const std::string bucket_name;
