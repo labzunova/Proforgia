@@ -5,17 +5,16 @@
 #pragma once
 
 #include "ActivityManager.h"
-#include "entities/User.h"
-#include "entities/Session.h"
 #include <map>
 #include <string>
 
 using std::string;
 
+template<class User, class Session>
 class ActivityUser : public ActivityManager {
 public:
-    explicit ActivityUser(std::map<string, string>& context);
-    ~ActivityUser() = default;
+    explicit ActivityUser(Context context);
+    ~ActivityUser() override = default;
     ActivityUser(const ActivityUser&) = delete;
     ActivityUser& operator = (ActivityUser&) = delete;
 

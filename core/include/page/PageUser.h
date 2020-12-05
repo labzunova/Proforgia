@@ -6,10 +6,11 @@
 
 #include "PageManager.h"
 
-class PageUser : public PageManager {
+template<class View>
+class PageUser : public PageManager<View> {
 public:
-    explicit PageUser(const View& view) : PageManager(view) {};
-    ~PageUser() = default;
+    explicit PageUser(const View& view) : PageManager<View>(view) {};
+    ~PageUser() override = default;
     PageUser(const PageUser&) = delete;
     PageUser& operator = (PageUser&) = delete;
 
@@ -25,7 +26,7 @@ public:
 
     string get_login_page() const override;
 
-    string get_info_tags(int id_room, std::vector<string> tags) const override;
+    string get_info_tags(int id_room, std::unique_ptr<std::vector<string>> tags) const override;
 
     string get_not_found() const override;
 };

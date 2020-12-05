@@ -6,8 +6,11 @@
 
 #include <map>
 #include <string>
+#include <utility>
 
 using std::string;
+
+typedef std::map<std::string, std::string> Context;
 
 class ActivityManager {
 public:
@@ -18,10 +21,11 @@ public:
     };
 
 protected:
-    explicit ActivityManager(std::map<string, string>& context) : context_(context) {};
-    ~ActivityManager() = default;
+    explicit ActivityManager(Context context) : context_(std::move(context)) {};
 
 public:
+    virtual ~ActivityManager() = default;
+
     virtual Status signUp();
     virtual Status signIn();
     virtual Status exit();
@@ -33,5 +37,5 @@ public:
     virtual Status add_deadline();
 
 protected:
-    std::map<string, string> context_;
+    Context context_;
 };

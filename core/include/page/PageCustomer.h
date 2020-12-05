@@ -4,19 +4,18 @@
 
 #pragma once
 
-#include "page/PageManager.h"
-#include "entities/User.h"
-#include "entities/Room.h"
+#include "PageManager.h"
 
 #include <map>
 #include <string>
 
 using std::string;
 
-class PageCustomer : public PageManager {
+template<class View, class User, class Room>
+class PageCustomer : public PageManager<View> {
 public:
-    PageCustomer(const View& view, const User&  user);
-    ~PageCustomer() = default;
+    PageCustomer(const View& view, const User& user);
+    ~PageCustomer() override = default;
     PageCustomer(const PageCustomer&) = delete;
     PageCustomer& operator = (PageCustomer&) = delete;
 
@@ -32,7 +31,7 @@ public:
 
     string get_login_page() const override;
 
-    string get_info_tags(int id_room, std::vector<string> tags) const override;
+    string get_info_tags(int id_room, std::unique_ptr<std::vector<string>> tags) const override;
 
     string get_not_found() const override;
 

@@ -1,7 +1,9 @@
 #pragma once
 
-//#include "Context.h"
 #include <string>
+#include <map>
+
+typedef std::map<std::string, std::string> Context;
 
 class View {
 public:
@@ -16,6 +18,7 @@ public:
     };
 
 public:
-    void SetPage(Page);
-    std::string Render();
+    std::string render(Context& context) {
+        return "<html>";
+    }
 };

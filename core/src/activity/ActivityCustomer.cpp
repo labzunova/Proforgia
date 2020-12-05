@@ -4,6 +4,8 @@
 
 #include "ActivityCustomer.h"
 
+#include <utility>
+
 ActivityManager::Status ActivityCustomer::exit() {
     return CLIENT_ERROR;
 }
@@ -32,9 +34,9 @@ ActivityManager::Status ActivityCustomer::add_deadline() {
     return CLIENT_ERROR;
 }
 
-ActivityCustomer::ActivityCustomer(std::map<string, string> &context,const User &user)
+ActivityCustomer::ActivityCustomer(const std::map<string, string> &context, User user)
         : ActivityManager(context)
-        , user_(user) {}
+        , user_(std::move(user)) {}
 
 void ActivityCustomer::delete_session() {
 

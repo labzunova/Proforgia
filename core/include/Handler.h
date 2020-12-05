@@ -6,10 +6,13 @@
 
 #include "PageManager.h"
 #include "ActivityManager.h"
+#include "View.h"
 
 #include <string>
 #include <map>
 #include <memory>
+
+#include "boost/date_time/gregorian/gregorian.hpp"
 
 typedef std::map<std::string, std::string> Context;
 
@@ -18,23 +21,27 @@ private:
     enum Status {
         OK,
         Rotten,
+        NotFound,
     };
 
 public:
-    explicit Handler(Context& context) : context_(context) {};
+    explicit Handler(Context& context) : context_(context) {LIVE_TIME(10);};
     ~Handler() = default;
     Handler(const Handler&) = delete;
     Handler& operator=(const Handler&) = delete;
 
-    std::string start_process();
+    std::string get_response();
 
 private:
     void start_session();
     Status check_session();
+    std::string redirect();
 
 private:
+    boost::gregorian::days LIVE_TIME;
+
     Context context_;
 
-    std::unique_ptr<PageManager> page_manager_;
-    std::unique_ptr<ActivityManager> activity_manager_;
+    std::shared_ptr<PageManager<View>> page_manager_;
+    std::shared_ptr<ActivityManager> activity_manager_;
 };
