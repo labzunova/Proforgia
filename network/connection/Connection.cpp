@@ -47,7 +47,7 @@ void Connection::handle_read( const Connection::error_code &e, std::size_t bytes
     if ( request.get_action() == "MAIN") // так будет записываться после парсинга случай, когда нужно получить главную страницу
     {
         to_put_in_loop.insert(std::pair<string, string>("action","GET"));
-        to_put_in_loop.insert(std::pair<string, string>("session",request.get_cookie("session")));
+        to_put_in_loop.insert(std::pair<string, string>("session",request.get_cookie((string &) "session")));
     }
 
     if ( request.get_action() == "LOGIN_GET") // получить страницу входа
@@ -55,8 +55,8 @@ void Connection::handle_read( const Connection::error_code &e, std::size_t bytes
     if ( request.get_action() == "LOGIN_POST") // залогинить пользователя+вернуть гланую
     {
         to_put_in_loop.insert(std::pair<string, string>("action","LOGIN"));
-        to_put_in_loop.insert(std::pair<string, string>("login",request.get_data("login")));
-        to_put_in_loop.insert(std::pair<string, string>("password",request.get_data("password")));
+        to_put_in_loop.insert(std::pair<string, string>("login",request.get_data((string &) "login")));
+        to_put_in_loop.insert(std::pair<string, string>("password",request.get_data((string &) "password")));
     }
 
     if ( request.get_action() == "SIGNUP_GET") // получить страницу регистрации
@@ -64,22 +64,22 @@ void Connection::handle_read( const Connection::error_code &e, std::size_t bytes
     if ( request.get_action() == "SIGNUP_POST") // зарегать пользователя+вернуть гланую
     { // зарегать пользователя = создать пользователя + добавить его в коммнату room, если она существует, иначе - создать новую комнату
         to_put_in_loop.insert(std::pair<string, string>("action","SIGNUP"));
-        to_put_in_loop.insert(std::pair<string, string>("login",request.get_data("login")));
-        to_put_in_loop.insert(std::pair<string, string>("password",request.get_data("password")));
-        to_put_in_loop.insert(std::pair<string, string>("room",request.get_data("room")));
+        to_put_in_loop.insert(std::pair<string, string>("login",request.get_data((string &) "login")));
+        to_put_in_loop.insert(std::pair<string, string>("password",request.get_data((string &) "password")));
+        to_put_in_loop.insert(std::pair<string, string>("room",request.get_data((string &) "room")));
     }
 
     if ( request.get_action() == "FILES_BY_TAG") // получить главную страницу со списком файлов по желаемому тегу
     {
         to_put_in_loop.insert(std::pair<string, string>("action","FILES_BY_TAG"));
-        to_put_in_loop.insert(std::pair<string, string>("tag",request.get_data("tag")));
-        to_put_in_loop.insert(std::pair<string, string>("session",request.get_cookie("session"))); // чтобы проверить сессию
+        to_put_in_loop.insert(std::pair<string, string>("tag",request.get_data((string &) "tag")));
+        to_put_in_loop.insert(std::pair<string, string>("session",request.get_cookie((string &) "session"))); // чтобы проверить сессию
     }
     if ( request.get_action() == "ADD_FILE") // добавить файл с указанным тегом и вернуть ту же главную страницу
     {
         to_put_in_loop.insert(std::pair<string, string>("action","ADD_FILE"));
-        to_put_in_loop.insert(std::pair<string, string>("tag",request.get_data("tag")));
-        to_put_in_loop.insert(std::pair<string, string>("session",request.get_cookie("session")));
+        to_put_in_loop.insert(std::pair<string, string>("tag",request.get_data((string &) "tag")));
+        to_put_in_loop.insert(std::pair<string, string>("session",request.get_cookie((string &) "session")));
         //to_put_in_loop.insert(std::pair<string, string>("file",request.get_data("file"))); TODO!!!!! тут будет добавка файла но надо разобраться как
     }
 

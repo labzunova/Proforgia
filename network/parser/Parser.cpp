@@ -1,20 +1,18 @@
 #include "Parser.h"
 
-Parser::Parser()
-{
-}
-
-unordered_map<string, string> Parser::parse_cookies(string request)
+const unordered_map<string, string> Parser::parse_cookies()
 {
 
 }
 
-unordered_map<string, string> Parser::parse_data(string request)
+const unordered_map<string, string> Parser::parse_data()
 {
 
 }
 
-string Parser::parse_method(string request)
-{
+const string Parser::parse_method() {
+
 }
+
+
 

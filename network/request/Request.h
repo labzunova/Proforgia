@@ -10,8 +10,8 @@ class Request
 {
 public:
     explicit Request( const string &request );
-    const string get_data( string type );
-    const string get_cookie( string type );
+    const string get_data( string &type );
+    const string get_cookie( string &type );
     const string get_action();
     const string get_method(); // GET or POST
 private:

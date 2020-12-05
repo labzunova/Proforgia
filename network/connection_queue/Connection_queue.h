@@ -15,7 +15,7 @@ private:
         std::map<std::string, std::string> data;  // метод запроса, что нужно выполнить, необходимые данные, полученные из прасинга запроса
         void callback( std::array<char, 8192> buffer ) {
             boost::asio::async_write(socket_, boost::asio::buffer( buffer ),
-                                     boost::bind( &Event::handle_write, boost::asio::placeholders::error ) ); // убрала shared_from_this - не компилится. TODO: понять как
+                                     boost::bind( &Event::handle_write, this, boost::asio::placeholders::error) ); // TODO: почитать еще про bind
         }
     private:
         boost::asio::ip::tcp::socket &socket_;
@@ -32,9 +32,10 @@ private:
     };
     std::queue<Event> connections;
 public:
+    std::mutex queue_mutex;
     void push_back( std::map<std::string, std::string> data, boost::asio::ip::tcp::socket &socket_  ); // так кладутся задачи в очередь
     Event pop_front(); // для воркеров
-    int is_empty(); // для воркеров
+    const int is_empty(); // для воркеров
 };
 
 

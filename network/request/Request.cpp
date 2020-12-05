@@ -7,12 +7,12 @@ Request::Request( const string &request )
 // методы парсинга разных частей запроса
 }
 
-const string Request::get_data( string type )
+const string Request::get_data( string &type )
 {
     return data[type];
 }
 
-const string Request::get_cookie( string type )
+const string Request::get_cookie( string &type )
 {
     return cookies[type];
 }
@@ -22,6 +22,7 @@ const string Request::get_method()
     return method;
 }
 
-const string Request::get_action() {
+const string Request::get_action()
+{
     return action;
 }
