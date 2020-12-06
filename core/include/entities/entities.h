@@ -3,10 +3,11 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include "Rights.h"
-#include "ErrorCodes.h"
+//#include "Rights.h"
+//#include "ErrorCodes.h"
 
 
+/// ИНТЕРФЕЙС СУЩНОСТЕЙ БД
 class DataManager;
 
 struct DBEntity {

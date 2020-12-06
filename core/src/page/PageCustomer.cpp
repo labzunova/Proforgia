@@ -5,6 +5,7 @@
 #include "PageCustomer.h"
 
 #include <utility>
+#include <boost/lexical_cast.hpp>
 
 template<class View, class User, class Room>
 PageCustomer<View, User, Room>::PageCustomer(const View &view, const User& user)
@@ -21,11 +22,12 @@ string PageCustomer<View, User, Room>::get_main_page() {
 }
 
 template<class View, class User, class Room>
-string PageCustomer<View, User, Room>::get_room_page(int id) {
+string PageCustomer<View, User, Room>::get_room_page(string id) {
     Context context = {{"page", "ROOM"}};
     write_user(context);
 
-    write_room(context, Room::get(id));
+    int id_room = boost::lexical_cast<int>(id);
+    write_room(context, Room::get(id_room));
     return PageManager<View>::view_.render(context);
 }
 
@@ -77,4 +79,10 @@ void PageCustomer<View, User, Room>::write_room(std::map<string, string> &ctx, c
 template<class View, class User, class Room>
 void PageCustomer<View, User, Room>::write_info_tag(std::map<string, string> &ctx, const Room &room, string tag) {
 
+}
+
+template<class View, class User, class Room>
+string PageCustomer<View, User, Room>::get_server_err() {
+    Context context = {{"page", "500"}};
+    return PageManager<View>::view_.render(context);
 }

@@ -2,6 +2,7 @@
 // Created by sergei on 28.11.2020.
 //
 
+#include "HttpResponse.h"
 #include "Handler.h"
 #include "PageUser.h"
 #include "PageCustomer.h"
@@ -20,23 +21,65 @@ std::string Handler::get_response() {
     }
 
     if(context_["method"] == "POST") {
-        if(context_["action"] == "")
+        if(context_["action"] == "signup") {
+            auto code = activity_manager_->signUp();
+            if(code == ActivityManager::CLIENT_ERROR)
+                return page_manager_->get_registr_page();
 
-    } else {
+            else if(code == ActivityManager::SERVER_ERROR)
+                return page_manager_->get_server_err();
+
+            else
+                return redirect("MAIN");
+        }
+        else if(context_["action"] == "login") {
+            auto code = activity_manager_->signIn();
+            if(code == ActivityManager::CLIENT_ERROR)
+                return page_manager_->get_login_page();
+
+            else if(code == ActivityManager::SERVER_ERROR)
+                return page_manager_->get_server_err();
+
+            else
+                return redirect("MAIN");
+        }
+        else if(context_["action"] == "add_file") {
+            auto code = activity_manager_->add_content();
+            if(code == ActivityManager::CLIENT_ERROR)
+                return page_manager_->get_room_page(context_["id_room"]);
+
+            else if(code == ActivityManager::SERVER_ERROR)
+                return page_manager_->get_server_err();
+
+            else
+                return redirect("ROOM/" + context_["id_room"]); // TODO не понятно в каком формате отдавать ссылку
+        }
+
+    }
+    else {
         if(context_["action"] == "MAIN") {
-            return page_manager_->get_main_page();
+            Context ctx = {{"code", "200"}}; // TODO заполнение контекста
+            ctx["body"] = page_manager_->get_main_page();
+            return HttpResponse::get_response(ctx);
 
         } else if(context_["action"] == "LOGIN") {
-            return page_manager_->get_login_page();
+            Context ctx = {{"code", "200"}}; // TODO заполнение контекста
+            ctx["body"] = page_manager_->get_login_page();
+            return HttpResponse::get_response(ctx);
 
         } else if(context_["action"] == "SIGNUP") {
-            return page_manager_->get_registr_page();
+            Context ctx = {{"code", "200"}}; // TODO заполнение контекста
+            ctx["body"] = page_manager_->get_registr_page();
+            return HttpResponse::get_response(ctx);
 
         } else if(context_["action"] == "FILES_BY_TAG") {
             // TODO запись id комнаты в context_
             auto tags = std::make_unique<std::vector<std::string>>();
             tags->push_back(context_["tag"]);
-            return page_manager_->get_info_tags(boost::lexical_cast<int>(context_["id_room"]), std::move(tags));
+
+            Context ctx = {{"code", "200"}}; // TODO заполнение контекста
+            ctx["body"] = page_manager_->get_info_tags(boost::lexical_cast<int>(context_["id_room"]), std::move(tags));
+            return HttpResponse::get_response(ctx);
 
         }
     }
@@ -48,8 +91,8 @@ void Handler::start_session() {
 
     if (check_session() == Handler::OK) {
         DBUser user = DBUser::get(DBSession::get("session").get_user());
-        page_manager_ = std::make_shared<PageCustomer<View, DBUser>>(view, user);
-        activity_manager_ = std::make_shared<ActivityCustomer<DBUser>>(ctx, user);
+        page_manager_ = std::make_shared<PageCustomer<View, DBUser, DBSession>>(view, user);
+        activity_manager_ = std::make_shared<ActivityCustomer<DBUser, DBRoom, DBSession>>(ctx, user);
     } else {
         page_manager_ = std::make_shared<PageUser<View>>(view);
         activity_manager_ = std::make_shared<ActivityUser<DBUser, DBSession>>(DBSession::get("session"))
@@ -69,6 +112,8 @@ Handler::Status Handler::check_session() {
         return OK;
 }
 
-std::string Handler::redirect() {
-    return std::__cxx11::string();
+string Handler::redirect(const string& page) {
+    Context ctx = {{"code", "302"},
+                    {"location", page}}; // TODO заполнение контекста
+    return HttpResponse::get_response(ctx);
 }

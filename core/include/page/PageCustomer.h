@@ -21,7 +21,7 @@ public:
 
     string get_main_page() override;
 
-    string get_room_page(int id) override;
+    string get_room_page(string id) override;
 
     string get_favorite_page() override;
 
@@ -34,6 +34,8 @@ public:
     string get_info_tags(int id_room, std::unique_ptr<std::vector<string>> tags) override;
 
     string get_not_found() override;
+
+    string get_server_err() override;
 
 private:
     void write_user(std::map<string, string>& ctx);

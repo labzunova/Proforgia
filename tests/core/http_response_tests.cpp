@@ -11,11 +11,11 @@ typedef std::map<std::string, std::string> Context;
 
 TEST(HttpResponseTests, HttpResponse_200){
     Context context{
-            {"Code", "200"},
-            {"Content-Length", "16001"},
-            {"Date", "Wed, 02 Dec 2020 15:14:34 GMT"},
-            {"Server", "WSGIServer/0.2 CPython/3.6.9"},
-            {"Body", "<html>"},
+            {"code", "200"},
+            {"content-length", "16001"},
+            {"date", "Wed, 02 Dec 2020 15:14:34 GMT"},
+            {"server", "WSGIServer/0.2 CPython/3.6.9"},
+            {"body", "<html>"},
     };
 
     std::string answer =
@@ -35,11 +35,11 @@ TEST(HttpResponseTests, HttpResponse_200){
 
 TEST(HttpResponseTests, HttpResponse_300){
     Context context{
-            {"Code", "302"},
-            {"Content-Length", "0"},
-            {"Date", "Wed, 02 Dec 2020 15:40:22 GMT"},
-            {"Server", "WSGIServer/0.2 CPython/3.6.9"},
-            {"Location", "/"},
+            {"code", "302"},
+            {"content-length", "0"},
+            {"date", "Wed, 02 Dec 2020 15:40:22 GMT"},
+            {"server", "WSGIServer/0.2 CPython/3.6.9"},
+            {"location", "/"},
     };
 
     std::string answer =
@@ -59,11 +59,11 @@ TEST(HttpResponseTests, HttpResponse_300){
 
 TEST(HttpResponseTests, HttpResponse_400){
     Context context{
-            {"Code", "404"},
-            {"Content-Length", "3062"},
-            {"Date", "Wed, 02 Dec 2020 15:45:27 GMT"},
-            {"Server", "WSGIServer/0.2 CPython/3.6.9"},
-            {"Body", "<html>"},
+            {"code", "404"},
+            {"content-length", "3062"},
+            {"date", "Wed, 02 Dec 2020 15:45:27 GMT"},
+            {"server", "WSGIServer/0.2 CPython/3.6.9"},
+            {"body", "<html>"},
     };
 
     std::string answer =

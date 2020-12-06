@@ -14,6 +14,8 @@
 
 #include "boost/date_time/gregorian/gregorian.hpp"
 
+using std::string;
+
 typedef std::map<std::string, std::string> Context;
 
 class Handler {
@@ -35,7 +37,7 @@ public:
 private:
     void start_session();
     Status check_session();
-    std::string redirect();
+    static string redirect(const string& page);
 
 private:
     boost::gregorian::days LIVE_TIME;

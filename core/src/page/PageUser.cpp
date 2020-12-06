@@ -11,7 +11,7 @@ string PageUser<View>::get_main_page() {
 }
 
 template<class View>
-string PageUser<View>::get_room_page(int id) {
+string PageUser<View>::get_room_page(string id) {
     return get_main_page();
 }
 
@@ -45,5 +45,11 @@ string PageUser<View>::get_info_tags(int id_room, std::unique_ptr<std::vector<st
 template<class View>
 string PageUser<View>::get_not_found() {
     Context context = {{"page", "NOT_FOUND"}};
+    return PageManager<View>::view_.render(context);
+}
+
+template<class View>
+string PageUser<View>::get_server_err() {
+    Context context = {{"page", "500"}};
     return PageManager<View>::view_.render(context);
 }

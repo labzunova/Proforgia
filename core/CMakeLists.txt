@@ -2,7 +2,7 @@ set(CORE_LIB core_lib)
 
 set(HEADER_FILES
         include/Worker.h
-#        include/Handler.h
+        include/Handler.h
         include/page/PageCustomer.h
         include/page/PageUser.h
         include/page/PageManager.h
@@ -24,7 +24,7 @@ set(INCLUDE
 
 set(SOURCE_FILES
         src/Worker.cpp
-#        src/Handler.cpp
+        src/Handler.cpp
         src/page/PageCustomer.cpp
         src/page/PageUser.cpp
         src/activity/ActivityManager.cpp
@@ -34,10 +34,10 @@ set(SOURCE_FILES
         )
 
 set(SOURCE_FILES_TESTS
-#        ../tests/api/gmock_tests.cpp
-        ../tests/api/http_response_tests.cpp
-        ../tests/api/page_tests.cpp
-#        ../tests/api/worker_tests.cpp
+#        ../tests/core/gmock_tests.cpp
+        ../tests/core/http_response_tests.cpp
+        ../tests/core/page_tests.cpp
+#        ../tests/core/worker_tests.cpp
         )
 
 SET(Boost_USE_STATIC_LIBS ON)
