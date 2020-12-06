@@ -18,7 +18,7 @@ private:
     std::unordered_map<std::string, std::string> data;
     std::unordered_map<std::string, std::string> cookies;
     string method;
-    string action;
+    string path;
 };
 
 

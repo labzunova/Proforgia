@@ -47,6 +47,7 @@ public:
     const unordered_map<string, string> parse_cookies();
     const unordered_map<string, string> parse_data();
     const string parse_method();
+    const string parse_path();
 };
 
 #endif //PROFORGIA_PARSER_H

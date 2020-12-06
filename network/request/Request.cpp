@@ -3,8 +3,11 @@
 
 Request::Request( const string &request )
 {
-// создается объект класса Parser и вызываются
-// методы парсинга разных частей запроса
+    Parser parser( request );
+    method = parser.parse_method();
+    path = parser.parse_path();
+    data = parser.parse_data();
+    cookies = parser.parse_cookies();
 }
 
 const string Request::get_data( string &type )
@@ -24,5 +27,5 @@ const string Request::get_method()
 
 const string Request::get_action()
 {
-    return action;
+    return path;
 }
