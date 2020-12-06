@@ -13,7 +13,7 @@ using std::string;
 template<class User, class Session>
 class ActivityUser : public ActivityManager {
 public:
-    explicit ActivityUser(Context context);
+    explicit ActivityUser(Context& context);
     ~ActivityUser() override = default;
     ActivityUser(const ActivityUser&) = delete;
     ActivityUser& operator = (ActivityUser&) = delete;
@@ -23,8 +23,7 @@ public:
     Status signIn() override;
 
 private:
-    bool is_email(const string& email) const;
-    User get_user(const string& email, const string& password);
-    User create_user(const std::map<string, string>& info);
-    Session create_session(const User& user);
+    bool validate_signUp();
+    bool validate_signIn();
+    string create_session(const int& id);
 };

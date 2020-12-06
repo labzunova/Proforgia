@@ -10,17 +10,13 @@
 
 using std::string;
 
-template<class User>
+template<class User, class Room, class Session>
 class ActivityCustomer : public ActivityManager {
 public:
-    ActivityCustomer(const std::map<string, string> &context, User user);
+    ActivityCustomer(Context &context, User user);
     ~ActivityCustomer() override = default;
     ActivityCustomer(const ActivityCustomer&) = delete;
     ActivityCustomer& operator = (ActivityCustomer&) = delete;
-
-private:
-    void delete_session();
-    void add_tags_room();
 
 public:
     Status exit() override;

@@ -19,21 +19,21 @@ public:
     PageCustomer(const PageCustomer&) = delete;
     PageCustomer& operator = (PageCustomer&) = delete;
 
-    string get_main_page() const override;
+    string get_main_page() override;
 
-    string get_room_page(int id) const override;
+    string get_room_page(int id) override;
 
-    string get_favorite_page() const override;
+    string get_favorite_page() override;
 
-    string get_deadline_page() const override;
+    string get_deadline_page() override;
 
-    string get_registr_page() const override;
+    string get_registr_page() override;
 
-    string get_login_page() const override;
+    string get_login_page() override;
 
-    string get_info_tags(int id_room, std::unique_ptr<std::vector<string>> tags) const override;
+    string get_info_tags(int id_room, std::unique_ptr<std::vector<string>> tags) override;
 
-    string get_not_found() const override;
+    string get_not_found() override;
 
 private:
     void write_user(std::map<string, string>& ctx);

@@ -6,16 +6,16 @@ set(HEADER_FILES
         include/page/PageCustomer.h
         include/page/PageUser.h
         include/page/PageManager.h
-#        include/activity/ActivityManager.h
-#        include/activity/ActivityCustomer.h
-#        include/activity/ActivityUser.h
+        include/activity/ActivityManager.h
+        include/activity/ActivityCustomer.h
+        include/activity/ActivityUser.h
         include/HttpResponse.h
         include/external_api/View.h
         include/entities/entities.h
         )
 
 set(INCLUDE
-#        include/activity
+        include/activity
         include/entities
         include/external_api
         include/page
@@ -23,25 +23,26 @@ set(INCLUDE
         )
 
 set(SOURCE_FILES
-        ${PROJECT_SOURCE_DIR}/core/src/Worker.cpp
+        src/Worker.cpp
 #        src/Handler.cpp
-        ${PROJECT_SOURCE_DIR}/core/src/page/PageCustomer.cpp
-        ${PROJECT_SOURCE_DIR}/core/src/page/PageUser.cpp
-#        src/activity/ActivityManager.cpp
-#        src/activity/ActivityCustomer.cpp
-#        src/activity/ActivityUser.cpp
-        ${PROJECT_SOURCE_DIR}/core/src/HttpResponse.cpp
+        src/page/PageCustomer.cpp
+        src/page/PageUser.cpp
+        src/activity/ActivityManager.cpp
+        src/activity/ActivityCustomer.cpp
+        src/activity/ActivityUser.cpp
+        src/HttpResponse.cpp
         )
 
 set(SOURCE_FILES_TESTS
 #        ../tests/api/gmock_tests.cpp
         ../tests/api/http_response_tests.cpp
         ../tests/api/page_tests.cpp
-        ../tests/api/worker_tests.cpp
+#        ../tests/api/worker_tests.cpp
         )
 
 SET(Boost_USE_STATIC_LIBS ON)
 FIND_PACKAGE(Boost REQUIRED COMPONENTS log)
+find_package(GTest)
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${INCLUDE})
 
@@ -50,4 +51,6 @@ target_link_libraries(${CORE_LIB} ${Boost_LIBRARIES})
 target_include_directories(${CORE_LIB} PUBLIC ${INCLUDE})
 
 add_executable(tests_core ${SOURCE_FILES_TESTS})
+target_include_directories(tests_core PUBLIC ${INCLUDE})
+target_include_directories(tests_core PUBLIC ${PROJECT_SOURCE_DIR}/core/src)
 target_link_libraries(tests_core gtest gmock gtest_main rt -ldl pthread ${CORE_LIB})

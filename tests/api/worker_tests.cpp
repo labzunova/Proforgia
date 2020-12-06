@@ -2,7 +2,7 @@
 // Created by sergei on 02.12.2020.
 //
 
-#include "Worker.h"
+#include "Worker.cpp"
 #include "gtest/gtest.h"
 #include <string>
 #include <queue>

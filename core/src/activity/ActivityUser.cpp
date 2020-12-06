@@ -6,35 +6,69 @@
 
 template<class User, class Session>
 ActivityManager::Status ActivityUser<User, Session>::signUp() {
-    return CLIENT_ERROR;
+    if(!validate_signUp())
+        return CLIENT_ERROR;
+
+    std::string login = context_["LOGIN"];
+    std::string email = context_["EMAIL"];
+    std::string password = context_["PASSWORD"]; // TODO кодирование пароля
+    typename User::User user(email, login, password);
+    int id = User::add(user); // TODO проверка на то прошло ли сохранение
+
+    string session = create_session(id);
+    context_["SESSION"] = session;
+    return OK;
 }
 
 template<class User, class Session>
 ActivityManager::Status ActivityUser<User, Session>::signIn() {
-    return CLIENT_ERROR;
+    if(!validate_signIn())
+        return CLIENT_ERROR;
+
+    string login = context_["LOGIN"];
+    string password = context_["PASSWORD"]; // TODO кодирование
+    User user = User::get(login); // TODO проверка на то пришел ли User
+    if(user.password != password)
+        return CLIENT_ERROR;
+
+    string session = create_session(user.id);
+    context_["SESSION"] = session;
+    return OK;
 }
 
 template<class User, class Session>
-ActivityUser::ActivityUser(std::map<string, string> &context) : ActivityManager(context) {
-
+ActivityUser<User, Session>::ActivityUser(Context &context) : ActivityManager(context) {
 }
 
 template<class User, class Session>
-bool ActivityUser::is_email(const string &email) const {
-    return false;
+bool ActivityUser<User, Session>::validate_signUp() {
+    // TODO добавить еще разные проверки
+    auto end = context_.end();
+    if((context_.find("LOGIN") == end) ||
+        (context_.find("PASSWORD") == end) ||
+        (context_.find("EMAIL") == end))
+
+        return false;
+
+    return true;
+}
+
+
+template<class User, class Session>
+string ActivityUser<User, Session>::create_session(const int& id) {
+    string session_str; // TODO генерируем стоку сессии
+    typename Session::Session session(id, session_str);
+    Session::add(session);
 }
 
 template<class User, class Session>
-User ActivityUser::get_user(const string &email, const string &password) {
-    return User();
-}
+bool ActivityUser<User, Session>::validate_signIn() {
+    // TODO добавить еще разные проверки
+    auto end = context_.end();
+    if((context_.find("LOGIN") == end) ||
+       (context_.find("PASSWORD") == end))
 
-template<class User, class Session>
-User ActivityUser::create_user(const std::map<string, string> &info) {
-    return User();
-}
+        return false;
 
-template<class User, class Session>
-Session ActivityUser::create_session(const User &user) {
-    return Session();
+    return true;
 }

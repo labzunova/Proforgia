@@ -14,14 +14,14 @@ PageCustomer<View, User, Room>::PageCustomer(const View &view, const User& user)
 
 
 template<class View, class User, class Room>
-string PageCustomer<View, User, Room>::get_main_page() const {
+string PageCustomer<View, User, Room>::get_main_page() {
     Context context = {{"page", "MAIN"}};
     write_user(context); // TODO возможно сразу запись комнаты
     return PageManager<View>::view_.render(context);
 }
 
 template<class View, class User, class Room>
-string PageCustomer<View, User, Room>::get_room_page(int id) const {
+string PageCustomer<View, User, Room>::get_room_page(int id) {
     Context context = {{"page", "ROOM"}};
     write_user(context);
 
@@ -31,33 +31,33 @@ string PageCustomer<View, User, Room>::get_room_page(int id) const {
 
 // TODO пока не известно будет ли это в проекте
 template<class View, class User, class Room>
-string PageCustomer<View, User, Room>::get_favorite_page() const {
+string PageCustomer<View, User, Room>::get_favorite_page() {
     return get_main_page();
 }
 
 // TODO пока не известно будет ли это в проекте
 template<class View, class User, class Room>
-string PageCustomer<View, User, Room>::get_deadline_page() const {
+string PageCustomer<View, User, Room>::get_deadline_page() {
     return get_main_page();
 }
 
 template<class View, class User, class Room>
-string PageCustomer<View, User, Room>::get_registr_page() const {
+string PageCustomer<View, User, Room>::get_registr_page() {
     return get_main_page();
 }
 
 template<class View, class User, class Room>
-string PageCustomer<View, User, Room>::get_login_page() const {
+string PageCustomer<View, User, Room>::get_login_page() {
     return get_main_page();
 }
 
 template<class View, class User, class Room>
-string PageCustomer<View, User, Room>::get_info_tags(int id_room, std::unique_ptr<std::vector<string>> tags) const {
+string PageCustomer<View, User, Room>::get_info_tags(int id_room, std::unique_ptr<std::vector<string>> tags) {
     return std::__cxx11::string();
 }
 
 template<class View, class User, class Room>
-string PageCustomer<View, User, Room>::get_not_found() const {
+string PageCustomer<View, User, Room>::get_not_found() {
     Context context = {{"page", "NOT_FOUND"}};
     return PageManager<View>::view_.render(context);
 }

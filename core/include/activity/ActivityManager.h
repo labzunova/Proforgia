@@ -21,7 +21,7 @@ public:
     };
 
 protected:
-    explicit ActivityManager(Context context) : context_(std::move(context)) {};
+    explicit ActivityManager(Context& context) : context_(std::move(context)) {};
 
 public:
     virtual ~ActivityManager() = default;
