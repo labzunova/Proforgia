@@ -9,9 +9,11 @@
 #include <iostream>
 #include "Rights.h"
 #include "ErrorCodes.h"
+#include "boost/date_time/gregorian/gregorian.hpp"
+using namespace boost::gregorian;
 
 // TODO: ДОБАВИТЬ ENTITY DBFILE
-// TODO: ДОБАВИТЬ ДАТЫ почти ко всем поолям!!!!
+// TODO: ДОБАВИТЬ ДАТЫ почти ко всем энтити'!!!!
 // TODO: еще раз подумать об архитектуре ошибок
 
 class DataManager;
@@ -22,7 +24,6 @@ struct DBEntity {
 	DataManager& db_manager;
 
 	int id;
-	// boost::date date_of_creation;
 
 	virtual bool update(ErrorCodes &error) = 0; // аналог save() в API UML
 };
@@ -40,15 +41,14 @@ struct DBUser : public DBEntity {
 		std::string email;
 	};
 
+    DBUser(int &id, std::string &_nick_name, std::string& _date, std::string &_email) :
+            DBEntity(id), nick_name(_nick_name), register_date(from_simple_string(_date)), email(_email) {
 
-	DBUser(int &id, std::string &_nick_name, std::string &_email) :
-            DBEntity(id), nick_name(_nick_name), email(_email) {
-
-	}
+    }
 
 	std::string nick_name;
 	std::string email;
-
+	date register_date;
 
 
 	static DBUser get(int& _id, ErrorCodes &error);
@@ -64,9 +64,9 @@ struct DBUser : public DBEntity {
 
 
 	void print() {
-	    std::cout << "User:" << std::endl;
+	    std::cout << nick_name << " info:" << std::endl;
 	    std::cout << "id: " << this->id << std::endl;
-	    std::cout << "nickname: " << this->nick_name << std::endl;
+	    std::cout << "date: " << this->register_date << std::endl;
 	    std::cout << "email: " << this->email << std::endl;
 	}
 };

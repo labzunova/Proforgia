@@ -7,10 +7,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 
 # TODO: replace Users/Ivan with project root variable
-include_directories(/Users/Ivan/Proforgia/database/aws-sdk/install/include)
+include_directories(${PROJECT_SOURCE_DIR}/database/aws-sdk/install/include)
 find_package(AWSSDK REQUIRED COMPONENTS s3)
 
 find_package(PostgreSQL REQUIRED)
+
+SET(Boost_USE_STATIC_LIBS ON)
+find_package(Boost REQUIRED COMPONENTS log)
+include_directories(${Boost_INCLUDE_DIRS})
+
+
 
 
 
@@ -33,4 +39,4 @@ add_executable(Proforgia main.cpp
         database/src/DBEntities.cpp)
 target_include_directories(Proforgia PRIVATE ${PostgreSQL_INCLUDE_DIRS})
 
-target_link_libraries(Proforgia ${AWSSDK_LINK_LIBRARIES} ${PostgreSQL_LIBRARIES})
+target_link_libraries(Proforgia ${AWSSDK_LINK_LIBRARIES} ${PostgreSQL_LIBRARIES} ${Boost_LIBRARIES})

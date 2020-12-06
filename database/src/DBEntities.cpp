@@ -27,6 +27,8 @@ std::unordered_map<DBRoom, Rights> DBUser::get_rooms(ErrorCodes &error) {
 }
 
 
+
+
 // TODO: дописать псевдокод и сделать рабочий метод
 std::vector<std::string> DBPost::get_attachments(ErrorCodes &error) {
 

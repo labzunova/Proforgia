@@ -4,9 +4,10 @@
 #include <iostream>
 #include "../include/Wrappers/DBWrapperRealisations/PostgreDBWrapper.h"
 
-
-// TODO: do shared ptr for connection
-// TODO: do smart ptr for result
+// TODO: допродумать над системой ошибок и исключчений у меня
+// TODO: do shared ptr for PGconn
+// TODO: do smart ptr for PGresult
+// TODO: сформировать свою либу в cmake
 DBUser PostgreDBWrapper::get_user_info(const int &user_id, ErrorCodes &error) const {
     PGconn* connection;
     try {
@@ -25,7 +26,6 @@ DBUser PostgreDBWrapper::get_user_info(const int &user_id, ErrorCodes &error) co
     if (PQresultStatus(result) != PGRES_TUPLES_OK)
         throw std::runtime_error(PQresultErrorMessage(result));
 
-    //если не нашли нужной записи, возвращаем FAIL
     if (PQntuples(result) == 0)
         throw std::runtime_error("запись не найдена"); // !
     else {
@@ -33,10 +33,9 @@ DBUser PostgreDBWrapper::get_user_info(const int &user_id, ErrorCodes &error) co
         std::string nickname = PQgetvalue(result, 0, 1);
         std::string email = PQgetvalue(result, 0, 2);
         std::string date = PQgetvalue(result, 0, 3);
-        std::cout << date << std::endl;
-        // date
+
         PQclear(result);
-        return std::move(DBUser(id, nickname, email));
+        return std::move(DBUser(id, nickname, date, email));
     }
 }
 
