@@ -14,7 +14,7 @@ include_directories("${PROJECT_SOURCE_DIR}/network")
 
 set(UNIT_TESTS
         tests/tests.cpp
-        )
+        tests/network/parser_tests.cpp)
 
 #---------------------------google-tests---------------------------
 
