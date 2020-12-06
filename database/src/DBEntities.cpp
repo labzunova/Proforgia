@@ -2,6 +2,31 @@
 #include "../include/DataManager.h"
 
 
+DBUser DBUser::get(int& _id, ErrorCodes &error) {
+
+}
+
+DBUser DBUser::get(std::string &_nickname, ErrorCodes &error) {
+
+}
+
+std::string DBUser::add(DBUser::User _user, ErrorCodes &error) {
+
+}
+
+bool DBUser::remove(std::string &id, ErrorCodes &error) {
+
+}
+
+bool DBUser::update(ErrorCodes &error) {
+
+}
+
+std::unordered_map<DBRoom, Rights> DBUser::get_rooms(ErrorCodes &error) {
+
+}
+
+
 // TODO: дописать псевдокод и сделать рабочий метод
 std::vector<std::string> DBPost::get_attachments(ErrorCodes &error) {
 
@@ -19,4 +44,4 @@ std::vector<DBTag> get_associated_tags(std::vector<std::string>& _tags, ErrorCod
 	// return tags in sorted order
 }
 
-DBEntity::DBEntity(std::string &_id) : db_manager(DataManager::getInstance()), id(_id) {}
+DBEntity::DBEntity(int&_id) : db_manager(DataManager::getInstance()), id(_id) {}

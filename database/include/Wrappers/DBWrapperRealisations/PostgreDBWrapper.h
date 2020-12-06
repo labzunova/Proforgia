@@ -1,5 +1,15 @@
 #include "../DBWrapper.h"
 
+#include <memory>
+
+extern "C"
+{
+    #include <libpq-fe.h>
+}
+
+// TODO: рассмотреть вариант заводить PGconn только при создании PostgreDBWrapper, чекать что он рабочий при каждом вызове
+//  и переподключаться лениво, если с ним что то будет не так
+
 class PostgreDBWrapper : public DBWrapper {
 public:
 	PostgreDBWrapper() = default;
@@ -28,7 +38,7 @@ public:
 //	bool remove_user_from_room( const std::string& room_id, const std::string& user_id, ErrorCodes &error ) override;
 //	bool remove_session( const std::string& session_id, ErrorCodes &error ) override;
 //
-//	DBUser get_user_info( const std::string& user_id, ErrorCodes &error ) const override;
+    DBUser get_user_info( const int& user_id, ErrorCodes &error ) const override;
 //	DBRoom get_room_info( const std::string& room_id, ErrorCodes &error ) const override;
 //	DBPost get_post_info( const std::string& post_id, ErrorCodes &error ) const override;
 //	DBSession get_session_info( const std::string& session_id, ErrorCodes &error ) const override;
@@ -36,4 +46,7 @@ public:
 //	bool edit_user( const DBUser::User& user_info, ErrorCodes &error ) override;
 //	bool edit_room( const DBRoom::Room& room_info, ErrorCodes &error ) override;
 //	bool edit_post( const DBPost::Post& post_info, ErrorCodes &error ) override;
+
+private:
+    PGconn* get_connection() const;
 };

@@ -48,7 +48,7 @@ public:
 	bool edit_post( const std::string& post_id, const DBPost& post ) const;
 	bool edit_session( const std::string& session_id, const DBSession& session ) const;
 
-	DBUser get_user_info( const std::string& user_id ) const;
+	DBUser get_user_info( const int& user_id ) const;
 	DBRoom get_room_info( const std::string& room_id ) const;
 	DBPost get_post_info( const std::string& post_id ) const;
 	DBSession get_session_info( const std::string& session_id ) const;

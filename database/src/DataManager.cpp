@@ -16,5 +16,10 @@ DataManager& DataManager::getInstance() {
     return instance;
 }
 
+DBUser DataManager::get_user_info(const int &user_id) const {
+
+}
+
+
 
 

@@ -5,6 +5,7 @@
 
 enum ErrorCodes {
 	UNKNOWN_STORAGE_ERROR,
+	DB_CONNECTION_ERROR,
 };
 
 #endif // PROFORGIA_ERRORCODES_H

@@ -3,13 +3,16 @@
 #include "database/include/Utils/DBEntities.h"
 
 #include "database/include/Wrappers/StorageWrapperRealisations/AmazonS3StorageWrapper.h"
+#include "database/include/Wrappers/DBWrapperRealisations/PostgreDBWrapper.h"
+
 
 
 int main()
 {
-    AmazonS3StorageWrapper storageWrapper;
+    PostgreDBWrapper db;
     ErrorCodes error;
 
-    storageWrapper.remove_file_from_storage("Test Folder/", error);
+    db.get_user_info(2, error).print();
+
     return 0;
 }

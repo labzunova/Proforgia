@@ -6,18 +6,22 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <iostream>
 #include "Rights.h"
 #include "ErrorCodes.h"
 
+// TODO: ДОБАВИТЬ ENTITY DBFILE
+// TODO: ДОБАВИТЬ ДАТЫ почти ко всем поолям!!!!
+// TODO: еще раз подумать об архитектуре ошибок
 
 class DataManager;
 
 struct DBEntity {
-	DBEntity(std::string& _id);
+	DBEntity(int& _id);
 
 	DataManager& db_manager;
 
-	std::string id;
+	int id;
 	// boost::date date_of_creation;
 
 	virtual bool update(ErrorCodes &error) = 0; // аналог save() в API UML
@@ -37,7 +41,7 @@ struct DBUser : public DBEntity {
 	};
 
 
-	DBUser(std::string &id, std::string &_nick_name, std::string &_email) :
+	DBUser(int &id, std::string &_nick_name, std::string &_email) :
             DBEntity(id), nick_name(_nick_name), email(_email) {
 
 	}
@@ -45,8 +49,11 @@ struct DBUser : public DBEntity {
 	std::string nick_name;
 	std::string email;
 
-    // TODO: email, nickname should be unique to allow this get methods
-	static DBUser get(std::string& _id, ErrorCodes &error); // by id or email or nickname
+
+
+	static DBUser get(int& _id, ErrorCodes &error);
+    // TODO: email should be unique to allow get method work with email
+	static DBUser get(std::string& _nickname, ErrorCodes &error);
 
 	static std::string add(User _user, ErrorCodes &error); // return id in DB on success, а при неудаче, вернет строку специального вида
 	static bool remove(std::string& id, ErrorCodes &error);
@@ -54,6 +61,14 @@ struct DBUser : public DBEntity {
 
 	// методы получения связанных полей 
 	std::unordered_map<DBRoom, Rights> get_rooms(ErrorCodes &error);
+
+
+	void print() {
+	    std::cout << "User:" << std::endl;
+	    std::cout << "id: " << this->id << std::endl;
+	    std::cout << "nickname: " << this->nick_name << std::endl;
+	    std::cout << "email: " << this->email << std::endl;
+	}
 };
 
 class DBTag : public DBEntity {
@@ -77,7 +92,7 @@ struct DBRoom : public DBEntity {
 		std::string description;
 	};
 
-	DBRoom(std::string &id, std::string &_room_name, std::string &_description) :
+	DBRoom(int &id, std::string &_room_name, std::string &_description) :
             DBEntity(id), room_name(_room_name), description(_description) {}
 
 	std::string room_name;
@@ -124,7 +139,7 @@ struct DBPost : public DBEntity {
 		std::vector<std::string> attachments; // list of files to add to the post in DB
 	};
 
-	DBPost(std::string &id, std::string &_room_id, std::string &_user_id, std::string &_title, std::string &_text) :
+	DBPost(int& id, std::string &_room_id, std::string &_user_id, std::string &_title, std::string &_text) :
             DBEntity(id), room_id(_room_id), user_id(_user_id), title(_title), text(_text)
 	{}
 
@@ -156,7 +171,7 @@ struct DBSession : public DBEntity {
 	    std::string user_id;
 	};
 
-	DBSession(std::string &id, std::string &_user_id) : DBEntity(id), user_id(_user_id) {}
+	DBSession(int &id, std::string &_user_id) : DBEntity(id), user_id(_user_id) {}
 
 	std::string user_id;
 

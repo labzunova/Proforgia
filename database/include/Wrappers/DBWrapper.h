@@ -33,8 +33,8 @@ public:
 //	virtual bool remove_post( const std::string& post_id, ErrorCodes &error ) = 0;
 //	virtual bool remove_user_from_room( const std::string& room_id, const std::string& user_id, ErrorCodes &error ) = 0;
 //	virtual bool remove_session( const std::string& session_id, ErrorCodes &error ) = 0;
-//
-//	virtual DBUser get_user_info( const std::string& user_id, ErrorCodes &error ) const = 0;
+
+    virtual DBUser get_user_info( const int& user_id, ErrorCodes &error ) const = 0;
 //	virtual DBRoom get_room_info( const std::string& room_id, ErrorCodes &error ) const = 0;
 //	virtual DBPost get_post_info( const std::string& post_id, ErrorCodes &error ) const = 0;
 //	virtual DBSession get_session_info( const std::string& session_id, ErrorCodes &error ) const = 0;

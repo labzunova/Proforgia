@@ -55,6 +55,7 @@ std::string AmazonS3StorageWrapper::get_file_link(const std::string &filename, E
     }
 
     Aws::ShutdownAPI(options);
+    return (std::string)url; // !
 }
 
 // TODO: implement folder for every entity with files (probably for every post)
