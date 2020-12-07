@@ -21,7 +21,10 @@ Connection_queue::Event Connection_queue::pop_front() {
 }
 
 const int Connection_queue::is_empty() {
-    return connections.empty();
+    //queue_mutex.lock();
+    bool check = connections.empty();
+   // queue_mutex.unlock();
+    return check;
 }
 
 Connection_queue::Connection_queue(Connection_queue *pQueue) {

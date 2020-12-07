@@ -10,11 +10,12 @@
 
 class Connection_queue: private boost::asio::noncopyable
 {
-private:
+public:
     struct Event { // событие, которое может по вызову callback записать данные в нужный сокет
         Event( std::map<std::string, std::string> data_, boost::asio::ip::tcp::socket sockett ): data( std::move( data_ ) ), socket_(  sockett  ) {} // TODO убрать magic numbers
         std::map<std::string, std::string> data;  // метод запроса, что нужно выполнить, необходимые данные, полученные из прасинга запроса
-        void callback( std::array<char, 8192> buffer ) {
+        void callback( std::string buffer )
+        {
             boost::asio::async_write(socket_, boost::asio::buffer( buffer ),
                                      boost::bind( &Event::handle_write, this, boost::asio::placeholders::error) ); // TODO: почитать еще про bind
         }

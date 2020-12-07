@@ -33,13 +33,12 @@ void Connection::stop()
 
 void Connection::handle_read( const Connection::error_code &e, std::size_t bytes_transferred )
 {
-    /* boost::asio::async_write(socket_, boost::asio::buffer(buffer_), // это тут было для тестирования эхо-сервера, пусть пока побудет
-                             boost::bind(&Connection::handle_write, shared_from_this(),boost::asio::placeholders::error)); */
+    /*boost::asio::async_write(socket_, boost::asio::buffer(buffer_), // это тут было для тестирования эхо-сервера, пусть пока побудет
+                             boost::bind(&Connection::handle_write, shared_from_this(),boost::asio::placeholders::error));*/
 
-    Request request( std::string(buffer_.begin(), buffer_.end() ) ); // внутри реквеста вызывается парсер и записывает в поля реквеста готовые значения
-
+   // Request request( std::string(buffer_.begin(), buffer_.end() ) ); // внутри реквеста вызывается парсер и записывает в поля реквеста готовые значения
     std::map<string, string> to_put_in_loop;  // эта мапа передается в воркеры для обработки апи
-    if ( request.get_method() == "GET" )
+    /*if ( request.get_method() == "GET" )
     {
         string path = request.get_path();
         to_put_in_loop.insert( std::pair<string, string>("path", path ) );
@@ -90,7 +89,7 @@ void Connection::handle_read( const Connection::error_code &e, std::size_t bytes
             to_put_in_loop.insert( std::pair<string, string>( "tag",request.get_data( ( string & ) "room" ) ) );
             to_put_in_loop.insert( std::pair<string, string>( "session",request.get_cookie( ( string & ) "session" ) ) );
         }
-    }
+    }*/
     connection_queue.push_back( to_put_in_loop, socket_ ); // пихаем в очередь мапу и сокет для колбэка: моя обработка данного запроса окончена, отправит уже колбэк
 }
 

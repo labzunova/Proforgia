@@ -4,7 +4,7 @@
 
 #include "include/Worker.h"
 
-#include <boost/log/trivial.hpp>
+//#include <boost/log/trivial.hpp>
 #include <boost/lexical_cast.hpp>
 #include <iostream>
 
@@ -20,7 +20,6 @@ void Work<Queue, Handler>::start_work(std::shared_ptr<Queue> queue) {
     for(int i = 0; i < max_thread - 1; i++) {
         workers.push_back(std::make_shared<Worker<Queue, Handler>>(queue));
     }
-
     checker = std::make_shared<Checker<Queue>>(queue);
 }
 
@@ -43,28 +42,29 @@ Worker<Queue, Handler>::~Worker() {
 
 template<class Queue, class Handler>
 void Worker<Queue, Handler>::run() {
-    BOOST_LOG_TRIVIAL(info) << ("Create worker: " + boost::lexical_cast<std::string>(std::this_thread::get_id()));
+    //BOOST_LOG_TRIVIAL(info) << ("Create worker: " + boost::lexical_cast<std::string>(std::this_thread::get_id()));
 
-    auto request = queue_->front();
+    typename Queue::Event * request;
     while (!exit_flag) {
         {
             std::unique_lock<std::mutex> locker(mtx);
             cv.wait(locker);
 
+
             if (exit_flag)
                 break;
 
-            if (queue_->empty())
+            if (queue_->is_empty())
                 continue;
 
-            request = queue_->front();
-            queue_->pop();
+            request = new typename Queue::Event(queue_->pop_front());
         }
 
-        Handler handler(request.context);
-        request.call_back(handler.get_response());
+        Handler handler(request->data);
+        request->callback(handler.get_response());
+        assert(false);
     }
-    BOOST_LOG_TRIVIAL(info) << ("Delete worker: " + boost::lexical_cast<std::string>(std::this_thread::get_id()));
+    //BOOST_LOG_TRIVIAL(info) << ("Delete worker: " + boost::lexical_cast<std::string>(std::this_thread::get_id()));
 }
 
 
@@ -81,12 +81,14 @@ Checker<Queue>::~Checker() {
 
 template<class Queue>
 void Checker<Queue>::run() {
-    BOOST_LOG_TRIVIAL(info) << ("Create checker: " + boost::lexical_cast<std::string>(std::this_thread::get_id()));
+    //BOOST_LOG_TRIVIAL(info) << ("Create checker: " + boost::lexical_cast<std::string>(std::this_thread::get_id()));
     while(!exit_flag) {
         std::unique_lock<std::mutex> locker(mtx);
-        if(!queue_->empty())
+        if(!queue_->is_empty())
+        {
             cv.notify_one();
+        }
     }
-    BOOST_LOG_TRIVIAL(info) << ("Delete checker: " + boost::lexical_cast<std::string>(std::this_thread::get_id()));
+    //BOOST_LOG_TRIVIAL(info) << ("Delete checker: " + boost::lexical_cast<std::string>(std::this_thread::get_id()));
 }
 
