@@ -6,6 +6,7 @@
 
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
+#include <mutex>
 
 class Connection_queue: private boost::asio::noncopyable
 {
@@ -36,6 +37,9 @@ public:
     void push_back( std::map<std::string, std::string> data, boost::asio::ip::tcp::socket &socket_  ); // так кладутся задачи в очередь
     Event pop_front(); // для воркеров
     const int is_empty(); // для воркеров
+    Connection_queue(Connection_queue *pQueue);
+
+    Connection_queue();
 };
 
 

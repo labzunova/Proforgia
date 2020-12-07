@@ -7,12 +7,14 @@ add_definitions(${MYCOMPILE_FLAGS})
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_subdirectory(core)
+#add_subdirectory(core)
 
-add_executable(Proforgia main.cpp network/connection/Connection.cpp network/connection/Connection.h network/server/Server.cpp network/server/Server.h network/parser/Parser.cpp network/parser/Parser.h network/connection_queue/Connection_queue.cpp network/connection_queue/Connection_queue.h network/request/Request.cpp network/request/Request.h)
+
+add_executable(Proforgia main.cpp network/connection/Connection.cpp network/connection/Connection.h network/server/Server.cpp network/server/Server.h network/parser/Parser.cpp network/parser/Parser.h network/connection_queue/Connection_queue.cpp network/connection_queue/Connection_queue.h network/request/Request.cpp network/request/Request.h core/include/Worker.h core/src/Worker.cpp)
 target_link_libraries(Proforgia boost_system pthread)
 
 include_directories("${PROJECT_SOURCE_DIR}/network")
+include_directories("${PROJECT_SOURCE_DIR}/core")
 
 set(UNIT_TESTS
         tests/tests.cpp

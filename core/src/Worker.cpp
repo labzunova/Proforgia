@@ -2,7 +2,7 @@
 // Created by sergei on 28.11.2020.
 //
 
-#include "Worker.h"
+#include "include/Worker.h"
 
 #include <boost/log/trivial.hpp>
 #include <boost/lexical_cast.hpp>

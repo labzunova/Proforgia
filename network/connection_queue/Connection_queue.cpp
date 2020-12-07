@@ -24,3 +24,11 @@ const int Connection_queue::is_empty() {
     return connections.empty();
 }
 
+Connection_queue::Connection_queue(Connection_queue *pQueue) {
+
+}
+
+Connection_queue::Connection_queue() {
+
+}
+
