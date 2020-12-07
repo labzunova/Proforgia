@@ -52,7 +52,7 @@ TEST(PageUserTests, MainPage){
     PageUser<TestView> page(view);
     std::string response = "page: MAIN\n";
     EXPECT_EQ(response, page.get_main_page());
-    EXPECT_EQ(response, page.get_room_page(5));
+    EXPECT_EQ(response, page.get_room_page("5"));
     EXPECT_EQ(response, page.get_deadline_page());
     EXPECT_EQ(response, page.get_favorite_page());
     EXPECT_EQ(response, page.get_info_tags(5, nullptr));

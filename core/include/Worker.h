@@ -10,18 +10,46 @@
 #include <mutex>
 #include <condition_variable>
 #include <atomic>
+#include <thread>
+#include <memory>
+#include <vector>
 
-static std::mutex mtx;
-static std::condition_variable cv;
-static std::atomic<bool> is_work;
 
 template<class Queue, class Handler>
 class Worker {
 public:
-    static std::string start_work(Queue& queue);
-    static void stop_work();
+    explicit Worker(std::shared_ptr<Queue> queue);
+    ~Worker();
 
 private:
-    static void worker(Queue& queue);
-    static void checker(Queue& queue);
+    std::thread thr;
+    std::shared_ptr<Queue> queue_;
+
+    void run();
+};
+
+template<class Queue>
+class Checker {
+public:
+    explicit Checker(std::shared_ptr<Queue> queue);
+    ~Checker();
+
+private:
+    std::thread thr;
+    std::shared_ptr<Queue> queue_;
+
+    void run();
+};
+
+
+template<class Queue, class Handler>
+class Work {
+public:
+    Work() = default;
+    void start_work(std::shared_ptr<Queue> queue);
+    void stop_work();
+
+private:
+    std::vector<std::shared_ptr<Worker<Queue, Handler>>> workers;
+    std::shared_ptr<Checker<Queue>> checker;
 };

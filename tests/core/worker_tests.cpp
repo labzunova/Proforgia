@@ -7,6 +7,7 @@
 #include <string>
 #include <queue>
 #include <utility>
+#include <iostream>
 
 
 typedef std::map<std::string, std::string> Context;
@@ -14,6 +15,7 @@ typedef std::map<std::string, std::string> Context;
 struct Request {
     explicit Request(Context context) : context(std::move(context)) {};
     static void call_back(const std::string& string) {
+        std::cout << "done work" << std::endl;
     };
 
     Context context;
@@ -34,14 +36,23 @@ public:
 TEST(WorkerTests, TimeWork){
 
     Context context = {{"METHOD", "GET"}};
-    Queue queue;
+    auto queue = std::make_shared<Queue>();
 
-    queue.push(Request(context));
-    queue.push(Request(context));
-    queue.push(Request(context));
-    queue.push(Request(context));
-    Worker<Queue, MockHandler>::start_work(queue);
-    sleep(3);
-    Worker<Queue, MockHandler>::stop_work();
-    ASSERT_TRUE(queue.empty());
+    queue->push(Request(context));
+    queue->push(Request(context));
+    queue->push(Request(context));
+    queue->push(Request(context));
+
+    clock_t t = clock();
+
+    Work<Queue, MockHandler> work;
+    work.start_work(queue);
+    while(!queue->empty()) sleep(1);
+    work.stop_work();
+
+    const double work_time = (clock() - t) / double(CLOCKS_PER_SEC);
+
+    ASSERT_TRUE(queue->empty());
+
+    ASSERT_TRUE(work_time <= 2);
 }
