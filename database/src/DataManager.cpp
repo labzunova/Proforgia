@@ -16,8 +16,8 @@ DataManager& DataManager::getInstance() {
     return instance;
 }
 
-DBUser DataManager::get_user_info(const int &user_id) const {
-
+shared_ptr<DBUser> DataManager::get_user_info(const int &user_id, ErrorCodes &error) const {
+    return database->get_user_info(user_id, error);
 }
 
 

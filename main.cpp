@@ -9,12 +9,16 @@
 
 int main()
 {
-    PostgreDBWrapper db;
-    // AmazonS3StorageWrapper st;
     ErrorCodes error;
+//    PostgreDBWrapper db;
+//    // AmazonS3StorageWrapper st;
+//    ErrorCodes error;
+//
+//    auto user = db.get_user_info(3, error);
+//    user->print();
 
-    db.get_user_info(3, error).print();
-    // st.get_file_link("dsdfsdf", error);
+    auto user = DBUser::get(3, error);
+    user->print();
 
     return 0;
 }
