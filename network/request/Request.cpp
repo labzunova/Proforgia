@@ -28,7 +28,12 @@ const string Request::get_method()
     return method;
 }
 
-const string Request::get_action()
+const string Request::get_path()
 {
     return path;
+}
+
+const string Request::get_room()
+{
+    return room;
 }

@@ -12,8 +12,9 @@ public:
     explicit Request( const string &request );
     const string get_data( string &type );
     const string get_cookie( string &type );
-    const string get_action();
-    const string get_method(); // GET or POST
+    const string get_path();
+    const string get_method();
+    const string get_room();
 private:
     std::unordered_map<std::string, std::string> data;
     std::unordered_map<std::string, std::string> cookies;
