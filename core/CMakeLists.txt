@@ -1,43 +1,43 @@
 set(CORE_LIB core_lib)
 
 set(HEADER_FILES
-        include/Worker.h
+#        include/Worker.h
 #        include/Handler.h
         include/page/PageCustomer.h
         include/page/PageUser.h
         include/page/PageManager.h
-        include/activity/ActivityManager.h
-        include/activity/ActivityCustomer.h
-        include/activity/ActivityUser.h
-        include/HttpResponse.h
+#        include/activity/ActivityManager.h
+#        include/activity/ActivityCustomer.h
+#        include/activity/ActivityUser.h
+#        include/HttpResponse.h
         include/external_api/View.h
-        include/entities/entities.h
+#        include/entities/entities.h
         )
 
 set(INCLUDE
-        include/activity
-        include/entities
+#        include/activity
+#        include/entities
         include/external_api
         include/page
-        include
+#        include
         )
 
 set(SOURCE_FILES
-        src/Worker.cpp
+#        src/Worker.cpp
 #        src/Handler.cpp
         src/page/PageCustomer.cpp
         src/page/PageUser.cpp
-        src/activity/ActivityManager.cpp
-        src/activity/ActivityCustomer.cpp
-        src/activity/ActivityUser.cpp
-        src/HttpResponse.cpp
+#        src/activity/ActivityManager.cpp
+#        src/activity/ActivityCustomer.cpp
+#        src/activity/ActivityUser.cpp
+#        src/HttpResponse.cpp
         )
 
 set(SOURCE_FILES_TESTS
 #        ../tests/core/gmock_tests.cpp
-        ../tests/core/http_response_tests.cpp
+#        ../tests/core/http_response_tests.cpp
         ../tests/core/page_tests.cpp
-        ../tests/core/worker_tests.cpp
+#        ../tests/core/worker_tests.cpp
         )
 
 SET(Boost_USE_STATIC_LIBS ON)

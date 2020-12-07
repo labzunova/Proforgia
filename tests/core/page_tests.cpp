@@ -3,6 +3,7 @@
 //
 
 #include "page/PageUser.cpp"
+#include "page/PageCustomer.cpp"
 #include "gtest/gtest.h"
 #include <string>
 
@@ -50,6 +51,18 @@ public:
 TEST(PageUserTests, MainPage){
     TestView view;
     PageUser<TestView> page(view);
+    std::string response = "page: MAIN\n";
+    EXPECT_EQ(response, page.get_main_page());
+    EXPECT_EQ(response, page.get_room_page("5"));
+    EXPECT_EQ(response, page.get_deadline_page());
+    EXPECT_EQ(response, page.get_favorite_page());
+    EXPECT_EQ(response, page.get_info_tags(5, nullptr));
+}
+
+TEST(PageCustomerTests, MainPage){
+    TestView view;
+    DBUser user = DBUser::get(1); // TODO из базы
+    PageCustomer<TestView, UserTest, RoomTest> page(view, user);
     std::string response = "page: MAIN\n";
     EXPECT_EQ(response, page.get_main_page());
     EXPECT_EQ(response, page.get_room_page("5"));
