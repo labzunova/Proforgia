@@ -19,6 +19,7 @@ private:
     std::unordered_map<std::string, std::string> cookies;
     string method;
     string path;
+    string room;
 };
 
 

@@ -8,7 +8,8 @@ const string Parser::parse_method()
     return method;
 }
 
-const string Parser::parse_path() { // !Учитывая то, что у нас в проекте не должно быть запросов с несколькими слэшами
+const string Parser::parse_path()
+{
     string temp,
             path;
     temp = request.erase(0, request.find(' ') + 1); // удаляем метод и пробел между методом и путем
@@ -18,15 +19,49 @@ const string Parser::parse_path() { // !Учитывая то, что у нас 
     return path;
 }
 
+const string Parser::parse_room_from_path( string& path )
+{
+    return path.erase(0, path.find('/') + 1);
+}
+
 const unordered_map<string, string> Parser::parse_cookies()
 {
-
+    unordered_map<string, string> cookie_values;
+    string cookies = request.erase( 0, request.find( "\r\nCookie:" ) + 10 );
+    cookies = cookies.erase( cookies.find("\r\n") );
+    string key, value;
+    while ( cookies.length() != 0 )
+    {
+        int index = cookies.find( '=' );
+        key = cookies.substr( 0, index );
+        int endpos = cookies.find( ':' );
+        if( endpos == -1 ) endpos = cookies.length(); // если последняя кука
+        value = cookies.substr( index + 1, endpos - index - 1 );
+        cookie_values.insert(std::make_pair( key, value ));
+        cookies.erase( 0, endpos + 1 );
+    }
+    return cookie_values;
 }
 
-const unordered_map<string, string> Parser::parse_data()
+const unordered_map<string, string> Parser::parse_body()
 {
-
+    unordered_map<string, string> data;
+    string body = request.erase( 0, request.find( "\r\n\r\n" ) + 4 ); // стираем все что до body
+    string key, value;
+    while ( body.length() != 0 )
+    {
+        int index = body.find( '=' );
+        key = body.substr( 0, index );
+        int endpos = body.find( '&' );
+        if( endpos == -1 ) endpos = body.length(); // если последний параметр
+        value = body.substr( index + 1, endpos - index - 1 );
+        data.insert(std::make_pair( key, value ));
+        body.erase( 0, endpos + 1 );
+    }
+    return data;
 }
+
+
 
 
 

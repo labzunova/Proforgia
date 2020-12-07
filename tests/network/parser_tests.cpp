@@ -1,9 +1,27 @@
 #include "gtest/gtest.h"
 #include <string>
 
-#include "parser/Parser.cpp" // wtf... TODO
+#include "parser/Parser.cpp" // wtf...but working TODO
 
-TEST(method_parse_tests, oneline_first)
+const static string POST_request1 = "POST /cgi-bin/process.cgi HTTP/1.1\r\n"
+                                   "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
+                                   "Host: www.example.com\r\n"
+                                   "Content-Type: application/x-www-form-urlencoded\r\n"
+                                   "Content-Length: length\r\n"
+                                   "Accept-Language: ru-ru\r\n"
+                                   "Accept-Encoding: gzip, deflate\r\n"
+                                   "Connection: Keep-Alive\r\n"
+                                   "Cookie: session=12345\r\n\r\n"
+                                   "hello=world&content=string&key=12345";
+
+const static string GET_request1 = "GET /hello/world HTTP/1.1\r\n"
+                                  "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
+                                  "Host: www.example.com\r\n"
+                                  "Accept-Language: ru-ru\r\n"
+                                  "Accept-Encoding: gzip, deflate\r\n"
+                                  "Connection: Keep-Alive";
+
+TEST( method_parse_tests, oneline_first )
 {
     string request = "GET /tutorials HTTP/1.1";
     Parser parser( request );
@@ -11,7 +29,7 @@ TEST(method_parse_tests, oneline_first)
     ASSERT_EQ( "GET", method );
 }
 
-TEST(method_parse_tests, oneline_second)
+TEST( method_parse_tests, oneline_second )
 {
     string request = "POST /cgi-bin/process.cgi HTTP/1.1";
     Parser parser( request );
@@ -19,46 +37,16 @@ TEST(method_parse_tests, oneline_second)
     ASSERT_EQ( "POST", method );
 }
 
-TEST(method_parse_tests, full_first)
+TEST( method_parse_tests, full_first )
 {
-    string request = "GET /hello.htm HTTP/1.1\n"
-                     "\n"
-                     "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\n"
-                     "\n"
-                     "Host: www.example.com\n"
-                     "\n"
-                     "Accept-Language: ru-ru\n"
-                     "\n"
-                     "Accept-Encoding: gzip, deflate\n"
-                     "\n"
-                     "Connection: Keep-Alive";
-    Parser parser( request );
+    Parser parser( GET_request1 );
     string method = parser.parse_method();
     ASSERT_EQ( "GET", method );
 }
 
-TEST(method_parse_tests, full_second)
+TEST( method_parse_tests, full_second )
 {
-    string request = "POST /cgi-bin/process.cgi HTTP/1.1\n"
-                     "\n"
-                     "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\n"
-                     "\n"
-                     "Host: www.example.com\n"
-                     "\n"
-                     "Content-Type: application/x-www-form-urlencoded\n"
-                     "\n"
-                     "Content-Length: length\n"
-                     "\n"
-                     "Accept-Language: ru-ru\n"
-                     "\n"
-                     "Accept-Encoding: gzip, deflate\n"
-                     "\n"
-                     "Connection: Keep-Alive\n"
-                     "\n"
-                     " \n"
-                     "\n"
-                     "licenseID=string&content=string&/paramsXML=string";
-    Parser parser( request );
+    Parser parser( POST_request1 );
     string method = parser.parse_method();
     ASSERT_EQ( "POST", method );
 }
@@ -71,22 +59,36 @@ TEST(path_parse_tests, oneline_first)
     ASSERT_EQ( "tutorials", path );
 }
 
-TEST(path_parse_tests, full_first)
+TEST( path_parse_tests, full_first )
 {
-    string request = "GET /hello HTTP/1.1\n"
-                     "\n"
-                     "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\n"
-                     "\n"
-                     "Host: www.example.com\n"
-                     "\n"
-                     "Accept-Language: ru-ru\n"
-                     "\n"
-                     "Accept-Encoding: gzip, deflate\n"
-                     "\n"
-                     "Connection: Keep-Alive";
-    Parser parser( request );
+    Parser parser( GET_request1 );
     string path = parser.parse_path();
-    ASSERT_EQ( "hello", path );
+    ASSERT_EQ( "hello/world", path );
 }
+
+TEST( room_from_path_parse_tests, first )
+{
+    Parser parser( GET_request1 );
+    string path = parser.parse_path();
+    string room = parser.parse_room_from_path( path );
+    ASSERT_EQ( "world", room );
+}
+
+TEST( body_parse_tests, first )
+{
+    Parser parser( POST_request1 );
+    unordered_map<string, string> data = parser.parse_body();
+    ASSERT_EQ( "world", data["hello"] );
+    ASSERT_EQ( "12345", data["key"] );
+    ASSERT_EQ( "string", data["content"] );
+}
+
+TEST( cookies_parse_tests, first )
+{
+    Parser parser( POST_request1 );
+    unordered_map<string, string> cookies = parser.parse_cookies();
+    ASSERT_EQ( "12345", cookies["session"] );
+}
+
 
 

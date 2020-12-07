@@ -6,7 +6,10 @@ Request::Request( const string &request )
     Parser parser( request );
     method = parser.parse_method();
     path = parser.parse_path();
-    data = parser.parse_data();
+    if( method == "POST" )
+        data = parser.parse_body();
+    if( path.find( "main" ) != 0 ) // если это запрос на какую-то комнату: выяснить, какую
+        room = parser.parse_room_from_path( path );
     cookies = parser.parse_cookies();
 }
 

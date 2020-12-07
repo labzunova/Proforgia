@@ -45,9 +45,10 @@ public:
     Parser( string request_ ): request( std::move( request_ ) ) {};
     string request;
     const unordered_map<string, string> parse_cookies();
-    const unordered_map<string, string> parse_data();
+    const unordered_map<string, string> parse_body();
     const string parse_method();
     const string parse_path();
+    const string parse_room_from_path( string& path );
 };
 
 #endif //PROFORGIA_PARSER_H
