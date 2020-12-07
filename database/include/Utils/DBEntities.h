@@ -137,8 +137,8 @@ struct DBRoom : public DBEntity {
 
 	bool update(ErrorCodes &error) override;
 
-	// методы получения связанных полей 
-	std::unordered_map<DBUser, Rights> get_users(ErrorCodes &error);
+	// методы получения связанных полей
+    std::optional< vector<pair<DBUser, Rights>> > get_users(ErrorCodes &error);
 	std::vector<DBPost> get_posts(ErrorCodes &error);
 	std::vector<DBTag> get_tags(ErrorCodes &error); // возвращает тэги, принадлежащие комнате, отсортированные по популярности (мб сделать выбор сортировки по дате или популярности)
 

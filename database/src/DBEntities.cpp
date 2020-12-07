@@ -31,6 +31,8 @@ const string &DBUser::getPassword() const {
 }
 
 
+
+
 // TODO: дописать псевдокод и сделать рабочий метод
 std::vector<std::string> DBPost::get_attachments(ErrorCodes &error) {
 
@@ -52,4 +54,50 @@ DBEntity::DBEntity(int& _id) : id(_id) {}
 
 int DBEntity::get_id() const {
     return id;
+}
+
+DBRoom DBRoom::get(string &_id, ErrorCodes &error) {
+
+}
+
+std::string DBRoom::add(DBRoom::Room _room, ErrorCodes &error) {
+
+}
+
+bool DBRoom::remove(string &id, ErrorCodes &error) {
+
+}
+
+bool DBRoom::add_user(const string &room_id, const string &user_id, ErrorCodes &error) {
+
+}
+
+bool DBRoom::remove_user(const string &room_id, const string &user_id, ErrorCodes &error) {
+
+}
+
+bool DBRoom::add_category(const string &category_name, const string &discipline_name, const string &room_id,
+                          const string &user_id, ErrorCodes &error) {
+
+}
+
+bool
+DBRoom::add_discipline(const string &discipline_name, const string &room_id, const string &user_id, ErrorCodes &error) {
+
+}
+
+bool DBRoom::update(ErrorCodes &error) {
+
+}
+
+std::optional< vector<pair<DBUser, Rights>> > DBRoom::get_users(ErrorCodes &error) {
+
+}
+
+std::vector<DBPost> DBRoom::get_posts(ErrorCodes &error) {
+
+}
+
+std::vector<DBTag> DBRoom::get_tags(ErrorCodes &error) {
+
 }
