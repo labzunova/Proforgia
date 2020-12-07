@@ -20,6 +20,10 @@ shared_ptr<DBUser> DataManager::get_user_info(const int &user_id, ErrorCodes &er
     return database->get_user_info(user_id, error);
 }
 
+shared_ptr<DBUser> DataManager::get_user_info(const string &nickname, ErrorCodes &error) const {
+    return database->get_user_info(nickname, error);
+}
+
 
 
 

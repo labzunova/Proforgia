@@ -23,8 +23,6 @@ using std::shared_ptr;
 // при неудаче get-методов, возвращающих умный указатель на какое-либо DBEntity, вернется nullptr
 // соответственно, если метод завершился неудачно, смотрим ErrorCodes &error на тип ошибки и обрабатываем
 
-class DataManager;
-
 struct DBEntity {
 	int id;
 	virtual bool update(ErrorCodes &error) = 0; // аналог save() в API UML
@@ -58,7 +56,7 @@ struct DBUser : public DBEntity {
 
 	static shared_ptr<DBUser> get(int _id, ErrorCodes &error);
     // TODO: email should be unique to allow get method work with email, make email unique
-	static shared_ptr<DBUser> get(std::string& _nickname, ErrorCodes &error);
+	static shared_ptr<DBUser> get(std::string _nickname, ErrorCodes &error);
 
 	static std::string add(User _user, ErrorCodes &error); // return id in DB on success, а при неудаче, вернет строку специального вида
 	static bool remove(std::string& id, ErrorCodes &error);

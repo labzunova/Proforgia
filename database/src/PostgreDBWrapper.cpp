@@ -23,7 +23,19 @@ PostgreDBWrapper::PostgreDBWrapper() :
 
 }
 
-// TODO: сформировать свою либу в cmake
+std::shared_ptr<PGconn> PostgreDBWrapper::get_connection() const {
+    std::string connInfo = "host=" + host + " port=" + port + " dbname=" + db_name + " user=" + db_user + " password=" + db_user_password;
+
+    std::shared_ptr<PGconn> connection;
+    connection.reset(PQconnectdb(connInfo.c_str()), &PQfinish);
+
+    if (PQstatus(connection.get()) != CONNECTION_OK)
+        throw std::runtime_error(PQerrorMessage(connection.get()));
+
+    return connection;
+}
+
+
 shared_ptr<DBUser> PostgreDBWrapper::get_user_info(const int &user_id, ErrorCodes &error) const {
     std::shared_ptr<PGconn> connection;
     try {
@@ -60,16 +72,40 @@ shared_ptr<DBUser> PostgreDBWrapper::get_user_info(const int &user_id, ErrorCode
     }
 }
 
-std::shared_ptr<PGconn> PostgreDBWrapper::get_connection() const {
-    std::string connInfo = "host=" + host + " port=" + port + " dbname=" + db_name + " user=" + db_user + " password=" + db_user_password;
 
+shared_ptr<DBUser> PostgreDBWrapper::get_user_info(const string &nickname, ErrorCodes &error) const {
     std::shared_ptr<PGconn> connection;
-    connection.reset(PQconnectdb(connInfo.c_str()), &PQfinish);
+    try {
+        connection = get_connection();
+    }
+    catch(std::exception &exc) {
+        error = ErrorCodes::DB_CONNECTION_ERROR;
+        std::cout << exc.what();
+        return nullptr; // !
+    }
 
-    if (PQstatus(connection.get()) != CONNECTION_OK)
-        throw std::runtime_error(PQerrorMessage(connection.get()));
+    std::string query = "select * from users where nickname='" + nickname + "';";
 
-    return connection;
+    auto res_deleter = [](PGresult* r) { PQclear(r);};
+    std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
+
+    if (PQresultStatus(result.get()) != PGRES_TUPLES_OK) {
+        error = ErrorCodes::UNKNOWN_DB_ERROR;
+        return nullptr;
+    }
+
+    if (PQntuples(result.get()) == 0) {
+        error = ErrorCodes::DB_ENTITY_NOT_FOUND;
+        return nullptr;
+    }
+    else {
+        int id = std::stoi(PQgetvalue(result.get(), 0, 0));
+        std::string nickname = PQgetvalue(result.get(), 0, 1);
+        std::string email = PQgetvalue(result.get(), 0, 2);
+        std::string date = PQgetvalue(result.get(), 0, 3);
+
+        return std::make_shared<DBUser>(id, nickname, date, email);
+    }
 }
 
 

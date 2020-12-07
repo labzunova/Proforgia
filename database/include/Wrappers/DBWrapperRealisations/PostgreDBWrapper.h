@@ -39,6 +39,7 @@ public:
 //	bool remove_session( const std::string& session_id, ErrorCodes &error ) override;
 //
     shared_ptr<DBUser> get_user_info( const int& user_id, ErrorCodes &error ) const override;
+    shared_ptr<DBUser> get_user_info( const string& nickname, ErrorCodes &error ) const override;
 //	DBRoom get_room_info( const std::string& room_id, ErrorCodes &error ) const override;
 //	DBPost get_post_info( const std::string& post_id, ErrorCodes &error ) const override;
 //	DBSession get_session_info( const std::string& session_id, ErrorCodes &error ) const override;

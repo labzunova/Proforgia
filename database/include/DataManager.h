@@ -44,6 +44,7 @@ public:
 	bool edit_session( const std::string& session_id, const DBSession& session, ErrorCodes &error ) const;
 
 	shared_ptr<DBUser> get_user_info( const int& user_id, ErrorCodes &error ) const;
+	shared_ptr<DBUser> get_user_info( const string& nickname, ErrorCodes &error ) const;
 	DBRoom get_room_info( const std::string& room_id, ErrorCodes &error ) const;
 	DBPost get_post_info( const std::string& post_id, ErrorCodes &error ) const;
 	DBSession get_session_info( const std::string& session_id, ErrorCodes &error ) const;

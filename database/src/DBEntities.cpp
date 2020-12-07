@@ -6,8 +6,8 @@ shared_ptr<DBUser> DBUser::get(int _id, ErrorCodes &error) {
     return DataManager::getInstance().get_user_info(_id, error);
 }
 
-shared_ptr<DBUser> DBUser::get(std::string &_nickname, ErrorCodes &error) {
-
+shared_ptr<DBUser> DBUser::get(std::string _nickname, ErrorCodes &error) {
+    return DataManager::getInstance().get_user_info(_nickname, error);
 }
 
 std::string DBUser::add(DBUser::User _user, ErrorCodes &error) {
