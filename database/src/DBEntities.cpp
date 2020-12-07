@@ -10,23 +10,25 @@ shared_ptr<DBUser> DBUser::get(std::string _nickname, ErrorCodes &error) {
     return DataManager::getInstance().get_user_info(_nickname, error);
 }
 
-std::string DBUser::add(DBUser::User _user, ErrorCodes &error) {
-
+bool DBUser::add(DBUser::User _user, ErrorCodes &error) {
+    return DataManager::getInstance().add_user(_user, error);
 }
 
-bool DBUser::remove(std::string &id, ErrorCodes &error) {
-
+bool DBUser::remove(int id, ErrorCodes &error) {
+    return DataManager::getInstance().remove_user(id, error);
 }
 
 bool DBUser::update(ErrorCodes &error) {
-
+    return DataManager::getInstance().edit_user(id, User(nick_name, email, password), error);
 }
 
 std::unordered_map<DBRoom, Rights> DBUser::get_rooms(ErrorCodes &error) {
 
 }
 
-
+const string &DBUser::getPassword() const {
+    return password;
+}
 
 
 // TODO: дописать псевдокод и сделать рабочий метод
@@ -47,3 +49,7 @@ std::vector<DBTag> get_associated_tags(std::vector<std::string>& _tags, ErrorCod
 }
 
 DBEntity::DBEntity(int& _id) : id(_id) {}
+
+int DBEntity::get_id() const {
+    return id;
+}

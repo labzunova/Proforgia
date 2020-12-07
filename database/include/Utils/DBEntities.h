@@ -15,8 +15,16 @@ using namespace boost::gregorian;
 using std::string;
 using std::shared_ptr;
 
+/*
+ ЗАДАЧИ ПО САМОЙ БАЗЕ ДАННЫХ:
+ TODO: поле password у юзер должно хранить хэш (скорее всего это будет число, уточнить у сережи)
+ TODO: сессия должна хранить строковый идентификатор сессии (скорее всего строка фикс. размера, уточнить)
+ TODO: сделать имеил уникальным
+ */
+
+
 // TODO: ДОБАВИТЬ ENTITY DBFILE
-// TODO: ДОБАВИТЬ ДАТЫ почти ко всем энтити'!!!!
+// TODO: ДОБАВИТЬ ДАТЫ почти ко всем энтити!!!!
 // TODO: еще раз подумать об архитектуре ошибок
 
 // при неудаче методов, возвращающих bool, вернется false
@@ -24,10 +32,12 @@ using std::shared_ptr;
 // соответственно, если метод завершился неудачно, смотрим ErrorCodes &error на тип ошибки и обрабатываем
 
 struct DBEntity {
-	int id;
 	virtual bool update(ErrorCodes &error) = 0; // аналог save() в API UML
 
+    int get_id() const;
+
 protected:
+    int id;
     DBEntity(int& _id);
 };
 
@@ -36,30 +46,27 @@ class DBRoom;
 
 struct DBUser : public DBEntity {
 	struct User {
-		User( std::string& _nick_name, std::string& _email) :
+		User( string _nick_name, string _email, string _password) :
 			nick_name(_nick_name), 
-			email(_email) {}
+			email(_email),
+			password(_password) {}
 
 		std::string nick_name;
 		std::string email;
+		std::string password;
 	};
 
-    DBUser(int &id, std::string &_nick_name, std::string& _date, std::string &_email) :
-            DBEntity(id), nick_name(_nick_name), register_date(from_simple_string(_date)), email(_email) {
+    DBUser(int &id, std::string &_nick_name, std::string& _date, std::string &_email, std::string& _password) :
+            DBEntity(id), nick_name(_nick_name), register_date(from_simple_string(_date)), email(_email), password(_password) {
 
     }
-
-	std::string nick_name;
-	std::string email;
-	date register_date;
-
 
 	static shared_ptr<DBUser> get(int _id, ErrorCodes &error);
     // TODO: email should be unique to allow get method work with email, make email unique
 	static shared_ptr<DBUser> get(std::string _nickname, ErrorCodes &error);
 
-	static std::string add(User _user, ErrorCodes &error); // return id in DB on success, а при неудаче, вернет строку специального вида
-	static bool remove(std::string& id, ErrorCodes &error);
+	static bool add(User _user, ErrorCodes &error);
+	static bool remove(int id, ErrorCodes &error);
 	bool update(ErrorCodes &error) override;
 
 	// методы получения связанных полей 
@@ -72,6 +79,14 @@ struct DBUser : public DBEntity {
 	    std::cout << "date: " << this->register_date << std::endl;
 	    std::cout << "email: " << this->email << std::endl;
 	}
+
+    const string &getPassword() const;
+
+    std::string nick_name;
+    std::string email;
+    date register_date;
+private:
+    std::string password;
 };
 
 class DBTag : public DBEntity {

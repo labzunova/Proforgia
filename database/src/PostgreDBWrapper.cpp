@@ -44,7 +44,7 @@ shared_ptr<DBUser> PostgreDBWrapper::get_user_info(const int &user_id, ErrorCode
     catch(std::exception &exc) {
         error = ErrorCodes::DB_CONNECTION_ERROR;
         std::cout << exc.what();
-        return nullptr; // !
+        return nullptr;
     }
 
     std::string s_id = std::to_string(user_id);
@@ -67,8 +67,9 @@ shared_ptr<DBUser> PostgreDBWrapper::get_user_info(const int &user_id, ErrorCode
         std::string nickname = PQgetvalue(result.get(), 0, 1);
         std::string email = PQgetvalue(result.get(), 0, 2);
         std::string date = PQgetvalue(result.get(), 0, 3);
+        std::string password = PQgetvalue(result.get(), 0, 4);
 
-        return std::make_shared<DBUser>(id, nickname, date, email);
+        return std::make_shared<DBUser>(id, nickname, date, email, password);
     }
 }
 
@@ -81,7 +82,7 @@ shared_ptr<DBUser> PostgreDBWrapper::get_user_info(const string &nickname, Error
     catch(std::exception &exc) {
         error = ErrorCodes::DB_CONNECTION_ERROR;
         std::cout << exc.what();
-        return nullptr; // !
+        return nullptr;
     }
 
     std::string query = "select * from users where nickname='" + nickname + "';";
@@ -100,12 +101,87 @@ shared_ptr<DBUser> PostgreDBWrapper::get_user_info(const string &nickname, Error
     }
     else {
         int id = std::stoi(PQgetvalue(result.get(), 0, 0));
-        std::string nickname = PQgetvalue(result.get(), 0, 1);
+        std::string nick_name = PQgetvalue(result.get(), 0, 1);
         std::string email = PQgetvalue(result.get(), 0, 2);
         std::string date = PQgetvalue(result.get(), 0, 3);
+        std::string password = PQgetvalue(result.get(), 0, 4);
 
-        return std::make_shared<DBUser>(id, nickname, date, email);
+        return std::make_shared<DBUser>(id, nick_name, date, email, password);
     }
+}
+
+bool PostgreDBWrapper::add_user(const DBUser::User &user_info, ErrorCodes &error) {
+    std::shared_ptr<PGconn> connection;
+    try {
+        connection = get_connection();
+    }
+    catch(std::exception &exc) {
+        error = ErrorCodes::DB_CONNECTION_ERROR;
+        std::cout << exc.what();
+        return false;
+    }
+
+    string query = "insert into users (nickname, email, password) values "
+                   "('" + user_info.nick_name +
+            "', '" + user_info.email +
+            "', '" + user_info.password + "');";
+
+    auto res_deleter = [](PGresult* r) { PQclear(r);};
+    std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
+    if (PQresultStatus(result.get()) != PGRES_COMMAND_OK) {
+        error = ErrorCodes::UNKNOWN_DB_ERROR;
+        return false;
+    }
+
+    return true;
+}
+
+bool PostgreDBWrapper::remove_user(const int& user_id, ErrorCodes &error) {
+    std::shared_ptr<PGconn> connection;
+    try {
+        connection = get_connection();
+    }
+    catch(std::exception &exc) {
+        error = ErrorCodes::DB_CONNECTION_ERROR;
+        std::cout << exc.what();
+        return false;
+    }
+
+    string s_id = std::to_string(user_id);
+    string query = "delete from users where id=" + s_id + ";";
+
+    auto res_deleter = [](PGresult* r) { PQclear(r);};
+    std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
+    if (PQresultStatus(result.get()) != PGRES_COMMAND_OK) {
+        error = ErrorCodes::UNKNOWN_DB_ERROR;
+        return false;
+    }
+
+    return true;
+}
+
+bool PostgreDBWrapper::edit_user(const int& id, const DBUser::User &user_info, ErrorCodes &error) {
+    std::shared_ptr<PGconn> connection;
+    try {
+        connection = get_connection();
+    }
+    catch(std::exception &exc) {
+        error = ErrorCodes::DB_CONNECTION_ERROR;
+        std::cout << exc.what();
+        return false;
+    }
+
+    string s_id = std::to_string(id);
+    string query = "update users set nickname='" + user_info.nick_name + "', email='" + user_info.email + "' where id=" + s_id + ";";
+
+    auto res_deleter = [](PGresult* r) { PQclear(r);};
+    std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
+    if (PQresultStatus(result.get()) != PGRES_COMMAND_OK) {
+        error = ErrorCodes::UNKNOWN_DB_ERROR;
+        return false;
+    }
+
+    return true;
 }
 
 

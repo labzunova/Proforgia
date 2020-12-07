@@ -24,7 +24,7 @@ private:
 	~DataManager() = default;
 
 public:
-	std::string add_user( const DBUser::User& user_info, ErrorCodes &error ) const;
+	bool add_user( const DBUser::User& user_info, ErrorCodes &error ) const;
 	std::string add_room( const DBRoom::Room& room_info, ErrorCodes &error ) const;
 	std::string add_post( const DBPost::Post& post_info, ErrorCodes &error ) const;
 	std::string add_session( const DBSession::Session& session_info, ErrorCodes &error ) const;
@@ -32,13 +32,13 @@ public:
 	bool add_discipline( const std::string& discipline_name, const std::string& room_id, const std::string& user_id ) const;
 	bool add_category(const std::string& category_name, const std::string& discipline_name, const std::string& room_id, const std::string& user_id ) const;
 
-	bool remove_user( const std::string& user_id, ErrorCodes &error ) const;
+	bool remove_user( const int& user_id, ErrorCodes &error ) const;
 	bool remove_room( const std::string& room_id, ErrorCodes &error ) const;
 	bool remove_post( const std::string& post_id, ErrorCodes &error ) const;
 	bool remove_user_from_room( const std::string& room_id, const std::string& user_id, ErrorCodes &error ) const;
 	bool remove_session( const std::string& session_id, ErrorCodes &error );
 
-	bool edit_user( const std::string& user_id, const DBUser& user, ErrorCodes &error ) const;
+	bool edit_user( const int& user_id, const DBUser::User& user, ErrorCodes &error ) const;
 	bool edit_room( const std::string& room_id, const DBRoom& room, ErrorCodes &error ) const;
 	bool edit_post( const std::string& post_id, const DBPost& post, ErrorCodes &error ) const;
 	bool edit_session( const std::string& session_id, const DBSession& session, ErrorCodes &error ) const;
