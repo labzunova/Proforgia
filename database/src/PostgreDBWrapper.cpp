@@ -4,12 +4,25 @@
 #include <iostream>
 #include "../include/Wrappers/DBWrapperRealisations/PostgreDBWrapper.h"
 
+#define DB_HOST "localhost"
+#define DB_PORT "5432"
+#define DB_NAME "proforgia_db"
+#define DB_USER "proforgia_user"
+#define DB_USER_PASSWORD "password"
+
+PostgreDBWrapper::PostgreDBWrapper() :
+    host(DB_HOST),
+    port(DB_PORT),
+    db_name(DB_NAME),
+    db_user(DB_USER),
+    db_user_password(DB_USER_PASSWORD) {
+
+}
+
 // TODO: допродумать над системой ошибок и исключчений у меня
-// TODO: do shared ptr for PGconn
-// TODO: do smart ptr for PGresult
 // TODO: сформировать свою либу в cmake
 DBUser PostgreDBWrapper::get_user_info(const int &user_id, ErrorCodes &error) const {
-    PGconn* connection;
+    std::shared_ptr<PGconn> connection;
     try {
         connection = get_connection();
     }
@@ -21,35 +34,34 @@ DBUser PostgreDBWrapper::get_user_info(const int &user_id, ErrorCodes &error) co
     std::string uid = std::to_string(user_id);
     std::string query = "select * from users where id=" + uid + ";";
 
-    PGresult* result = PQexec(connection, query.c_str());
+    auto res_deleter = [](PGresult* r) { PQclear(r);};
+    std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
 
-    if (PQresultStatus(result) != PGRES_TUPLES_OK)
-        throw std::runtime_error(PQresultErrorMessage(result));
+    if (PQresultStatus(result.get()) != PGRES_TUPLES_OK)
+        throw std::runtime_error(PQresultErrorMessage(result.get()));
 
-    if (PQntuples(result) == 0)
+    if (PQntuples(result.get()) == 0)
         throw std::runtime_error("запись не найдена"); // !
     else {
-        int id = std::stoi(PQgetvalue(result, 0, 0));
-        std::string nickname = PQgetvalue(result, 0, 1);
-        std::string email = PQgetvalue(result, 0, 2);
-        std::string date = PQgetvalue(result, 0, 3);
+        int id = std::stoi(PQgetvalue(result.get(), 0, 0));
+        std::string nickname = PQgetvalue(result.get(), 0, 1);
+        std::string email = PQgetvalue(result.get(), 0, 2);
+        std::string date = PQgetvalue(result.get(), 0, 3);
 
-        PQclear(result);
         return std::move(DBUser(id, nickname, date, email));
     }
 }
 
-PGconn* PostgreDBWrapper::get_connection() const {
-    // TODO: remove hardcode
-    std::string connInfo = "host=localhost port=5432 dbname=proforgia_db user=proforgia_user password=password";
-    PGconn* connection = PQconnectdb(connInfo.c_str());
+std::shared_ptr<PGconn> PostgreDBWrapper::get_connection() const {
+    std::string connInfo = "host=" + host + " port=" + port + " dbname=" + db_name + " user=" + db_user + " password=" + db_user_password;
 
-    // doesn't work, some issue with shared_ptr
-    // std::shared_ptr<PGconn> connection;
-    // connection.reset(PQconnectdb(connInfo));
+    std::shared_ptr<PGconn> connection;
+    connection.reset(PQconnectdb(connInfo.c_str()), &PQfinish);
 
-    if (PQstatus(connection) != CONNECTION_OK)
-        throw std::runtime_error(PQerrorMessage(connection));
+    if (PQstatus(connection.get()) != CONNECTION_OK)
+        throw std::runtime_error(PQerrorMessage(connection.get()));
 
     return connection;
 }
+
+

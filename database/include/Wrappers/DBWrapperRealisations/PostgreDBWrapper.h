@@ -12,7 +12,7 @@ extern "C"
 
 class PostgreDBWrapper : public DBWrapper {
 public:
-	PostgreDBWrapper() = default;
+	PostgreDBWrapper();
 	~PostgreDBWrapper() override = default;
 
 	PostgreDBWrapper( const PostgreDBWrapper& ) = delete;
@@ -48,5 +48,11 @@ public:
 //	bool edit_post( const DBPost::Post& post_info, ErrorCodes &error ) override;
 
 private:
-    PGconn* get_connection() const;
+    std::shared_ptr<PGconn> get_connection() const;
+
+    std::string host;
+    std::string port;
+    std::string db_name;
+    std::string db_user;
+    std::string db_user_password;
 };
