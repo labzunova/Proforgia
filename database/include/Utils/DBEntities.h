@@ -5,15 +5,20 @@
 
 #include <string>
 #include <vector>
-#include <unordered_map>
+#include <optional>
 #include <iostream>
+#include <unordered_map>
+
 #include "Rights.h"
 #include "ErrorCodes.h"
+
 #include "boost/date_time/gregorian/gregorian.hpp"
 
 using namespace boost::gregorian;
 using std::string;
 using std::shared_ptr;
+using std::vector;
+using std::pair;
 
 /*
  ЗАДАЧИ ПО САМОЙ БАЗЕ ДАННЫХ:
@@ -69,8 +74,10 @@ struct DBUser : public DBEntity {
 	static bool remove(int id, ErrorCodes &error);
 	bool update(ErrorCodes &error) override;
 
-	// методы получения связанных полей 
-	std::unordered_map<DBRoom, Rights> get_rooms(ErrorCodes &error);
+	// методы получения связанных полей
+
+	// возвращает массив пар, пара - комната и права пользователя в этой комнате
+	std::optional< vector<pair<DBRoom, Rights>> > get_rooms(ErrorCodes &error);
 
 
 	void print() {
@@ -110,9 +117,12 @@ struct DBRoom : public DBEntity {
 		std::string description;
 	};
 
-	DBRoom(int &id, std::string &_room_name, std::string &_description) :
-            DBEntity(id), room_name(_room_name), description(_description) {}
+	DBRoom(int &id, std::string &_room_name, std::string &_description, string& _create_date) :
+            DBEntity(id), room_name(_room_name), description(_description), create_date(from_simple_string(_create_date)) {}
 
+    ~DBRoom() = default;
+
+    date create_date;
 	std::string room_name;
 	std::string description;
 
@@ -131,6 +141,15 @@ struct DBRoom : public DBEntity {
 	std::unordered_map<DBUser, Rights> get_users(ErrorCodes &error);
 	std::vector<DBPost> get_posts(ErrorCodes &error);
 	std::vector<DBTag> get_tags(ErrorCodes &error); // возвращает тэги, принадлежащие комнате, отсортированные по популярности (мб сделать выбор сортировки по дате или популярности)
+
+
+    void print() {
+        std::cout << "Room info:" << std::endl;
+        std::cout << "id: " << this->id << std::endl;
+        std::cout << "name: " << this->room_name << std::endl;
+        std::cout << "description: " << this->description << std::endl;
+        std::cout << "date: " << this->create_date << std::endl;
+    }
 };
 
 

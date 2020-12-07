@@ -36,6 +36,10 @@ bool DataManager::edit_user(const int& user_id, const DBUser::User &user, ErrorC
     return database->edit_user(user_id, user, error);
 }
 
+std::optional< vector<pair<DBRoom, Rights>> > DataManager::get_user_rooms(const int &user_id, ErrorCodes &error) const {
+    return database->get_user_rooms(user_id, error);
+}
+
 
 
 

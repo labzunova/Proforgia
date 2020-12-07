@@ -28,7 +28,7 @@ int main()
         }
     }
 
-    auto user = DBUser::get("cool_nickname_2", error);
+    auto user = DBUser::get(1, error);
     if (user) {
         user->print();
     } else {
@@ -42,16 +42,21 @@ int main()
         }
     }
 
-    user->email = "dfgfdgdfgdfgdf";
-    user->nick_name = "aaaaaaaa";
-    res = user->update(error);
-    if (!res) {
+    auto rooms = user->get_rooms(error);
+    if(!rooms) {
         switch(error) {
             case ErrorCodes::DB_CONNECTION_ERROR:
                 std::cout << "connection error" << std::endl;
                 break;
+            case ErrorCodes::UNKNOWN_DB_ERROR:
+                std::cout << "unknown error" << std::endl;
+                break;
             default:
-                std::cout << "other error" << std::endl;
+                assert(false);
+        }
+    } else {
+        for (int i = 0; i < rooms->size(); i++) {
+            rooms.value()[i].first.print();
         }
     }
 

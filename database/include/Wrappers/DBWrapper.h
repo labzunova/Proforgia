@@ -38,6 +38,7 @@ public:
 
     virtual shared_ptr<DBUser> get_user_info( const int& user_id, ErrorCodes &error ) const = 0;
     virtual shared_ptr<DBUser> get_user_info( const string& nickname, ErrorCodes &error ) const = 0;
+    virtual std::optional< vector<pair<DBRoom, Rights>> > get_user_rooms( const int& user_id, ErrorCodes &error ) const = 0;
 //	virtual DBRoom get_room_info( const std::string& room_id, ErrorCodes &error ) const = 0;
 //	virtual DBPost get_post_info( const std::string& post_id, ErrorCodes &error ) const = 0;
 //	virtual DBSession get_session_info( const std::string& session_id, ErrorCodes &error ) const = 0;

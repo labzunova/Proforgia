@@ -22,8 +22,8 @@ bool DBUser::update(ErrorCodes &error) {
     return DataManager::getInstance().edit_user(id, User(nick_name, email, password), error);
 }
 
-std::unordered_map<DBRoom, Rights> DBUser::get_rooms(ErrorCodes &error) {
-
+std::optional< vector<pair<DBRoom, Rights>> > DBUser::get_rooms(ErrorCodes &error) {
+    return DataManager::getInstance().get_user_rooms(id, error);
 }
 
 const string &DBUser::getPassword() const {

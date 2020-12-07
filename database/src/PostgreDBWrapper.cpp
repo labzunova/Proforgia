@@ -184,4 +184,47 @@ bool PostgreDBWrapper::edit_user(const int& id, const DBUser::User &user_info, E
     return true;
 }
 
+std::optional< vector<pair<DBRoom, Rights>> > PostgreDBWrapper::get_user_rooms(const int &user_id, ErrorCodes &error) const {
+    std::shared_ptr<PGconn> connection;
+    try {
+        connection = get_connection();
+    }
+    catch(std::exception &exc) {
+        error = ErrorCodes::DB_CONNECTION_ERROR;
+        std::cout << exc.what();
+        return std::nullopt;
+    }
+
+    string s_id = std::to_string(user_id);
+    string query = "select r.*, ur.user_rights from users_to_rooms ur left join rooms r on ur.room_id=r.id where ur.user_id=" + s_id + ";";
+
+    auto res_deleter = [](PGresult* r) { PQclear(r);};
+    std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
+
+    if (PQresultStatus(result.get()) != PGRES_TUPLES_OK) {
+        error = ErrorCodes::UNKNOWN_DB_ERROR;
+        return std::nullopt;
+    }
+
+    vector<pair<DBRoom, Rights>> res;
+    int number_of_rows = PQntuples(result.get());
+    for (int i = 0; i < number_of_rows; i++) {
+        int room_id = std::stoi(PQgetvalue(result.get(), i, 0));
+        string date = PQgetvalue(result.get(), i, 1);
+        string name = PQgetvalue(result.get(), i, 2);
+        string description = PQgetvalue(result.get(), i, 3);
+        string user_rights_s = PQgetvalue(result.get(), i, 4);
+        Rights user_rights;
+        if (user_rights_s == ADMIN_RIGHTS_DB_STR)
+            user_rights = Rights::ADMIN;
+        else if (user_rights_s == MEMBER_RIGHTS_DB_STR)
+            user_rights = Rights::MEMBER;
+        else assert(false);
+
+        res.emplace_back(std::make_pair(DBRoom(room_id, name, description, date), user_rights));
+    }
+
+    return res;
+}
+
 
