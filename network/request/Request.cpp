@@ -6,11 +6,20 @@ Request::Request( const string &request )
     Parser parser( request );
     method = parser.parse_method();
     path = parser.parse_path();
+    cookies = parser.parse_cookies();
     if( method == "POST" )
         data = parser.parse_body();
-    if( path.find( "main" ) != 0 ) // если это запрос на какую-то комнату: выяснить, какую
-        room = parser.parse_room_from_path( path );
-    cookies = parser.parse_cookies();
+    if( path.find( "rooms" ) != 0 ) // если это запрос на какую-то комнату: выяснить, какую
+    {
+        path = parser.parse_room_properties( path );
+        if ( path.find( '/') != -1 ) // если требуется получить не просто комнату, а комнату с постами по тегу
+        {
+            room = path.substr( 0, room.find( '/' ) );
+            tag = path.erase( 0, path.find( '/' ) + 1 );
+        }
+        else // если получить нужно просто конкретную комнату
+            room = path;
+    }
 }
 
 const string Request::get_data( string &type )
@@ -36,4 +45,8 @@ const string Request::get_path()
 const string Request::get_room()
 {
     return room;
+}
+
+const string Request::get_tag_for_room() {
+    return tag;
 }

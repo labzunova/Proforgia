@@ -114,7 +114,7 @@ TEST( room_from_path_parse_tests, first )
 {
     Parser parser( GET_request1 );
     string path = parser.parse_path();
-    string room = parser.parse_room_from_path( path );
+    string room = parser.parse_room_properties(path);
     ASSERT_EQ( "first", room );
 }
 
@@ -152,7 +152,7 @@ TEST( full_parse_tests, GET_room ) // запрос на получение ко�
     ASSERT_EQ( method, "GET" );
     string path = parser.parse_path();
     ASSERT_EQ( "main/first", path );
-    string room = parser.parse_room_from_path( path );
+    string room = parser.parse_room_properties(path);
     ASSERT_EQ( "first", room );
     unordered_map<string, string> cookies = parser.parse_cookies();
     ASSERT_EQ( "12345", cookies["session"] );

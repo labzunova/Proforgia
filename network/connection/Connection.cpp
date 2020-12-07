@@ -38,7 +38,7 @@ void Connection::handle_read( const Connection::error_code &e, std::size_t bytes
 
     Request request( std::string(buffer_.begin(), buffer_.end() ) ); // внутри реквеста вызывается парсер и записывает в поля реквеста готовые значения
 
-    std::map<string, string> to_put_in_loop;  // эта мапа передается в воркеры для обработки апи
+    std::map<string, string> to_put_in_loop; // эта мапа передается в воркеры для обработки апи
     if ( request.get_method() == "GET" )
     {
         string path = request.get_path();
@@ -61,7 +61,6 @@ void Connection::handle_read( const Connection::error_code &e, std::size_t bytes
             to_put_in_loop.insert( std::pair<string, string>( "tag",request.get_data( ( string & ) "tag" ) ) );
             to_put_in_loop.insert(std::pair<string, string>("session",request.get_cookie(( string & ) "session" ) ) ); // чтобы проверить сессию
         }
-
     }
     else
     {

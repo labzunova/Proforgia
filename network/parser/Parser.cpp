@@ -19,7 +19,7 @@ const string Parser::parse_path()
     return path;
 }
 
-const string Parser::parse_room_from_path( string path )
+const string Parser::parse_room_properties(string& path )
 {
     return path.erase(0, path.find('/') + 1);
 }

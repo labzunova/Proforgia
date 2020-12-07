@@ -47,8 +47,8 @@ public:
     const unordered_map<string, string> parse_cookies();
     const unordered_map<string, string> parse_body();
     const string parse_method();
-    const string parse_path();
-    const string parse_room_from_path( string path );
+    const string parse_path(); // все пути в нашем приложении - или одно слово, или rooms/some_room или rooms/some_room/tag
+    const string parse_room_properties(string& path );
 };
 
 #endif //PROFORGIA_PARSER_H
