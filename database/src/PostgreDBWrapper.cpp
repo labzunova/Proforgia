@@ -288,4 +288,52 @@ bool PostgreDBWrapper::add_room(const DBRoom::Room &room_info, ErrorCodes &error
     return true;
 }
 
+bool PostgreDBWrapper::remove_room(const int &room_id, ErrorCodes &error) {
+    std::shared_ptr<PGconn> connection;
+    try {
+        connection = get_connection();
+    }
+    catch(std::exception &exc) {
+        error = ErrorCodes::DB_CONNECTION_ERROR;
+        std::cout << exc.what();
+        return false;
+    }
+
+    string s_id = std::to_string(room_id);
+    string query = "delete from rooms where id=" + s_id + ";";
+
+    auto res_deleter = [](PGresult* r) { PQclear(r);};
+    std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
+    if (PQresultStatus(result.get()) != PGRES_COMMAND_OK) {
+        error = ErrorCodes::UNKNOWN_DB_ERROR;
+        return false;
+    }
+
+    return true;
+}
+
+bool PostgreDBWrapper::edit_room(const int& id, const DBRoom::Room &room_info, ErrorCodes &error) {
+    std::shared_ptr<PGconn> connection;
+    try {
+        connection = get_connection();
+    }
+    catch(std::exception &exc) {
+        error = ErrorCodes::DB_CONNECTION_ERROR;
+        std::cout << exc.what();
+        return false;
+    }
+
+    string s_id = std::to_string(id);
+    string query = "update rooms set room_name='" + room_info.room_name + "', room_desciption='" + room_info.description + "' where id=" + s_id + ";";
+
+    auto res_deleter = [](PGresult* r) { PQclear(r);};
+    std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
+    if (PQresultStatus(result.get()) != PGRES_COMMAND_OK) {
+        error = ErrorCodes::UNKNOWN_DB_ERROR;
+        return false;
+    }
+
+    return true;
+}
+
 

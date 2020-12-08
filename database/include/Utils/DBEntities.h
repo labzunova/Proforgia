@@ -23,6 +23,7 @@ using std::pair;
  TODO: поле password у юзер должно хранить хэш (скорее всего это будет число, уточнить у сережи)
  TODO: сессия должна хранить строковый идентификатор сессии (скорее всего строка фикс. размера, уточнить)
  TODO: сделать имеил уникальным
+ TODO: исправить typo room_desciption на room_description
  */
 
 
@@ -121,13 +122,12 @@ struct DBRoom : public DBEntity {
 
     ~DBRoom() = default;
 
-    date create_date;
-	std::string room_name;
-	std::string description;
+    std::string room_name;
+    std::string description;
 
 	static shared_ptr<DBRoom> get(int _id, ErrorCodes &error);
-	static bool add(Room _room, ErrorCodes &error); // return id in DB on success, а при неудаче, вернет строку специального вида
-	static bool remove(std::string& id, ErrorCodes &error);
+	static bool add(Room _room, ErrorCodes &error);
+	static bool remove(int id, ErrorCodes &error);
 
 	static bool add_user(const std::string& room_id, const std::string& user_id, ErrorCodes &error);
 	static bool remove_user(const std::string& room_id, const std::string& user_id, ErrorCodes &error);
@@ -149,6 +149,9 @@ struct DBRoom : public DBEntity {
         std::cout << "description: " << this->description << std::endl;
         std::cout << "date: " << this->create_date << std::endl;
     }
+
+private:
+    date create_date;
 };
 
 

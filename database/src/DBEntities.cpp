@@ -64,8 +64,8 @@ bool DBRoom::add(DBRoom::Room _room, ErrorCodes &error) {
     return DataManager::getInstance().add_room(_room, error);
 }
 
-bool DBRoom::remove(string &id, ErrorCodes &error) {
-
+bool DBRoom::remove(int id, ErrorCodes &error) {
+    return DataManager::getInstance().remove_room(id, error);
 }
 
 bool DBRoom::add_user(const string &room_id, const string &user_id, ErrorCodes &error) {
@@ -87,7 +87,7 @@ DBRoom::add_discipline(const string &discipline_name, const string &room_id, con
 }
 
 bool DBRoom::update(ErrorCodes &error) {
-
+    return DataManager::getInstance().edit_room(id, Room(room_name, description), error);
 }
 
 std::optional< vector<pair<DBUser, Rights>> > DBRoom::get_users(ErrorCodes &error) {

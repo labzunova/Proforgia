@@ -48,6 +48,16 @@ bool DataManager::add_room(const DBRoom::Room &room_info, ErrorCodes &error) con
     return database->add_room(room_info, error);
 }
 
+bool DataManager::remove_room(const int& room_id, ErrorCodes &error) const {
+    return database->remove_room(room_id, error);
+}
+
+bool DataManager::edit_room(const int &room_id, const DBRoom::Room &room, ErrorCodes &error) const {
+    return database->edit_room(room_id, room, error);
+}
+
+
+
 
 
 

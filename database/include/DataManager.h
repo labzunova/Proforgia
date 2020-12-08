@@ -33,13 +33,13 @@ public:
 	bool add_category(const std::string& category_name, const std::string& discipline_name, const std::string& room_id, const std::string& user_id ) const;
 
 	bool remove_user( const int& user_id, ErrorCodes &error ) const;
-	bool remove_room( const std::string& room_id, ErrorCodes &error ) const;
+	bool remove_room( const int& room_id, ErrorCodes &error ) const;
 	bool remove_post( const std::string& post_id, ErrorCodes &error ) const;
 	bool remove_user_from_room( const std::string& room_id, const std::string& user_id, ErrorCodes &error ) const;
 	bool remove_session( const std::string& session_id, ErrorCodes &error );
 
 	bool edit_user( const int& user_id, const DBUser::User& user, ErrorCodes &error ) const;
-	bool edit_room( const std::string& room_id, const DBRoom& room, ErrorCodes &error ) const;
+	bool edit_room( const int& room_id, const DBRoom::Room& room, ErrorCodes &error ) const;
 	bool edit_post( const std::string& post_id, const DBPost& post, ErrorCodes &error ) const;
 	bool edit_session( const std::string& session_id, const DBSession& session, ErrorCodes &error ) const;
 

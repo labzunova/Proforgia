@@ -78,7 +78,29 @@ int main()
                 std::cout << "other error" << std::endl;
         }
     }
-*/
+
+    bool res = DBRoom::remove(7, error);
+    if (!res) {
+        switch(error) {
+            case ErrorCodes::DB_CONNECTION_ERROR:
+                std::cout << "connection error" << std::endl;
+                break;
+            default:
+                std::cout << "other error" << std::endl;
+        }
+    }
+
+
+
+    room->room_name = "newName";
+    room->description = "newDescription";
+    bool res = room->update(error);
+    if (!res) {
+        assert(false);
+    }
+
+ */
+
 
     return 0;
 }
