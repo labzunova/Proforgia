@@ -42,6 +42,34 @@ std::vector<DBPost> DBPost::get(std::vector<std::string>& _tags, ErrorCodes &err
 	// get all posts, that contain all tags in _tags
 }
 
+DBPost DBPost::get(string &_id, ErrorCodes &error) {
+
+}
+
+std::string DBPost::add(DBPost::Post _post, ErrorCodes &error) {
+
+}
+
+bool DBPost::remove(string &id, ErrorCodes &error) {
+
+}
+
+bool DBPost::update(ErrorCodes &error) {
+
+}
+
+DBRoom DBPost::get_room(ErrorCodes &error) {
+
+}
+
+DBUser DBPost::get_author(ErrorCodes &error) {
+
+}
+
+std::vector<DBTag> DBPost::get_tags(ErrorCodes &error) {
+
+}
+
 // Это не надо, сережа реализует у себя!
 std::vector<DBTag> get_associated_tags(std::vector<std::string>& _tags, ErrorCodes &error) {
 	// get all posts, that contain all tags in _tags
@@ -68,22 +96,12 @@ bool DBRoom::remove(int id, ErrorCodes &error) {
     return DataManager::getInstance().remove_room(id, error);
 }
 
-bool DBRoom::add_user(const string &room_id, const string &user_id, ErrorCodes &error) {
-
+bool DBRoom::add_user(const int &room_id, const int &user_id, Rights user_rights, ErrorCodes &error) {
+    return DataManager::getInstance().add_user_to_room(room_id, user_id, user_rights, error);
 }
 
-bool DBRoom::remove_user(const string &room_id, const string &user_id, ErrorCodes &error) {
-
-}
-
-bool DBRoom::add_category(const string &category_name, const string &discipline_name, const string &room_id,
-                          const string &user_id, ErrorCodes &error) {
-
-}
-
-bool
-DBRoom::add_discipline(const string &discipline_name, const string &room_id, const string &user_id, ErrorCodes &error) {
-
+bool DBRoom::remove_user(const int &room_id, const int &user_id, ErrorCodes &error) {
+    return DataManager::getInstance().remove_user_from_room(room_id, user_id, error);
 }
 
 bool DBRoom::update(ErrorCodes &error) {
@@ -91,13 +109,13 @@ bool DBRoom::update(ErrorCodes &error) {
 }
 
 std::optional< vector<pair<DBUser, Rights>> > DBRoom::get_users(ErrorCodes &error) {
-
+    return DataManager::getInstance().get_room_users(id, error);
 }
 
-std::vector<DBPost> DBRoom::get_posts(ErrorCodes &error) {
-
+std::optional< std::vector<DBPost> > DBRoom::get_posts(ErrorCodes &error) {
+    return DataManager::getInstance().get_room_posts(id, error);
 }
 
-std::vector<DBTag> DBRoom::get_tags(ErrorCodes &error) {
-
+std::optional< std::vector<DBTag> > DBRoom::get_tags(ErrorCodes &error) {
+    return DataManager::getInstance().get_room_tags(id, error);
 }

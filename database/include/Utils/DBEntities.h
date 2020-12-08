@@ -11,8 +11,12 @@
 #include "ErrorCodes.h"
 
 #include "boost/date_time/gregorian/gregorian.hpp"
+#include "boost/date_time/local_time/local_time.hpp"
 
 using namespace boost::gregorian;
+using namespace boost::local_time;
+using namespace boost::posix_time;
+
 using std::string;
 using std::shared_ptr;
 using std::vector;
@@ -24,12 +28,13 @@ using std::pair;
  TODO: сессия должна хранить строковый идентификатор сессии (скорее всего строка фикс. размера, уточнить)
  TODO: сделать имеил уникальным
  TODO: исправить typo room_desciption на room_description
+ TODO: сделать поля user_id и room_id not null в таблице posts
  */
 
 
 // TODO: ДОБАВИТЬ ENTITY DBFILE
 // TODO: ДОБАВИТЬ ДАТЫ почти ко всем энтити!!!!
-// TODO: еще раз подумать об архитектуре ошибок
+
 
 // при неудаче методов, возвращающих bool, вернется false
 // при неудаче get-методов, возвращающих умный указатель на какое-либо DBEntity, вернется nullptr
@@ -129,17 +134,15 @@ struct DBRoom : public DBEntity {
 	static bool add(Room _room, ErrorCodes &error);
 	static bool remove(int id, ErrorCodes &error);
 
-	static bool add_user(const std::string& room_id, const std::string& user_id, ErrorCodes &error);
-	static bool remove_user(const std::string& room_id, const std::string& user_id, ErrorCodes &error);
-	static bool add_discipline(const std::string& discipline_name, const std::string& room_id, const std::string& user_id, ErrorCodes &error);
-	static bool add_category(const std::string& category_name, const std::string& discipline_name, const std::string& room_id, const std::string& user_id, ErrorCodes &error);
+	static bool add_user(const int& room_id, const int& user_id, Rights user_rights, ErrorCodes &error);
+	static bool remove_user(const int& room_id, const int& user_id, ErrorCodes &error);
 
 	bool update(ErrorCodes &error) override;
 
 	// методы получения связанных полей
     std::optional< vector<pair<DBUser, Rights>> > get_users(ErrorCodes &error);
-	std::vector<DBPost> get_posts(ErrorCodes &error);
-	std::vector<DBTag> get_tags(ErrorCodes &error); // возвращает тэги, принадлежащие комнате, отсортированные по популярности (мб сделать выбор сортировки по дате или популярности)
+    std::optional< std::vector<DBPost> > get_posts(ErrorCodes &error); // TODO: сортировка по дате
+    std::optional< std::vector<DBTag> > get_tags(ErrorCodes &error); // TODO: сортировка по дате/популярности
 
 
     void print() {
@@ -162,11 +165,13 @@ struct DBPost : public DBEntity {
 			std::string& _user_id, 
 			std::string& _title,
 			std::string& _text,
-			std::vector<std::string>& _attachments ) : 
+            vector<string> _tags,
+			std::vector<std::string>& _attachments ) :
 				room_id(_room_id), 
 				user_id(_user_id),
 				title(_title),
 				text(_text),
+				tags(_tags),
 				attachments(_attachments)
 		{}
 
@@ -175,15 +180,16 @@ struct DBPost : public DBEntity {
 
         std::string title;
 		std::string text;
+		vector<string> tags;
 		std::vector<std::string> attachments; // list of files to add to the post in DB
 	};
 
-	DBPost(int& id, std::string &_room_id, std::string &_user_id, std::string &_title, std::string &_text) :
-            DBEntity(id), room_id(_room_id), user_id(_user_id), title(_title), text(_text)
+	DBPost(int& id, int &_room_id, int &_user_id, std::string &_title, std::string &_text, local_date_time& _ldt) :
+            DBEntity(id), room_id(_room_id), user_id(_user_id), title(_title), text(_text), publication_date(_ldt)
 	{}
 
-	std::string room_id; 
-	std::string user_id; // post author
+	int room_id;
+	int user_id; // post author
 
 	std::string title;
 	std::string text;
@@ -201,6 +207,18 @@ struct DBPost : public DBEntity {
 	std::vector<DBTag> get_tags(ErrorCodes &error);
 
 	std::vector<std::string> get_attachments(ErrorCodes &error); // list of links to storage locations of files
+
+    void print() {
+        std::cout << "Post info:" << std::endl;
+        std::cout << "id: " << this->id << std::endl;
+        std::cout << "room id: " << this->room_id << std::endl;
+        std::cout << "user id: " << this->user_id << std::endl;
+        std::cout << "publication date and time: " << this->publication_date << std::endl;
+        std::cout << "title: " << this->title << std::endl;
+        std::cout << "text: " << this->text << std::endl;
+    }
+private:
+    local_date_time publication_date;
 };
 
 struct DBSession : public DBEntity {

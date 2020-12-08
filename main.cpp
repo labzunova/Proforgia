@@ -5,8 +5,6 @@
 #include "database/include/Wrappers/StorageWrapperRealisations/AmazonS3StorageWrapper.h"
 #include "database/include/Wrappers/DBWrapperRealisations/PostgreDBWrapper.h"
 
-
-
 int main()
 {
     ErrorCodes error;
@@ -99,8 +97,64 @@ int main()
         assert(false);
     }
 
+
+
+    bool res = DBRoom::add_user(1, 1, Rights::MEMBER, error);
+    if (!res) {
+        switch(error) {
+            case ErrorCodes::DB_CONNECTION_ERROR:
+                std::cout << "connection error" << std::endl;
+                break;
+            default:
+                std::cout << "other error" << std::endl;
+        }
+    }
+
+    res = DBRoom::remove_user(1, 1, error);
+    if (!res) {
+        switch(error) {
+            case ErrorCodes::DB_CONNECTION_ERROR:
+                std::cout << "connection error" << std::endl;
+                break;
+            default:
+                std::cout << "other error" << std::endl;
+        }
+    }
+
+
+    auto room = DBRoom::get(3, error);
+    if (room) {
+        room->print();
+        std::cout << std::endl << std::endl;
+        ErrorCodes error1;
+        auto room_users = room->get_users(error1);
+        if (room_users) {
+            for (int i = 0; i < room_users->size(); i++) {
+                room_users.value()[i].first.print();
+                std::cout << std::endl;
+            }
+        } else assert(false);
+    } else {
+        // handle
+        switch(error) {
+            case ErrorCodes::DB_ENTITY_NOT_FOUND:
+                std::cout << "entity not found" << std::endl;
+                break;
+            default:
+                std::cout << "other error" << std::endl;
+        }
+    }
  */
 
+    auto room = DBRoom::get(2, error);
+    auto room_posts = room->get_posts(error);
+    if (room_posts) {
+        for (int i = 0; i < room_posts->size(); i++) {
+            room_posts.value()[i].print();
+            std::cout << std::endl;
+        }
+    } else assert(false);
 
     return 0;
 }
+

@@ -29,19 +29,22 @@ public:
 	bool add_user( const DBUser::User& user_info, ErrorCodes &error ) override;
 	bool add_room( const DBRoom::Room& room_info, ErrorCodes &error ) override;
 //	bool add_post( const std::string& post_id, const DBPost::Post& post_info, ErrorCodes &error ) override;
-//	bool add_user_to_room( const std::string& room_id, const std::string& user_id, ErrorCodes &error ) override;
+	bool add_user_to_room( const int& room_id, const int& user_id, Rights user_rights, ErrorCodes &error ) override;
 //	bool add_session( const std::string& session_id, const DBSession::Session& session_info, ErrorCodes &error ) override;
 //
 	bool remove_user( const int& user_id, ErrorCodes &error ) override;
 	bool remove_room( const int& room_id, ErrorCodes &error ) override;
 //	bool remove_post( const std::string& post_id, ErrorCodes &error ) override;
-//	bool remove_user_from_room( const std::string& room_id, const std::string& user_id, ErrorCodes &error ) override;
+	bool remove_user_from_room( const int& room_id, const int& user_id, ErrorCodes &error ) override;
 //	bool remove_session( const std::string& session_id, ErrorCodes &error ) override;
 //
     shared_ptr<DBUser> get_user_info( const int& user_id, ErrorCodes &error ) const override;
     shared_ptr<DBUser> get_user_info( const string& nickname, ErrorCodes &error ) const override;
     std::optional< vector<pair<DBRoom, Rights>> > get_user_rooms( const int& user_id, ErrorCodes &error ) const override;
 	shared_ptr<DBRoom> get_room_info( const int& room_id, ErrorCodes &error ) const override;
+    std::optional< vector<pair<DBUser, Rights>> > get_room_users( const int& room_id, ErrorCodes &error ) const override;
+    std::optional< vector<DBPost> > get_room_posts( const int& room_id, ErrorCodes &error ) const override;
+    std::optional< vector<DBTag> > get_room_tags( const int& room_id, ErrorCodes &error ) const override;
 //	DBPost get_post_info( const std::string& post_id, ErrorCodes &error ) const override;
 //	DBSession get_session_info( const std::string& session_id, ErrorCodes &error ) const override;
 //
