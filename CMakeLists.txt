@@ -12,11 +12,10 @@ SET(Boost_USE_STATIC_LIBS ON)
 FIND_PACKAGE(Boost REQUIRED COMPONENTS log)
 include_directories(${Boost_INCLUDE_DIRS})
 
-add_executable(Proforgia main.cpp network/connection/Connection.cpp network/connection/Connection.h network/server/Server.cpp network/server/Server.h network/parser/Parser.cpp network/parser/Parser.h network/connection_queue/Connection_queue.cpp network/connection_queue/Connection_queue.h network/request/Request.cpp network/request/Request.h core/src/Worker.cpp core/include/Worker.h)
+add_executable(Proforgia main.cpp network/connection/Connection.cpp network/connection/Connection.h network/server/Server.cpp network/server/Server.h network/parser/Parser.cpp network/parser/Parser.h network/connection_queue/Connection_queue.cpp network/connection_queue/Connection_queue.h network/request/Request.cpp network/request/Request.h)
 target_link_libraries(Proforgia boost_system pthread ${Boost_LIBRARIES})
 
 include_directories("${PROJECT_SOURCE_DIR}/network")
-include_directories("${PROJECT_SOURCE_DIR}/core")
 
 set(UNIT_TESTS
         tests/tests.cpp
