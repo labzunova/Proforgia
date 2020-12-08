@@ -61,7 +61,7 @@ TEST(PageUserTests, MainPage){
 
 TEST(PageCustomerTests, MainPage){
     TestView view;
-    DBUser user = DBUser::get(1); // TODO из базы
+    UserTest user = UserTest::get(1); // TODO из базы
     PageCustomer<TestView, UserTest, RoomTest> page(view, user);
     std::string response = "page: MAIN\n";
     EXPECT_EQ(response, page.get_main_page());
