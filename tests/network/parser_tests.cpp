@@ -4,27 +4,27 @@
 #include "parser/Parser.cpp" // wtf...but working TODO
 
 const static string POST_request_random1 = "POST /login/process.cgi HTTP/1.1\r\n"
-                                   "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
-                                   "Host: www.example.com\r\n"
-                                   "Cont"
-                                   "ent-Type: application/x-www-form-urlencoded\r\n"
-                                   "Content-Length: length\r\n"
-                                   "Accept-Language: ru-ru\r\n"
-                                   "Accept-Encoding: gzip, deflate\r\n"
-                                   "Connection: Keep-Alive\r\n"
-                                   "Cookie: session=12345\r\n\r\n"
-                                   "hello=world&content=string&key=12345";
+                                           "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
+                                           "Host: www.example.com\r\n"
+                                           "Cont"
+                                           "ent-Type: application/x-www-form-urlencoded\r\n"
+                                           "Content-Length: length\r\n"
+                                           "Accept-Language: ru-ru\r\n"
+                                           "Accept-Encoding: gzip, deflate\r\n"
+                                           "Connection: Keep-Alive\r\n"
+                                           "Cookie: session=12345\r\n\r\n"
+                                           "hello=world&content=string&key=12345";
 
 const static string POST_request_random2 = "POST /cgi-bin/process.cgi HTTP/1.1\r\n"
-                                    "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
-                                    "Host: www.example.com\r\n"
-                                    "Content-Type: application/x-www-form-urlencoded\r\n"
-                                    "Content-Length: length\r\n"
-                                    "Accept-Language: ru-ru\r\n"
-                                    "Accept-Encoding: gzip, deflate\r\n"
-                                    "Connection: Keep-Alive\r\n"
-                                    "Cookie: PHPSESSID=298zf09hf012fh2; csrftoken=u32t4o3tb3gg43; _gat=1\r\n\r\n"
-                                    "hello=world&content=string&key=12345";
+                                           "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
+                                           "Host: www.example.com\r\n"
+                                           "Content-Type: application/x-www-form-urlencoded\r\n"
+                                           "Content-Length: length\r\n"
+                                           "Accept-Language: ru-ru\r\n"
+                                           "Accept-Encoding: gzip, deflate\r\n"
+                                           "Connection: Keep-Alive\r\n"
+                                           "Cookie: PHPSESSID=298zf09hf012fh2; csrftoken=u32t4o3tb3gg43; _gat=1\r\n\r\n"
+                                           "hello=world&content=string&key=12345";
 
 const static string POST_request_login = "POST /login HTTP/1.1\r\n"
                                          "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
@@ -37,33 +37,41 @@ const static string POST_request_login = "POST /login HTTP/1.1\r\n"
                                          "login=name&password=12345";
 
 const static string POST_request_signup = "POST /signup HTTP/1.1\r\n"
-                                         "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
-                                         "Host: www.example.com\r\n"
-                                         "Content-Type: application/x-www-form-urlencoded\r\n"
-                                         "Content-Length: length\r\n"
-                                         "Accept-Language: ru-ru\r\n"
-                                         "Accept-Encoding: gzip, deflate\r\n"
-                                         "Connection: Keep-Alive\r\n\r\n"
-                                         "login=name&mail=name@gmail.com&password=12345";
-
-const static string POST_request_addpost = "POST /addpost HTTP/1.1\r\n"
                                           "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
                                           "Host: www.example.com\r\n"
                                           "Content-Type: application/x-www-form-urlencoded\r\n"
                                           "Content-Length: length\r\n"
                                           "Accept-Language: ru-ru\r\n"
                                           "Accept-Encoding: gzip, deflate\r\n"
-                                          "Connection: Keep-Alive\r\n"
-                                          "Cookie: session=dfsd54h4telngdfjgod5\r\n\r\n"
-                                          "title=first&text=hello!&fileurl=s3url&tag=math";
+                                          "Connection: Keep-Alive\r\n\r\n"
+                                          "login=name&mail=name@gmail.com&password=12345";
 
-const static string GET_request1 = "GET /main/first HTTP/1.1\r\n"
-                                  "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
-                                  "Host: www.example.com\r\n"
-                                  "Accept-Language: ru-ru\r\n"
-                                  "Accept-Encoding: gzip, deflate\r\n"
-                                  "Connection: Keep-Alive\r\n"
-                                  "Cookie: session=12345\r\n\r\n";
+const static string POST_request_addpost = "POST /rooms/room1 HTTP/1.1\r\n"
+                                           "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
+                                           "Host: www.example.com\r\n"
+                                           "Content-Type: application/x-www-form-urlencoded\r\n"
+                                           "Content-Length: length\r\n"
+                                           "Accept-Language: ru-ru\r\n"
+                                           "Accept-Encoding: gzip, deflate\r\n"
+                                           "Connection: Keep-Alive\r\n"
+                                           "Cookie: session=dfsd54h4telngdfjgod5\r\n\r\n"
+                                           "title=first&text=hello!&fileurl=s3url&tag=math";
+
+const static string GET_request_room = "GET /rooms/room1 HTTP/1.1\r\n"
+                                   "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
+                                   "Host: www.example.com\r\n"
+                                   "Accept-Language: ru-ru\r\n"
+                                   "Accept-Encoding: gzip, deflate\r\n"
+                                   "Connection: Keep-Alive\r\n"
+                                   "Cookie: session=12345\r\n\r\n";
+
+const static string GET_request2 = "GET /room/room1/math HTTP/1.1\r\n"
+                                   "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
+                                   "Host: www.example.com\r\n"
+                                   "Accept-Language: ru-ru\r\n"
+                                   "Accept-Encoding: gzip, deflate\r\n"
+                                   "Connection: Keep-Alive\r\n"
+                                   "Cookie: session=sessionforroom\r\n\r\n";
 
 TEST( method_parse_tests, oneline_first )
 {
@@ -83,7 +91,7 @@ TEST( method_parse_tests, oneline_second )
 
 TEST( method_parse_tests, full_first )
 {
-    Parser parser( GET_request1 );
+    Parser parser(GET_request_room );
     string method = parser.parse_method();
     ASSERT_EQ( "GET", method );
 }
@@ -105,17 +113,18 @@ TEST(path_parse_tests, oneline_first)
 
 TEST( path_parse_tests, full_first )
 {
-    Parser parser( GET_request1 );
+    Parser parser(GET_request_room );
     string path = parser.parse_path();
-    ASSERT_EQ( "main/first", path );
+    ASSERT_EQ( "rooms/room1", path );
 }
 
 TEST( room_from_path_parse_tests, first )
 {
-    Parser parser( GET_request1 );
+    Parser parser(GET_request_room );
     string path = parser.parse_path();
-    string room = parser.parse_room_from_path( path );
-    ASSERT_EQ( "first", room );
+    std::pair<string, string> room = parser.parse_room_properties(path);
+    ASSERT_EQ( "room1", room.first );
+    ASSERT_EQ( "", room.second );
 }
 
 TEST( body_parse_tests, first )
@@ -147,16 +156,32 @@ TEST( cookies_parse_tests, second )
 
 TEST( full_parse_tests, GET_room ) // запрос на получение конкретной комнаты
 {
-    Parser parser( GET_request1 );
+    Parser parser( GET_request_room );
     string method = parser.parse_method();
     ASSERT_EQ( method, "GET" );
     string path = parser.parse_path();
-    ASSERT_EQ( "main/first", path );
-    string room = parser.parse_room_from_path( path );
-    ASSERT_EQ( "first", room );
+    ASSERT_EQ( "rooms/room1", path );
+    std::pair<string, string> room = parser.parse_room_properties( path );
+    ASSERT_EQ( "room1", room.first );
+    ASSERT_EQ( "", room.second );
     unordered_map<string, string> cookies = parser.parse_cookies();
     ASSERT_EQ( "12345", cookies["session"] );
 }
+
+TEST( full_parse_tests, GET_room_tag ) // запрос на получение конкретной комнаты с постами по тегу
+{
+    Parser parser( GET_request2 );
+    string method = parser.parse_method();
+    ASSERT_EQ( method, "GET" );
+    string path = parser.parse_path();
+    ASSERT_EQ( "room/room1/math", path );
+    std::pair<string, string> room = parser.parse_room_properties( path );
+    ASSERT_EQ( "room1", room.first );
+    ASSERT_EQ( "math", room.second );
+    unordered_map<string, string> cookies = parser.parse_cookies();
+    ASSERT_EQ( "sessionforroom", cookies["session"] );
+}
+
 
 TEST( full_parse_tests, POST_login ) // запрос на то чтобы войти
 {
@@ -189,7 +214,9 @@ TEST( full_parse_tests, POST_addpost ) // запрос на добавление
     string method = parser.parse_method();
     ASSERT_EQ( method, "POST" );
     string path = parser.parse_path();
-    ASSERT_EQ( "addpost", path );
+    ASSERT_EQ( "rooms/room1", path );
+    string room = parser.parse_room_properties( path ).first;
+    ASSERT_EQ( "room1", room );
     unordered_map<string, string> data = parser.parse_body();
     ASSERT_EQ( "first", data["title"] );
     ASSERT_EQ( "hello!", data["text"] );
@@ -198,4 +225,3 @@ TEST( full_parse_tests, POST_addpost ) // запрос на добавление
     unordered_map<string, string> cookies = parser.parse_cookies();
     ASSERT_EQ( "dfsd54h4telngdfjgod5", cookies["session"] );
 }
-

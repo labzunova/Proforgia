@@ -35,30 +35,32 @@ void Connection::handle_read( const Connection::error_code &e, std::size_t bytes
 {
     /*boost::asio::async_write(socket_, boost::asio::buffer(buffer_), // это тут было для тестирования эхо-сервера, пусть пока побудет
                              boost::bind(&Connection::handle_write, shared_from_this(),boost::asio::placeholders::error));*/
-
-   // Request request( std::string(buffer_.begin(), buffer_.end() ) ); // внутри реквеста вызывается парсер и записывает в поля реквеста готовые значения
+    string request_( std::begin( buffer_ ), std::end( buffer_ ) );
+    Request request( request_ ); // внутри реквеста вызывается парсер и записывает в поля реквеста готовые значения
     std::map<string, string> to_put_in_loop;  // эта мапа передается в воркеры для обработки апи
-    /*if ( request.get_method() == "GET" )
+    if ( request.get_method() == "GET" )
     {
-        string path = request.get_path();
-        to_put_in_loop.insert( std::pair<string, string>("path", path ) );
         to_put_in_loop.insert( std::pair<string, string>( "method","GET" ) );
-        if ( path.find("main/" ) != -1 ) // тут может быть, к примеру, main/first
-        { // так будет записываться после парсинга случай, когда нужно получить главную страницу
-            to_put_in_loop["path"] = "main";
-            to_put_in_loop.insert( std::pair<string, string>( "room", request.get_room() ) );
-            to_put_in_loop.insert( std::pair<string, string>( "session",request.get_cookie(( string & ) "session" ) ) );
-        }
-        if ( path == "rooms" ) // получить список комнат пользователя
+        string path = request.get_path();
+        if ( path == "login" || path == "signup" )
+            to_put_in_loop.insert( std::pair<string, string>("path", path ) );
+        if ( path == "profile" ) // получить список комнат пользователя
         {
             to_put_in_loop.insert( std::pair<string, string>("path", path ) );
             to_put_in_loop.insert( std::pair<string, string>( "session",request.get_cookie(( string & ) "session" ) ) ); // чтобы проверить сессию
         }
-        if ( path == "maintag" ) // получить главную страницу со списком файлов по желаемому тегу
-        { // TODO: tag
-            to_put_in_loop.insert( std::pair<string, string>("path", path ) );
-            to_put_in_loop.insert( std::pair<string, string>( "tag",request.get_data( ( string & ) "tag" ) ) );
-            to_put_in_loop.insert(std::pair<string, string>("session",request.get_cookie(( string & ) "session" ) ) ); // чтобы проверить сессию
+
+        if ( path.find("rooms" ) != -1 ) // тут может быть, к примеру, rooms/first
+        { // так будет записываться после парсинга случай, когда нужно получить какую-то комнату или комнату с выведенными по тегу данными
+            to_put_in_loop.insert( std::pair<string, string>( "room", request.get_room() ) );
+            if ( request.get_tag_for_room() != "" )
+            {
+                to_put_in_loop["path"] = "roomtag";
+                to_put_in_loop.insert( std::pair<string, string>( "tag", request.get_tag_for_room() ) );
+            }
+            else
+                to_put_in_loop["path"] = "room";
+            to_put_in_loop.insert( std::pair<string, string>( "session",request.get_cookie(( string & ) "session" ) ) );
         }
 
     }
@@ -78,42 +80,18 @@ void Connection::handle_read( const Connection::error_code &e, std::size_t bytes
             to_put_in_loop.insert(std::pair<string, string>( "mail",request.get_data( ( string & ) "mail" ) ) ) ;
             to_put_in_loop.insert(std::pair<string, string>( "password",request.get_data( ( string & ) "password" ) ) );
         }
-        if ( path == "addpost" ) // добавить файл с указанным тегом и вернуть ту же главную страницу
-        { // TODO: room
-            to_put_in_loop.insert( std::pair<string, string>( "tag",request.get_data( ( string & ) "tag" ) ) );
-            to_put_in_loop.insert( std::pair<string, string>( "fileurl",request.get_data( ( string & ) "fileurl" ) ) );
-            to_put_in_loop.insert( std::pair<string, string>( "session",request.get_cookie( ( string & ) "session" ) ) );
-        }
-        if ( path == "room" ) // вступить в новую комнату и вернуть ее
+        if ( path.find( "rooms" ) != -1 ) // добавить файл с указанным тегом и вернуть ту же главную страницу
         {
-            to_put_in_loop.insert( std::pair<string, string>( "tag",request.get_data( ( string & ) "room" ) ) );
-            to_put_in_loop.insert( std::pair<string, string>( "session",request.get_cookie( ( string & ) "session" ) ) );
+            to_put_in_loop["path"] = "room";
+            to_put_in_loop.insert( std::pair<string, string>( "room", request.get_room() ) );
+            to_put_in_loop.insert( std::pair<string, string>( "session",request.get_cookie(( string & ) "session" ) ) );
+            to_put_in_loop.insert( std::pair<string, string>( "title",request.get_data( ( string & ) "title" ) ) );
+            to_put_in_loop.insert( std::pair<string, string>( "tag",request.get_data( ( string & ) "tag" ) ) );
+            to_put_in_loop.insert( std::pair<string, string>( "text",request.get_data( ( string & ) "text" ) ) ); // text и fileurl не обязательно будут
+            to_put_in_loop.insert( std::pair<string, string>( "fileurl",request.get_data( ( string & ) "fileurl" ) ) );
         }
-    }*/
+    }
     connection_queue.push_back( to_put_in_loop, socket_ ); // пихаем в очередь мапу и сокет для колбэка: моя обработка данного запроса окончена, отправит уже колбэк
 }
-
-void Connection::callback_to_write( std::array<char, 8192> buffer ) {
-    boost::asio::async_write( socket_, boost::asio::buffer( buffer ),
-                             boost::bind( &Connection::handle_write, shared_from_this(), boost::asio::placeholders::error ) );
-}
-
-void Connection::handle_write( const Connection::error_code &e )
-{
-    // выполняющаяся при чтении функция, которая биндится при запуске асинхронного чтения
-    if (!e)
-    {
-        // Initiate graceful connection closure.
-        boost::system::error_code ignored_ec;
-        socket_.shutdown( boost::asio::ip::tcp::socket::shutdown_both, ignored_ec );
-    }
-
-    if ( e != boost::asio::error::operation_aborted  )
-    {
-       // connection_queue.stop(shared_from_this());
-    }
-}
-
-
 
 

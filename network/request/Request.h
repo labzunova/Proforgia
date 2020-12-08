@@ -15,12 +15,14 @@ public:
     const string get_path();
     const string get_method();
     const string get_room();
+    const string get_tag_for_room();
 private:
     std::unordered_map<std::string, std::string> data;
     std::unordered_map<std::string, std::string> cookies;
     string method;
     string path;
     string room;
+    string tag;
 };
 
 

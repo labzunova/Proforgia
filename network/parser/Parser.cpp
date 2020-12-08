@@ -19,27 +19,41 @@ const string Parser::parse_path()
     return path;
 }
 
-const string Parser::parse_room_from_path( string path )
+const std::pair<string, string> Parser::parse_room_properties(string& path )
 {
-    return path.erase(0, path.find('/') + 1);
+    string room = "",
+           tag = "";
+    path.erase(0, path.find('/') + 1);
+    if ( path.find( '/') != -1 ) // если требуется получить не просто комнату, а комнату с постами по тегу
+    {
+        room = path.substr( 0, path.find( '/' ) );
+        tag = path.erase( 0, path.find( '/' ) + 1 );
+    }
+    else // если получить нужно просто конкретную комнату
+        room = path;
+    std::pair<string, string> properties = { room, tag };
+    return properties;
 }
 
 const unordered_map<string, string> Parser::parse_cookies()
 {
-    string request_ = request;
     unordered_map<string, string> cookie_values;
-    string cookies = request_.erase( 0, request_.find( "\r\nCookie:" ) + 10 );
-    cookies = cookies.erase( cookies.find("\r\n") );
-    string key, value;
-    while ( cookies.length() != 0 )
+    if ( request.find( "\r\nCookie:" ) != -1)
     {
-        int index = cookies.find( '=' );
-        key = cookies.substr( 0, index );
-        int endpos = cookies.find( ';' );
-        if( endpos == -1 ) endpos = cookies.length(); // если последняя кука
-        value = cookies.substr( index + 1, endpos - index - 1 );
-        cookie_values.insert(std::make_pair( key, value ));
-        cookies.erase( 0, endpos + 2 );
+        string request_ = request;
+        string cookies = request_.erase( 0, request_.find( "\r\nCookie:" ) + 10 );
+        cookies = cookies.erase( cookies.find("\r\n") );
+        string key, value;
+        while ( cookies.length() != 0 )
+        {
+            int index = cookies.find( '=' );
+            key = cookies.substr( 0, index );
+            int endpos = cookies.find( ';' );
+            if( endpos == -1 ) endpos = cookies.length(); // если последняя кука
+            value = cookies.substr( index + 1, endpos - index - 1 );
+            cookie_values.insert(std::make_pair( key, value ));
+            cookies.erase( 0, endpos + 2 );
+        }
     }
     return cookie_values;
 }
@@ -62,8 +76,3 @@ const unordered_map<string, string> Parser::parse_body()
     }
     return data;
 }
-
-
-
-
-

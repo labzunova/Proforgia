@@ -21,6 +21,22 @@ set(UNIT_TESTS
         tests/tests.cpp
         tests/network/parser_tests.cpp)
 
+set(HEADER_FILES_SERVER
+        network/connection/Connection.h
+        network/connection_queue/Connection_queue.h
+        network/parser/Parser.h
+        network/request/Request.h
+        network/server/Server.h
+        )
+
+set(SOURCE_FILES_SERVER
+        network/connection/Connection.cpp
+        network/connection_queue/Connection_queue.cpp
+        network/parser/Parser.cpp
+        network/request/Request.cpp
+        network/server/Server.cpp
+        )
+
 #---------------------------google-tests---------------------------
 
 # Download and unpack googletest at configure time
