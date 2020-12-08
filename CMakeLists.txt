@@ -37,6 +37,7 @@ set(SOURCE_FILES_SERVER
         network/server/Server.cpp
         )
 
+add_library(${SERVER_LIB} STATIC ${SOURCE_FILES_SERVER})
 #---------------------------google-tests---------------------------
 
 # Download and unpack googletest at configure time
