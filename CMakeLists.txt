@@ -6,7 +6,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 
-
 find_package(AWSSDK REQUIRED COMPONENTS s3)
 
 find_package(PostgreSQL REQUIRED)
