@@ -227,4 +227,65 @@ std::optional< vector<pair<DBRoom, Rights>> > PostgreDBWrapper::get_user_rooms(c
     return res;
 }
 
+shared_ptr<DBRoom> PostgreDBWrapper::get_room_info(const int& room_id, ErrorCodes &error) const {
+    std::shared_ptr<PGconn> connection;
+    try {
+        connection = get_connection();
+    }
+    catch(std::exception &exc) {
+        error = ErrorCodes::DB_CONNECTION_ERROR;
+        std::cout << exc.what();
+        return nullptr;
+    }
+
+    std::string s_id = std::to_string(room_id);
+    std::string query = "select * from rooms where id=" + s_id + ";";
+
+    auto res_deleter = [](PGresult* r) { PQclear(r);};
+    std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
+
+    if (PQresultStatus(result.get()) != PGRES_TUPLES_OK) {
+        error = ErrorCodes::UNKNOWN_DB_ERROR;
+        return nullptr;
+    }
+
+    if (PQntuples(result.get()) == 0) {
+        error = ErrorCodes::DB_ENTITY_NOT_FOUND;
+        return nullptr;
+    }
+    else {
+        int id = std::stoi(PQgetvalue(result.get(), 0, 0));
+        string date = PQgetvalue(result.get(), 0, 1);
+        string name = PQgetvalue(result.get(), 0, 2);
+        string description = PQgetvalue(result.get(), 0, 3);
+
+        return std::make_shared<DBRoom>(id, name, description, date);
+    }
+}
+
+bool PostgreDBWrapper::add_room(const DBRoom::Room &room_info, ErrorCodes &error) {
+    std::shared_ptr<PGconn> connection;
+    try {
+        connection = get_connection();
+    }
+    catch(std::exception &exc) {
+        error = ErrorCodes::DB_CONNECTION_ERROR;
+        std::cout << exc.what();
+        return false;
+    }
+
+    string query = "insert into rooms (room_name, room_desciption) values "
+                   "('" + room_info.room_name +
+                   "', '" + room_info.description + "');";
+
+    auto res_deleter = [](PGresult* r) { PQclear(r);};
+    std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
+    if (PQresultStatus(result.get()) != PGRES_COMMAND_OK) {
+        error = ErrorCodes::UNKNOWN_DB_ERROR;
+        return false;
+    }
+
+    return true;
+}
+
 

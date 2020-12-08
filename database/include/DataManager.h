@@ -25,7 +25,7 @@ private:
 
 public:
 	bool add_user( const DBUser::User& user_info, ErrorCodes &error ) const;
-	std::string add_room( const DBRoom::Room& room_info, ErrorCodes &error ) const;
+	bool add_room( const DBRoom::Room& room_info, ErrorCodes &error ) const;
 	std::string add_post( const DBPost::Post& post_info, ErrorCodes &error ) const;
 	std::string add_session( const DBSession::Session& session_info, ErrorCodes &error ) const;
 	bool add_user_to_room( const std::string& room_id, const std::string& user_id, ErrorCodes &error ) const;
@@ -46,7 +46,7 @@ public:
 	shared_ptr<DBUser> get_user_info( const int& user_id, ErrorCodes &error ) const;
 	shared_ptr<DBUser> get_user_info( const string& nickname, ErrorCodes &error ) const;
     std::optional< vector<pair<DBRoom, Rights>> > get_user_rooms( const int& user_id, ErrorCodes &error ) const;
-	DBRoom get_room_info( const std::string& room_id, ErrorCodes &error ) const;
+    shared_ptr<DBRoom> get_room_info( const int& room_id, ErrorCodes &error ) const;
 	DBPost get_post_info( const std::string& post_id, ErrorCodes &error ) const;
 	DBSession get_session_info( const std::string& session_id, ErrorCodes &error ) const;
 

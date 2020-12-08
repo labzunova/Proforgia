@@ -27,7 +27,7 @@ protected:
 //		ErrorCodes &error ) override;
 public:
 	bool add_user( const DBUser::User& user_info, ErrorCodes &error ) override;
-//	bool add_room( const std::string& room_id, const DBRoom::Room& room_info, ErrorCodes &error ) override;
+	bool add_room( const DBRoom::Room& room_info, ErrorCodes &error ) override;
 //	bool add_post( const std::string& post_id, const DBPost::Post& post_info, ErrorCodes &error ) override;
 //	bool add_user_to_room( const std::string& room_id, const std::string& user_id, ErrorCodes &error ) override;
 //	bool add_session( const std::string& session_id, const DBSession::Session& session_info, ErrorCodes &error ) override;
@@ -41,7 +41,7 @@ public:
     shared_ptr<DBUser> get_user_info( const int& user_id, ErrorCodes &error ) const override;
     shared_ptr<DBUser> get_user_info( const string& nickname, ErrorCodes &error ) const override;
     std::optional< vector<pair<DBRoom, Rights>> > get_user_rooms( const int& user_id, ErrorCodes &error ) const override;
-//	DBRoom get_room_info( const std::string& room_id, ErrorCodes &error ) const override;
+	shared_ptr<DBRoom> get_room_info( const int& room_id, ErrorCodes &error ) const override;
 //	DBPost get_post_info( const std::string& post_id, ErrorCodes &error ) const override;
 //	DBSession get_session_info( const std::string& session_id, ErrorCodes &error ) const override;
 //

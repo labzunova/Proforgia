@@ -56,12 +56,12 @@ int DBEntity::get_id() const {
     return id;
 }
 
-DBRoom DBRoom::get(string &_id, ErrorCodes &error) {
-
+shared_ptr<DBRoom> DBRoom::get(int _id, ErrorCodes &error) {
+    return DataManager::getInstance().get_room_info(_id, error);
 }
 
-std::string DBRoom::add(DBRoom::Room _room, ErrorCodes &error) {
-
+bool DBRoom::add(DBRoom::Room _room, ErrorCodes &error) {
+    return DataManager::getInstance().add_room(_room, error);
 }
 
 bool DBRoom::remove(string &id, ErrorCodes &error) {

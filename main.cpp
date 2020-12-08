@@ -10,13 +10,7 @@
 int main()
 {
     ErrorCodes error;
-//    PostgreDBWrapper db;
-//    // AmazonS3StorageWrapper st;
-//    ErrorCodes error;
-//
-//    auto user = db.get_user_info(3, error);
-//    user->print();
-
+/*
     auto res = DBUser::add(DBUser::User("cool_nickname_2", "basket.ivan@mail.ru", "xxx"), error);
     if (!res) {
         switch(error) {
@@ -60,6 +54,31 @@ int main()
         }
     }
 
+    auto room = DBRoom::get(11, error);
+    if (room) {
+        room->print();
+    } else {
+        // handle
+        switch(error) {
+            case ErrorCodes::DB_ENTITY_NOT_FOUND:
+                std::cout << "entity not found" << std::endl;
+                break;
+            default:
+                std::cout << "other error" << std::endl;
+        }
+    }
+
+    bool res = DBRoom::add(DBRoom::Room("myroomname3"), error);
+    if (!res) {
+        switch(error) {
+            case ErrorCodes::DB_CONNECTION_ERROR:
+                std::cout << "connection error" << std::endl;
+                break;
+            default:
+                std::cout << "other error" << std::endl;
+        }
+    }
+*/
 
     return 0;
 }

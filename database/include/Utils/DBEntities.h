@@ -108,7 +108,7 @@ class DBPost;
 
 struct DBRoom : public DBEntity {
 	struct Room {
-		Room( std::string& _room_name, std::string& _description ) : 
+		Room( std::string _room_name, std::string _description = "" ) :
 		room_name(_room_name),
 		description(_description) {}
 
@@ -125,8 +125,8 @@ struct DBRoom : public DBEntity {
 	std::string room_name;
 	std::string description;
 
-	static DBRoom get(std::string& _id, ErrorCodes &error);
-	static std::string add(Room _room, ErrorCodes &error); // return id in DB on success, а при неудаче, вернет строку специального вида
+	static shared_ptr<DBRoom> get(int _id, ErrorCodes &error);
+	static bool add(Room _room, ErrorCodes &error); // return id in DB on success, а при неудаче, вернет строку специального вида
 	static bool remove(std::string& id, ErrorCodes &error);
 
 	static bool add_user(const std::string& room_id, const std::string& user_id, ErrorCodes &error);

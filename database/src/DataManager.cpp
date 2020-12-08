@@ -40,6 +40,15 @@ std::optional< vector<pair<DBRoom, Rights>> > DataManager::get_user_rooms(const 
     return database->get_user_rooms(user_id, error);
 }
 
+shared_ptr<DBRoom> DataManager::get_room_info(const int &room_id, ErrorCodes &error) const {
+    return database->get_room_info(room_id, error);
+}
+
+bool DataManager::add_room(const DBRoom::Room &room_info, ErrorCodes &error) const {
+    return database->add_room(room_info, error);
+}
+
+
 
 
 
