@@ -13,6 +13,9 @@
 #include <thread>
 #include <memory>
 #include <vector>
+#include <boost/log/trivial.hpp>
+#include <boost/lexical_cast.hpp>
+#include <iostream>
 
 
 template<class Queue, class Handler>
@@ -53,3 +56,5 @@ private:
     std::vector<std::shared_ptr<Worker<Queue, Handler>>> workers;
     std::shared_ptr<Checker<Queue>> checker;
 };
+
+

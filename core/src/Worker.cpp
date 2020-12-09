@@ -2,11 +2,10 @@
 // Created by sergei on 28.11.2020.
 //
 
-#include "Worker.h"
 
-#include <boost/log/trivial.hpp>
-#include <boost/lexical_cast.hpp>
-#include <iostream>
+//extern "C++" {
+#include "Worker.h"
+//}
 
 static std::mutex mtx;
 static std::condition_variable cv;

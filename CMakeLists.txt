@@ -10,6 +10,7 @@ set(UNIT_TESTS
         )
 
 add_executable(Proforgia main.cpp)
+target_link_libraries(Proforgia core_lib)
 
 #---------------------------google-tests---------------------------
 

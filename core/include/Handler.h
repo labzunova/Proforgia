@@ -13,6 +13,7 @@
 #include <memory>
 
 #include "boost/date_time/gregorian/gregorian.hpp"
+#include "boost/date_time/local_time/local_time.hpp"
 
 using std::string;
 
@@ -27,7 +28,7 @@ private:
     };
 
 public:
-    explicit Handler(Context& context) : context_(context) {LIVE_TIME(10);};
+    explicit Handler(Context& context) : context_(context) ;
     ~Handler() = default;
     Handler(const Handler&) = delete;
     Handler& operator=(const Handler&) = delete;
@@ -40,7 +41,7 @@ private:
     static string redirect(const string& page);
 
 private:
-    boost::gregorian::days LIVE_TIME;
+    boost::local_time::local_date_time LIVE_TIME;
 
     Context context_;
 
