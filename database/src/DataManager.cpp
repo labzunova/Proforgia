@@ -94,6 +94,40 @@ shared_ptr<DBPost> DataManager::get_post_info(const int &post_id, ErrorCodes &er
 }
 
 
+std::optional<vector<DBPost> >
+DataManager::get_posts_by_tags(vector<string> &_tags, int room_id, ErrorCodes &error) const {
+    auto posts_ids = database->get_posts_by_tags(_tags, room_id, error);
+    if (!posts_ids) {
+        return std::nullopt;
+    }
+
+    ErrorCodes _error;
+    vector<DBPost> posts;
+    posts.reserve(posts_ids->size());
+    for (int i = 0; i < posts_ids->size(); i++) {
+        auto post = database->get_post_info(posts_ids.value()[i], _error);
+        if (!post) {
+            switch (_error) {
+                case DB_CONNECTION_ERROR:
+                    error = DB_CONNECTION_ERROR;
+                    return std::nullopt;
+                case DB_ENTITY_NOT_FOUND:
+                    continue;
+                default:
+                    error = UNKNOWN_DB_ERROR;
+                    return std::nullopt;
+            }
+        }
+        posts.push_back(post.operator*());
+    }
+
+    return posts;
+}
+
+bool DataManager::add_tags_to_post(vector<std::string> &_tags, const int &post_id, const int &room_id, ErrorCodes &error) const {
+    return database->add_tags_to_post(_tags, post_id, room_id, error);
+}
+
 
 
 

@@ -40,8 +40,9 @@ std::vector<std::string> DBPost::get_attachments(ErrorCodes &error) {
 
 }
 
-std::vector<DBPost> DBPost::get(std::vector<std::string>& _tags, ErrorCodes &error) {
+std::optional< vector<DBPost> > DBPost::get(std::vector<std::string> _tags, int room_id, ErrorCodes &error) {
 	// get all posts, that contain all tags in _tags
+    return DataManager::getInstance().get_posts_by_tags(_tags, room_id, error);
 }
 
 shared_ptr<DBPost> DBPost::get(int _id, ErrorCodes &error) {
@@ -60,19 +61,19 @@ bool DBPost::update(ErrorCodes &error) {
     return DataManager::getInstance().edit_post(id, Post(room_id, user_id, title, text), error);
 }
 
-bool update_tags(vector<DBTag>& new_tags) {
+bool DBPost::update_tags(vector<string>& new_tags, ErrorCodes &error) {
+    return DataManager::getInstance().add_tags_to_post(new_tags, id, room_id, error);
+}
+
+string DBPost::get_upload_link(ErrorCodes &error) {
 
 }
 
-string DBPost::get_upload_link() {
+bool DBPost::add_file(string filename, ErrorCodes &error) {
 
 }
 
-bool DBPost::add_file(string filename) {
-
-}
-
-bool DBPost::remove_file(string filename) {
+bool DBPost::remove_file(string filename, ErrorCodes &error) {
 
 }
 

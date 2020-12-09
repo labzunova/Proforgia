@@ -22,6 +22,7 @@ const static string DB_USER_PASSWORD = "password";
 //  и переподключаться лениво, если с ним что то будет не так и протестить такой вариант работы
 
 // TODO: сделать лог дебага и туда писать PQresultErrorMessage
+// TODO: использовать один PQResult для записи нового результата при нескольких запросах
 
 PostgreDBWrapper::PostgreDBWrapper() :
     host(DB_HOST),
@@ -662,6 +663,131 @@ bool PostgreDBWrapper::edit_post(const int& id, const DBPost::Post &post_info, E
     }
 
     return true;
+}
+
+std::optional<vector<int> >
+PostgreDBWrapper::get_posts_by_tags(vector<std::string> &_tags, int room_id, ErrorCodes &error) const {
+    std::shared_ptr<PGconn> connection;
+    try {
+        connection = get_connection();
+    }
+    catch(std::exception &exc) {
+        error = ErrorCodes::DB_CONNECTION_ERROR;
+        std::cout << exc.what();
+        return std::nullopt;
+    }
+
+    // итоговый результат
+    vector<int> result_posts_ids;
+
+    // получаю все тэги этой комнаты и помещаю их в map
+    std::string s_id = std::to_string(room_id);
+    std::string query = "select id, tag_name from tags where room_id=" + s_id + ";";
+    auto res_deleter = [](PGresult* r) { PQclear(r);};
+    std::unique_ptr <PGresult, decltype(res_deleter)> room_tags_result(PQexec(connection.get(), query.c_str()), res_deleter);
+    if (PQresultStatus(room_tags_result.get()) != PGRES_TUPLES_OK) {
+        error = ErrorCodes::UNKNOWN_DB_ERROR;
+        return std::nullopt;
+    }
+    std::unordered_map<string, int> room_tags = {};
+    int number_of_rows = PQntuples(room_tags_result.get());
+    if (number_of_rows == 0) return result_posts_ids;
+    for (int i = 0; i < number_of_rows; i++) {
+        int tag_id = std::stoi(PQgetvalue(room_tags_result.get(), i, 0));
+        string tag_name = PQgetvalue(room_tags_result.get(), i, 1);
+
+        room_tags.insert({tag_name, tag_id});
+    }
+
+    // заполняю массив id'шников всех тэгов из _tags которые состоят в комнате room_id
+    vector<int> _tags_ids = {};
+    for (auto & _tag : _tags) {
+        auto tag = room_tags.find(_tag);
+        if (tag != room_tags.end()) _tags_ids.push_back(tag->second);
+    }
+
+    // делаю запрос на нахождение id постов у которых есть ВСЕ тэги из _tags
+    if (_tags_ids.empty()) return result_posts_ids;
+    string _query = "select p1.post_id from tags_to_posts p1 ";
+    string joining;
+    string condition = "where p1.tag_id = " + std::to_string(_tags_ids[0]);
+    for (int i = 1; i < _tags_ids.size(); i++) {
+        joining += "left join tags_to_posts p" + std::to_string(i+1) +
+                " on p" + std::to_string(i) + ".post_id = p" + std::to_string(i+1) + ".post_id ";
+        condition += " and p" + std::to_string(i+1) + ".tag_id = " + std::to_string(_tags_ids[i]);
+    }
+    // QUERY EXAMPLE:
+    // select p1.post_id from tags_to_posts p1 left join tags_to_posts p2 on p1.post_id = p2.post_id left
+    // join tags_to_posts p3 on p3.post_id = p2.post_id
+    // where p1.tag_id = 2 and p2.tag_id = 6 and p3.tag_id = 7;
+    _query = _query + joining + condition + ";";
+
+    std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), _query.c_str()), res_deleter);
+
+    number_of_rows = PQntuples(result.get());
+    for (int i = 0; i < number_of_rows; i++) {
+        int _post_id = std::stoi(PQgetvalue(result.get(), i, 0));
+        result_posts_ids.push_back(_post_id);
+    }
+
+    return result_posts_ids;
+}
+
+bool PostgreDBWrapper::add_tags_to_post(vector<std::string> &_tags, const int &post_id, const int &room_id, ErrorCodes &error) {
+    if (_tags.empty()) return true;
+
+    std::shared_ptr<PGconn> connection;
+    try {
+        connection = get_connection();
+    }
+    catch(std::exception &exc) {
+        error = ErrorCodes::DB_CONNECTION_ERROR;
+        std::cout << exc.what();
+        return false;
+    }
+
+    // добавить в tags те тэги, которых еще не было в тэгах этой комнаты
+    std::string s_id = std::to_string(room_id);
+    std::string query = "insert into tags (tag_name, room_id) values ";
+    for (int i = 0; i < _tags.size(); i++) {
+        query += "('" + _tags[i] + "', " + s_id + ")";
+        if (i != (_tags.size() - 1)) query += ", ";
+    }
+    query += " on conflict do nothing;";
+
+    auto res_deleter = [](PGresult* r) { PQclear(r);};
+    std::unique_ptr <PGresult, decltype(res_deleter)> add_tags_result(PQexec(connection.get(), query.c_str()), res_deleter);
+    if (PQresultStatus(add_tags_result.get()) != PGRES_COMMAND_OK) {
+        error = ErrorCodes::UNKNOWN_DB_ERROR;
+        return false;
+    }
+
+
+    // выбрать все тэги этого поста, этой комнаты
+    query = "select id from tags where ((tag_name = '" + _tags[0] + "'";;
+    for (int i = 1; i < _tags.size(); i++) {
+        query += " or tag_name = '" + _tags[i] + "'";
+    }
+    query += ") and room_id = " + std::to_string(room_id) + ");";
+
+    std::unique_ptr <PGresult, decltype(res_deleter)> get_tags_of_this_post_result(PQexec(connection.get(), query.c_str()), res_deleter);
+    if (PQresultStatus(add_tags_result.get()) != PGRES_TUPLES_OK) {
+        error = ErrorCodes::UNKNOWN_DB_ERROR;
+        return false;
+    }
+
+    vector<int> tags_ids;
+    int number_of_rows = PQntuples(get_tags_of_this_post_result.get());
+    if (number_of_rows == 0) return true;
+    for (int i = 0; i < number_of_rows; i++) {
+        int id = std::stoi(PQgetvalue(get_tags_of_this_post_result.get(), i, 0));
+        tags_ids.push_back(id);
+    }
+
+    // очистить все ранние связи этого поста с тэгами
+
+    // вставить актуальные записи связей тэгов с этим постом
+
 }
 
 

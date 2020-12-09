@@ -203,13 +203,13 @@ struct DBPost : public DBEntity {
 	static bool remove(int id, ErrorCodes &error);
 	bool update(ErrorCodes &error) override;
 
-    static vector<DBPost> get(std::vector<std::string>& _tags, ErrorCodes &error);
+    static std::optional< vector<DBPost> > get(std::vector<std::string> _tags, int room_id, ErrorCodes &error);
 
-    string get_upload_link(); // !!! чтобы отдать ссылку нужно знать название файла ИНАЧЕ название будет генерится автоматом
-    bool add_file(string filename); // filename - имя файла, с которым он загрузился в Хранилище
-    bool remove_file(string filename); // filename - имя файла, с которым он загрузился в Хранилище
+    string get_upload_link(ErrorCodes &error); // !!! чтобы отдать ссылку нужно знать название файла ИНАЧЕ название будет генерится автоматом
+    bool add_file(string filename, ErrorCodes &error); // filename - имя файла, с которым он загрузился в Хранилище
+    bool remove_file(string filename, ErrorCodes &error); // filename - имя файла, с которым он загрузился в Хранилище
 
-    bool update_tags(vector<DBTag>& new_tags); // для добавления/обновления списка тэгов у поста
+    bool update_tags(vector<string>& new_tags, ErrorCodes &error); // для добавления/обновления списка тэгов у поста
 
 	// методы получения связанных полей 
 	DBRoom get_room(ErrorCodes &error);

@@ -178,6 +178,27 @@ int main()
     post->update(error);
 */
 
+    auto posts = DBPost::get({"tag1", "mathmathics", "physicsSuck"}, 2, error);
+    if (!posts) {
+        switch(error) {
+            case DB_CONNECTION_ERROR:
+                std::cout << "DB_CONNECTION_ERROR" << std::endl;
+                break;
+            case DB_ENTITY_NOT_FOUND:
+                std::cout << "DB_ENTITY_NOT_FOUND" << std::endl;
+                break;
+            case UNKNOWN_DB_ERROR:
+                std::cout << "UNKNOWN_DB_ERROR" << std::endl;
+                break;
+            default:
+                std::cout << "????????" << std::endl;
+                break;
+        }
+    }
+    for (int i = 0; i < posts->size(); i++) {
+        posts.value()[i].print();
+        std::cout << std::endl;
+    }
 
     return 0;
 }
