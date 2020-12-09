@@ -22,6 +22,7 @@ target_include_directories(${DATABASE_LIB} PRIVATE ${PostgreSQL_INCLUDE_DIRS})
 set(SOURCE_FILES_TESTS
         ../tests/database/postgres_wrapper_tests.cpp)
 
-
+add_executable(tests_database ${SOURCE_FILES_TESTS})
+target_link_libraries(tests_database gtest gmock gtest_main -ldl pthread ${DATABASE_LIB})
 
 #----------------------------------------end-tests---------------------------------------------#
