@@ -29,6 +29,7 @@ using std::pair;
  TODO: сделать имеил уникальным
  TODO: исправить typo room_desciption на room_description
  TODO: сделать поля user_id и room_id not null в таблице posts
+ TODO: сделать поле room_id not null в таблице tags
  */
 
 
@@ -82,6 +83,7 @@ struct DBUser : public DBEntity {
 	// методы получения связанных полей
 
 	// возвращает массив пар, пара - комната и права пользователя в этой комнате
+    // std::optional конвертируется в bool и используется для определения, успешно ли завершилась функция
 	std::optional< vector<pair<DBRoom, Rights>> > get_rooms(ErrorCodes &error);
 
 
@@ -92,7 +94,7 @@ struct DBUser : public DBEntity {
 	    std::cout << "email: " << this->email << std::endl;
 	}
 
-    const string &getPassword() const;
+    [[nodiscard]] const string &getPassword() const;
 
     std::string nick_name;
     std::string email;
@@ -102,12 +104,29 @@ private:
 };
 
 class DBTag : public DBEntity {
-private:
-	size_t use_count; // счетчик количества упоминаний тэга для более эффективной сортировки тэгов по популярности
-
-
 public:
-	std::string name;
+    DBTag(int &id, string name, int roomId);
+
+    bool update(ErrorCodes &error) override; // поля тэга менять нельзя, всегда вернет false
+
+    struct Tag {
+        Tag(string name, int roomId);
+
+        string name;
+        int room_id;
+    };
+
+    void print() {
+        std::cout << "Tag info:" << std::endl;
+        std::cout << "id: " << this->id << std::endl;
+        std::cout << "name: " << this->name << std::endl;
+        std::cout << "room id: " << this->room_id << std::endl;
+    }
+
+private:
+	// size_t use_count; // счетчик количества упоминаний тэга для более эффективной сортировки тэгов по популярности
+	string name;
+	int room_id;
 };
 
 class DBPost;
@@ -160,28 +179,13 @@ private:
 
 struct DBPost : public DBEntity {
 	struct Post {
-		Post( 
-			std::string& _room_id, 
-			std::string& _user_id, 
-			std::string& _title,
-			std::string& _text,
-            vector<string> _tags,
-			std::vector<std::string>& _attachments ) :
-				room_id(_room_id), 
-				user_id(_user_id),
-				title(_title),
-				text(_text),
-				tags(_tags),
-				attachments(_attachments)
-		{}
+        Post(int roomId, int userId, const string &title, const string &text);
 
-		std::string room_id; 
-		std::string user_id; // post author
+		int room_id;
+		int user_id; // post author
 
-        std::string title;
-		std::string text;
-		vector<string> tags;
-		std::vector<std::string> attachments; // list of files to add to the post in DB
+        string title;
+		string text;
 	};
 
 	DBPost(int& id, int &_room_id, int &_user_id, std::string &_title, std::string &_text, local_date_time& _ldt) :
@@ -194,19 +198,24 @@ struct DBPost : public DBEntity {
 	std::string title;
 	std::string text;
 
-	static DBPost get(std::string& _id, ErrorCodes &error);
-	static std::string add(Post _post, ErrorCodes &error); // return id in DB on success, а при неудаче, вернет строку специального вида
-	static bool remove(std::string& id, ErrorCodes &error);
+	static shared_ptr<DBPost> get(int _id, ErrorCodes &error);
+	static bool add(const Post& _post, ErrorCodes &error);
+	static bool remove(int id, ErrorCodes &error);
 	bool update(ErrorCodes &error) override;
 
-	static std::vector<DBPost> get(std::vector<std::string>& _tags, ErrorCodes &error);
+    static vector<DBPost> get(std::vector<std::string>& _tags, ErrorCodes &error);
+
+    string get_upload_link(); // !!! чтобы отдать ссылку нужно знать название файла ИНАЧЕ название будет генерится автоматом
+    bool add_file(string filename); // filename - имя файла, с которым он загрузился в Хранилище
+    bool remove_file(string filename); // filename - имя файла, с которым он загрузился в Хранилище
+
+    bool update_tags(vector<DBTag>& new_tags); // для добавления/обновления списка тэгов у поста
 
 	// методы получения связанных полей 
 	DBRoom get_room(ErrorCodes &error);
 	DBUser get_author(ErrorCodes &error);
-	std::vector<DBTag> get_tags(ErrorCodes &error);
-
-	std::vector<std::string> get_attachments(ErrorCodes &error); // list of links to storage locations of files
+	vector<DBTag> get_tags(ErrorCodes &error);
+	vector<std::string> get_attachments(ErrorCodes &error); // list of links to storage locations of files
 
     void print() {
         std::cout << "Post info:" << std::endl;

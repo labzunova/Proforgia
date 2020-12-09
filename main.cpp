@@ -1,6 +1,9 @@
 #include <iostream>
 #include "database/include/Utils/DBEntities.h"
 
+using std::cout;
+using std::endl;
+
 int main()
 {
     ErrorCodes error;
@@ -140,9 +143,9 @@ int main()
                 std::cout << "other error" << std::endl;
         }
     }
- */
 
-    auto room = DBRoom::get(2, error);
+
+    auto room = DBRoom::get(4, error);
     auto room_posts = room->get_posts(error);
     if (room_posts) {
         for (int i = 0; i < room_posts->size(); i++) {
@@ -150,6 +153,31 @@ int main()
             std::cout << std::endl;
         }
     } else assert(false);
+
+    auto room_tags = room->get_tags(error);
+    if (room_tags) {
+        for (int i = 0; i < room_tags->size(); i++) {
+            room_tags.value()[i].print();
+            std::cout << std::endl;
+        }
+        if (room_tags->empty()) cout << "No tags";
+    } else assert(false);
+
+
+    bool res = DBPost::add(DBPost::Post(2, 1, "postAddedFromCode", "aaaaa"), error);
+    if (!res) assert(false);
+
+    res = DBPost::remove(8, error);
+    if (!res) assert(false);
+
+    auto post = DBPost::get(9, error);
+    if (post) post->print();
+    else assert(error == ErrorCodes::DB_ENTITY_NOT_FOUND);
+
+    post->text = "updated text";
+    post->update(error);
+*/
+
 
     return 0;
 }

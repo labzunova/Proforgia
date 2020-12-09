@@ -1,4 +1,6 @@
 #include "../include/Utils/DBEntities.h"
+
+#include <utility>
 #include "../include/DataManager.h"
 
 
@@ -42,19 +44,35 @@ std::vector<DBPost> DBPost::get(std::vector<std::string>& _tags, ErrorCodes &err
 	// get all posts, that contain all tags in _tags
 }
 
-DBPost DBPost::get(string &_id, ErrorCodes &error) {
-
+shared_ptr<DBPost> DBPost::get(int _id, ErrorCodes &error) {
+    return DataManager::getInstance().get_post_info(_id, error);
 }
 
-std::string DBPost::add(DBPost::Post _post, ErrorCodes &error) {
-
+bool DBPost::add(const DBPost::Post& _post, ErrorCodes &error) {
+    return DataManager::getInstance().add_post(_post, error);
 }
 
-bool DBPost::remove(string &id, ErrorCodes &error) {
-
+bool DBPost::remove(int id, ErrorCodes &error) {
+    return DataManager::getInstance().remove_post(id, error);
 }
 
 bool DBPost::update(ErrorCodes &error) {
+    return DataManager::getInstance().edit_post(id, Post(room_id, user_id, title, text), error);
+}
+
+bool update_tags(vector<DBTag>& new_tags) {
+
+}
+
+string DBPost::get_upload_link() {
+
+}
+
+bool DBPost::add_file(string filename) {
+
+}
+
+bool DBPost::remove_file(string filename) {
 
 }
 
@@ -119,3 +137,15 @@ std::optional< std::vector<DBPost> > DBRoom::get_posts(ErrorCodes &error) {
 std::optional< std::vector<DBTag> > DBRoom::get_tags(ErrorCodes &error) {
     return DataManager::getInstance().get_room_tags(id, error);
 }
+
+DBTag::Tag::Tag(string name, int roomId) : name(std::move(name)), room_id(roomId) {}
+
+DBTag::DBTag(int &id, string name, int roomId) : DBEntity(id), name(std::move(name)),
+                                                                         room_id(roomId) {}
+
+bool DBTag::update(ErrorCodes &error) {
+    return false;
+}
+
+DBPost::Post::Post(int roomId, int userId, const string &title, const string &text) : room_id(roomId), user_id(userId),
+                                                                                      title(title), text(text) {}

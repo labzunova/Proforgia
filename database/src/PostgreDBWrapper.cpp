@@ -512,7 +512,158 @@ std::optional<vector<DBPost> > PostgreDBWrapper::get_room_posts(const int &room_
 
 
 std::optional<vector<DBTag> > PostgreDBWrapper::get_room_tags(const int &room_id, ErrorCodes &error) const {
+    std::shared_ptr<PGconn> connection;
+    try {
+        connection = get_connection();
+    }
+    catch(std::exception &exc) {
+        error = ErrorCodes::DB_CONNECTION_ERROR;
+        std::cout << exc.what();
+        return std::nullopt;
+    }
 
+    string s_id = std::to_string(room_id);
+    string query = "select * from tags where room_id=" + s_id + ";";
+
+    auto res_deleter = [](PGresult* r) { PQclear(r);};
+    std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
+
+    if (PQresultStatus(result.get()) != PGRES_TUPLES_OK) {
+        error = ErrorCodes::UNKNOWN_DB_ERROR;
+        return std::nullopt;
+    }
+
+    vector<DBTag> res;
+    int number_of_rows = PQntuples(result.get());
+    for (int i = 0; i < number_of_rows; i++) {
+        int tag_id = std::stoi(PQgetvalue(result.get(), i, 0));
+        string tag_name = PQgetvalue(result.get(), i, 1);
+        int _room_id = std::stoi(PQgetvalue(result.get(), i, 2));
+
+        res.emplace_back(tag_id, tag_name, _room_id);
+    }
+
+    return res;
 }
+
+// TODO: в БД нет проверки на то что пост может быть добавлен только юзером который состоит в комнате room_id
+bool PostgreDBWrapper::add_post(const DBPost::Post &post_info, ErrorCodes &error) {
+    std::shared_ptr<PGconn> connection;
+    try {
+        connection = get_connection();
+    }
+    catch(std::exception &exc) {
+        error = ErrorCodes::DB_CONNECTION_ERROR;
+        std::cout << exc.what();
+        return false;
+    }
+
+    string s_user_id = std::to_string(post_info.user_id);
+    string s_room_id = std::to_string(post_info.room_id);
+    string query = "insert into posts (user_id, room_id, title, post_text) values "
+                   "(" + s_user_id +
+                   ", " + s_room_id +
+                   ", '" + post_info.title +
+                   "', '" + post_info.text + "');";
+
+    auto res_deleter = [](PGresult* r) { PQclear(r);};
+    std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
+    if (PQresultStatus(result.get()) != PGRES_COMMAND_OK) {
+        error = ErrorCodes::UNKNOWN_DB_ERROR;
+        return false;
+    }
+
+    return true;
+}
+
+bool PostgreDBWrapper::remove_post(const int &post_id, ErrorCodes &error) {
+    std::shared_ptr<PGconn> connection;
+    try {
+        connection = get_connection();
+    }
+    catch(std::exception &exc) {
+        error = ErrorCodes::DB_CONNECTION_ERROR;
+        std::cout << exc.what();
+        return false;
+    }
+
+    string s_id = std::to_string(post_id);
+    string query = "delete from posts where id=" + s_id + ";";
+
+    auto res_deleter = [](PGresult* r) { PQclear(r);};
+    std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
+    if (PQresultStatus(result.get()) != PGRES_COMMAND_OK) {
+        error = ErrorCodes::UNKNOWN_DB_ERROR;
+        return false;
+    }
+
+    return true;
+}
+
+shared_ptr<DBPost> PostgreDBWrapper::get_post_info(const int &post_id, ErrorCodes &error) const {
+    std::shared_ptr<PGconn> connection;
+    try {
+        connection = get_connection();
+    }
+    catch(std::exception &exc) {
+        error = ErrorCodes::DB_CONNECTION_ERROR;
+        std::cout << exc.what();
+        return nullptr;
+    }
+
+    std::string s_id = std::to_string(post_id);
+    std::string query = "select * from posts where id=" + s_id + ";";
+
+    auto res_deleter = [](PGresult* r) { PQclear(r);};
+    std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
+
+    if (PQresultStatus(result.get()) != PGRES_TUPLES_OK) {
+        error = ErrorCodes::UNKNOWN_DB_ERROR;
+        return nullptr;
+    }
+
+    if (PQntuples(result.get()) == 0) {
+        error = ErrorCodes::DB_ENTITY_NOT_FOUND;
+        return nullptr;
+    }
+    else {
+        int _post_id = std::stoi(PQgetvalue(result.get(), 0, 0));
+        string s_create_time = PQgetvalue(result.get(), 0, 1);
+        auto create_time = parse_timestamp_to_local_date_time(s_create_time);
+        int user_id = std::stoi(PQgetvalue(result.get(), 0, 2));
+        int _room_id = std::stoi(PQgetvalue(result.get(), 0, 3));
+        string title = PQgetvalue(result.get(), 0, 4);
+        string text = PQgetvalue(result.get(), 0, 5);
+
+        assert(_post_id == post_id);
+        return std::make_shared<DBPost>(_post_id, _room_id, user_id, title, text, create_time);
+    }
+}
+
+bool PostgreDBWrapper::edit_post(const int& id, const DBPost::Post &post_info, ErrorCodes &error) {
+    std::shared_ptr<PGconn> connection;
+    try {
+        connection = get_connection();
+    }
+    catch(std::exception &exc) {
+        error = ErrorCodes::DB_CONNECTION_ERROR;
+        std::cout << exc.what();
+        return false;
+    }
+
+    string s_id = std::to_string(id);
+    string query = "update posts set title='" + post_info.title + "', post_text='" + post_info.text + "' where id=" + s_id + ";";
+
+    auto res_deleter = [](PGresult* r) { PQclear(r);};
+    std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
+    if (PQresultStatus(result.get()) != PGRES_COMMAND_OK) {
+        error = ErrorCodes::UNKNOWN_DB_ERROR;
+        return false;
+    }
+
+    return true;
+}
+
+
 
 

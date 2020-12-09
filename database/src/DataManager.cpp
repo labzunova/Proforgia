@@ -77,6 +77,22 @@ std::optional<vector<DBPost>> DataManager::get_room_posts(const int &room_id, Er
     return database->get_room_posts(room_id, error);
 }
 
+bool DataManager::add_post(const DBPost::Post &post_info, ErrorCodes &error) const {
+    return database->add_post(post_info, error);
+}
+
+bool DataManager::remove_post(const int &post_id, ErrorCodes &error) const {
+    return database->remove_post(post_id, error);
+}
+
+bool DataManager::edit_post(const int &post_id, const DBPost::Post &post, ErrorCodes &error) const {
+    return database->edit_post(post_id, post, error);
+}
+
+shared_ptr<DBPost> DataManager::get_post_info(const int &post_id, ErrorCodes &error) const {
+    return database->get_post_info(post_id, error);
+}
+
 
 
 
