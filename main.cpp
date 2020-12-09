@@ -4,9 +4,63 @@
 using std::cout;
 using std::endl;
 
+#include "boost/date_time/gregorian/gregorian.hpp"
+#include "boost/date_time/local_time/local_time.hpp"
+
+using namespace boost::gregorian;
+using namespace boost::local_time;
+using namespace boost::posix_time;
+
+local_date_time parse_timestamp_to_local_date_time(string str) {
+    ptime pt(boost::posix_time::time_from_string(str));
+    string timezone_str;
+    for (int i = 2; i > 0; i--)
+        timezone_str.push_back(str[str.size() - i]);
+    int hours_cnt = std::stoi(timezone_str);
+
+    ptime pt1;
+    if (str[str.size()-3] == '+') pt1 = pt - hours(hours_cnt);
+    else if (str[str.size()-3] == '-') pt1 = pt + hours(hours_cnt);
+    else assert(false);
+
+    timezone_str.insert(0, 1, str[str.size()-3]);
+
+    time_zone_ptr zone(
+            new posix_time_zone("MST" + timezone_str));
+    local_date_time az(pt1, zone);
+    return az;
+}
+
 int main()
 {
+
+    time_duration const_expire_time = hours(72) + seconds(10);
+
+    // ptime current_time(second_clock::universal_time()); // UTC time
+
+    local_date_time session_create_time(parse_timestamp_to_local_date_time("2020-12-08 22:39:52.074377+03"));
+
+    // cout << current_time << endl;
+    cout << session_create_time << endl;
+
+    auto session_expire_time = session_create_time + const_expire_time;
+    cout << session_expire_time << endl;
+
+    time_zone_ptr zone(
+            new posix_time_zone("MST+03")
+    );
+    local_date_time current_time = local_sec_clock::local_time(zone);
+
+    cout << current_time << endl;
+
+    if (current_time > session_expire_time) cout << "session expired << endl";
+    else cout << "session valid";
+
+
+
+
     ErrorCodes error;
+    // примеры использования методов интерфейса
 /*
     auto res = DBUser::add(DBUser::User("cool_nickname_2", "basket.ivan@mail.ru", "xxx"), error);
     if (!res) {
@@ -176,7 +230,7 @@ int main()
 
     post->text = "updated text";
     post->update(error);
-*/
+
 
     auto posts = DBPost::get({"tag1", "mathmathics", "physicsSuck"}, 2, error);
     if (!posts) {
@@ -199,6 +253,8 @@ int main()
         posts.value()[i].print();
         std::cout << std::endl;
     }
+*/
+
 
     return 0;
 }
