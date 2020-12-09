@@ -29,7 +29,7 @@ void Server::start_server()
 void Server::stop_server()
 {
     // Post a call to the stop function so that server::stop() is safe to call from any thread.
-    io_service_.post(boost::bind(&Server::handle_stop, this)); // TODO: разобраться, почему так
+    io_service_.post(boost::bind(&Server::handle_stop, this));
 }
 
 void Server::handle_accept( error_code err ) // TODO: or &?
