@@ -1,9 +1,5 @@
 #include <iostream>
-
 #include "database/include/Utils/DBEntities.h"
-
-#include "database/include/Wrappers/StorageWrapperRealisations/AmazonS3StorageWrapper.h"
-#include "database/include/Wrappers/DBWrapperRealisations/PostgreDBWrapper.h"
 
 int main()
 {
