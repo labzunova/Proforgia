@@ -1,6 +1,9 @@
 #include <iostream>
+#include "wt_templates/LoginTemplate.h"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    auto loginTemplate = Wt::cpp14::make_unique<LoginTemplate>();
+
+    std::cout << loginTemplate->getTemplateText() << std::endl;
     return 0;
 }
