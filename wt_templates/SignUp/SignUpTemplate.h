@@ -4,10 +4,10 @@
 #include "NLTemplate.h"
 #include "BaseTemplate.h"
 
-class SignUpTemplate : BaseTemplate {
+class SignUpTemplate : public BaseTemplate {
 public:
     SignUpTemplate();
-    std::string& getSignUpHTML();
+    std::string& getHTML();
 private:
     std::string signUpHTML;
 };

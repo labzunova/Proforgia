@@ -7,9 +7,11 @@
 class BaseTemplate {
 public:
     BaseTemplate();
+    virtual std::string& getHTML() = 0;
 
 protected:
     std::vector<std::string> getCSS();
+
     std::vector<std::string> getJS();
 };
 

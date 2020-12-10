@@ -6,7 +6,7 @@ SignUpTemplate::SignUpTemplate() {
 
 }
 
-std::string& SignUpTemplate::getSignUpHTML() {
+std::string& SignUpTemplate::getHTML() {
     LoaderFile loader;
     Template temp(loader);
     temp.load("../wt_templates/templates/signup.html");

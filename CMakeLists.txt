@@ -11,10 +11,14 @@ set(wt_views
         wt_templates/NLTemplate.cpp
         wt_templates/BaseTemplate.cpp
         wt_templates/Login/LoginTemplate.cpp
-        wt_templates/SignUp/SignUpTemplate.cpp)
+        wt_templates/SignUp/SignUpTemplate.cpp
+        wt_templates/TemplateWrapper.cpp)
 include_directories(wt_templates)
 
-add_executable(Proforgia ${wt_views} main.cpp)
+add_library(TemplatesEngine ${wt_views})
+
+add_executable(Proforgia main.cpp)
+target_link_libraries(Proforgia TemplatesEngine)
 
 
 #---------------------------google-tests---------------------------
