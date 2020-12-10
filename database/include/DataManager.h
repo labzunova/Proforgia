@@ -57,6 +57,5 @@ public:
 
 	std::string get_file_link( const std::string& filename, ErrorCodes &error ) const;
 	std::string get_file_upload_link( const std::string& filename, ErrorCodes &error ) const;
-	bool remove_file_from_storage( const std::string& filename, const std::string& remote_location /* ? */, ErrorCodes &error ) const;
+	bool remove_file_from_storage( const std::string& filename, ErrorCodes &error ) const;
 };
-

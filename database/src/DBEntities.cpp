@@ -1,6 +1,8 @@
 #include "../include/Utils/DBEntities.h"
 
 #include <utility>
+#include <ctime>
+#include <unistd.h>
 #include "../include/DataManager.h"
 
 
@@ -65,16 +67,39 @@ bool DBPost::update_tags(vector<string> new_tags, ErrorCodes &error) {
     return DataManager::getInstance().add_tags_to_post(new_tags, id, room_id, error);
 }
 
-string DBPost::get_upload_link(ErrorCodes &error) {
+string gen_random(const int len) {
 
+    string tmp_s;
+    static const char alphanum[] =
+            "0123456789"
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            "abcdefghijklmnopqrstuvwxyz";
+
+    srand( (unsigned) time(nullptr) * getpid());
+
+    tmp_s.reserve(len);
+
+    for (int i = 0; i < len; ++i)
+        tmp_s += alphanum[rand() % (sizeof(alphanum) - 1)];
+
+
+    return tmp_s;
+}
+
+string DBPost::get_upload_link(int post_id, ErrorCodes &error) {
+    // пока имя файла в ссылке генерируется рандомно, как вариант можно заменять в процессе
+    string filename = gen_random(10); // !
+    string storage_file_path = POSTS_TABLE_NAME + "/" + std::to_string(post_id) + "/" + filename;
+
+    return DataManager::getInstance().get_file_upload_link(storage_file_path, error);
 }
 
 bool DBPost::add_file(string filename, ErrorCodes &error) {
-
+    // добавить запись о файле в БД
 }
 
 bool DBPost::remove_file(string filename, ErrorCodes &error) {
-
+    return DataManager::getInstance().remove_file_from_storage(filename, error);
 }
 
 DBRoom DBPost::get_room(ErrorCodes &error) {

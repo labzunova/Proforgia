@@ -128,6 +128,18 @@ bool DataManager::add_tags_to_post(vector<std::string> &_tags, const int &post_i
     return database->add_tags_to_post(_tags, post_id, room_id, error);
 }
 
+std::string DataManager::get_file_link(const std::string &filename, ErrorCodes &error) const {
+    return storage->get_file_link(filename, error);
+}
+
+std::string DataManager::get_file_upload_link(const std::string &filename, ErrorCodes &error) const {
+    return storage->get_file_upload_link(filename, error);
+}
+
+bool DataManager::remove_file_from_storage(const std::string &filename, ErrorCodes &error) const {
+    return storage->remove_file_from_storage(filename, error);
+}
+
 
 
 

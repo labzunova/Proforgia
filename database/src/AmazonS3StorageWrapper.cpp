@@ -18,6 +18,9 @@
 #define DEFAULT_REGION "eu-central-1"
 #define DEFAULT_TO_CLIENT_PATH "/Users/Ivan/Proforgia-files/files-to-client/"
 #define DEFAULT_FROM_CLIENT_PATH "/Users/Ivan/Proforgia-files/files-from-client/"
+#define POSTS_FILES_FOLDER_NAME "posts/"
+
+// TODO: add boost log
 
 bool put_object(const Aws::String& bucketName,
                 const Aws::String& objectName,

@@ -221,12 +221,10 @@ int main()
                 break;
         }
     }
+
+
+    auto link = DBPost::get_upload_link(2, error);
  */
-
-    
-
-
-
     return 0;
 }
 

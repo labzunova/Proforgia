@@ -23,6 +23,35 @@ using std::vector;
 using std::pair;
 
 /*
+ЧТО ИСПОЛЬЗОВАЛ ИЗ STL
+
+std::unordered_map
+- Для удобного получения id элемента по его имени
+
+std::optional
+Для оборачивания методов, которые могут вернуть значение (vector например) а могут завершится неуспешно. С помощью std::optional могу определить, успешно ли завершилась функция
+
+std::unique_ptr
+- Для использования в своих целях, один раз инициализировав и никуда не присваивая + для задания кастомного deleter’a через лямбду
+
+lamda
+- Для описания своего поведения при удалении объекта в умном указателе
+
+std::shared_ptr
+- Для отдачи объектов в своих интерфейсах, которые уничтожатся, когда их перестанут использовать
+
+std::move
+Реализация муж семантики, для использования конструктора переноса
+
+std::vector
+- Просто когда нужен массив
+
+std::pair
+- Когда нужно вернуть массив пар значений
+ */
+
+
+/*
  ЗАДАЧИ ПО САМОЙ БАЗЕ ДАННЫХ:
  TODO: поле password у юзер должно хранить хэш (скорее всего это будет число, уточнить у сережи)
  TODO: сессия должна хранить строковый идентификатор сессии (скорее всего строка фикс. размера, уточнить)
@@ -41,6 +70,9 @@ using std::pair;
 // при неудаче get-методов, возвращающих умный указатель на какое-либо DBEntity, вернется nullptr
 // если возвращаемое значение метода обернуто в std::optional, то при неудаче оно сконвертируется в false
 // соответственно, если метод завершился неудачно, смотрим ErrorCodes &error на тип ошибки и обрабатываем
+
+const static string POSTS_TABLE_NAME = "posts";
+
 
 struct DBEntity {
 	virtual bool update(ErrorCodes &error) = 0; // аналог save() в API UML
@@ -205,9 +237,9 @@ struct DBPost : public DBEntity {
 
     static std::optional< vector<DBPost> > get(std::vector<std::string> _tags, int room_id, ErrorCodes &error);
 
-    string get_upload_link(ErrorCodes &error); // !!! чтобы отдать ссылку нужно знать название файла ИНАЧЕ название будет генерится автоматом
-    bool add_file(string filename, ErrorCodes &error); // filename - имя файла, с которым он загрузился в Хранилище
-    bool remove_file(string filename, ErrorCodes &error); // filename - имя файла, с которым он загрузился в Хранилище
+    static string get_upload_link(int post_id, ErrorCodes &error); // !!! чтобы отдать ссылку нужно знать название файла ИНАЧЕ название будет генерится автоматом
+    static bool add_file(string filename, ErrorCodes &error); // filename - имя файла, с которым он загрузился в Хранилище
+    static bool remove_file(string filename, ErrorCodes &error); // filename - имя файла, с которым он загрузился в Хранилище
 
     // !!! полностью заменяет текущие тэги этого поста на тэги в new_tags
     bool update_tags(vector<string> new_tags, ErrorCodes &error); // для добавления/обновления списка тэгов у поста
@@ -227,6 +259,7 @@ struct DBPost : public DBEntity {
         std::cout << "title: " << this->title << std::endl;
         std::cout << "text: " << this->text << std::endl;
     }
+
 private:
     local_date_time publication_date;
 };
