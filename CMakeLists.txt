@@ -6,20 +6,16 @@ set(CMAKE_CXX_STANDARD 14)
 set(UNIT_TESTS
         tests/tests.cpp
         )
-#------------------find package wt---------------------
+#------------------tempates engine---------------------
 set(wt_views
-        ${PROJECT_SOURCE_DIR}/wt_templates/LoginTemplate.cpp)
-include_directories(wt_application)
-include_directories(/usr/local/include)
-find_package(Wt REQUIRED Wt HTTP)
-add_definitions(-DHPDF_DLL)
+        wt_templates/NLTemplate.cpp
+        wt_templates/BaseTemplate.cpp
+        wt_templates/Login/LoginTemplate.cpp
+        wt_templates/SignUp/SignUpTemplate.cpp)
+include_directories(wt_templates)
 
 add_executable(Proforgia ${wt_views} main.cpp)
 
-#------------------link wt-----------------------------
-target_link_libraries(Proforgia
-        Wt::Wt
-        Wt::HTTP)
 
 #---------------------------google-tests---------------------------
 

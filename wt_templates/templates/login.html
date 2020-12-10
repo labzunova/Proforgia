@@ -1,0 +1,43 @@
+ {% include ../wt_templates/templates/inc/base_header.html %}
+
+ <style type="text/css">
+   {% include ../wt_templates/templates/static/css/login.css %}
+ </style>
+
+  <!-- Begin page content -->
+  <main role="main" class="d-flex justify-content-center container">
+      <div class="row container d-flex justify-content-between">
+        <div class="col-9">
+          <div class="name-page col-12">
+            <h4>Log in</h4>
+          </div>
+
+          <form class="col-12">
+            <div class="form-group">
+              <label for="inputEmail1">Email address</label>
+              <input type="email" class="form-control" id="inputEmail1" aria-describedby="emailHelp">
+              <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            </div>
+            <div class="form-group">
+              <label for="inputPassword">Password</label>
+              <input type="password" class="form-control" id="inputPassword">
+            </div>
+            <button type="submit" class="btn btn-primary btn-dark">Log in</button>
+            <div class="new-account">
+              <a href="#" class="text-dark">create new account</a>
+            </div>
+          </form>
+
+
+        </div>
+
+      </div>
+  </main>
+  <footer class="d-flex container justify-content-center">
+
+  </footer>
+  <script src="../js/jquery.slim.min.js"></script>
+  <script src="../js/popper.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  </body>
+</html>

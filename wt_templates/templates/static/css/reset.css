@@ -1,0 +1,12 @@
+p{
+  margin: 0 0 0;
+}
+
+li{
+  list-style-type: none;
+  margin-bottom: 4px;
+}
+
+ul{
+  padding-left: 0px;
+}
