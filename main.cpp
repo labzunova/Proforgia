@@ -6,10 +6,36 @@ using std::cout;
 using std::endl;
 
 
+#include <string>
+#include <queue>
+#include <utility>
+#include <iostream>
+
+#include "Worker.cpp"
+#include "Handler.h"
+#include "server/Server.h"
+
+typedef std::map<std::string, std::string> Context;
+
+
 
 int main( int argc, char* argv[] ) {
 
-    ErrorCodes error;
+    std::shared_ptr<Connection_queue> queue = std::make_shared<Connection_queue>();
+    Server server("127.0.0.1", "5000", *queue);
+//    Server server( argv[0], argv[1], queue );
+
+    Work<Connection_queue, Handler> work;
+    work.start_work(queue);
+    server.start_server();
+
+
+//    Context context = {{"method", "GET"},
+//                       {"action", "MAIN"}};
+//    Handler h(context);
+//    std::cout << h.get_response();
+
+//    ErrorCodes error;
     // примеры использования методов интерфейса
 /*
     auto res = DBUser::add(DBUser::User("cool_nickname_2", "basket.ivan@mail.ru", "xxx"), error);

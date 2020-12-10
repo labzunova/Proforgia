@@ -36,8 +36,9 @@ set(UNIT_TESTS
         tests/tests.cpp
         tests/network/parser_tests.cpp)
 
-add_executable(Proforgia main.cpp)
-target_link_libraries(Proforgia database_lib TemplatesEngine)
+add_executable(Proforgia main.cpp network/connection/Connection.cpp network/connection/Connection.h network/server/Server.cpp network/server/Server.h network/parser/Parser.cpp network/parser/Parser.h network/connection_queue/Connection_queue.cpp network/connection_queue/Connection_queue.h network/request/Request.cpp network/request/Request.h)
+target_link_libraries(Proforgia core_lib)
+target_link_libraries(Proforgia boost_system pthread ${Boost_LIBRARIES})
 
 
 

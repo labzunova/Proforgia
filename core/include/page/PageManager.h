@@ -6,12 +6,12 @@
 
 
 
-//#include "TemplateWrapper.h"
+#include "TemplateWrapper.h"
 #include <string>
 #include <vector>
 #include <memory>
 #include <map>
-#include "View.h"
+//#include "View.h"
 
 using std::string;
 
@@ -41,5 +41,5 @@ public:
     virtual string get_server_err() = 0;
 
 protected:
-    View view_;
+//    TemplateWrapper view_;
 };
