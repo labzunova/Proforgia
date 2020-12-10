@@ -12,6 +12,7 @@ set(wt_views
         wt_templates/BaseTemplate.cpp
         wt_templates/Login/LoginTemplate.cpp
         wt_templates/SignUp/SignUpTemplate.cpp
+        wt_templates/Profile/ProfileTemplate.cpp
         wt_templates/TemplateWrapper.cpp)
 include_directories(wt_templates)
 

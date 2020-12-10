@@ -1,13 +1,11 @@
 #ifndef PROFORGIA_TEMPLATEWRAPPER_H
 #define PROFORGIA_TEMPLATEWRAPPER_H
 
-#include <map>
 #include <memory>
 
 #include "Login/LoginTemplate.h"
 #include "SignUp/SignUpTemplate.h"
-
-typedef std::map<std::string, std::string> Context;
+#include "Profile/ProfileTemplate.h"
 
 class TemplateWrapper {
 public:

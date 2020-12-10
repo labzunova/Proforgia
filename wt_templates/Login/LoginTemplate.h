@@ -6,8 +6,8 @@
 
 class LoginTemplate : public BaseTemplate {
 public:
-    LoginTemplate();
-    std::string& getHTML();
+    LoginTemplate(Context& context);
+    std::string& getHTML() override;
 private:
     std::string loginHTML;
 };

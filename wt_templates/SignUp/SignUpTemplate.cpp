@@ -2,7 +2,7 @@
 
 using namespace NL::Template;
 
-SignUpTemplate::SignUpTemplate() {
+SignUpTemplate::SignUpTemplate(Context& context) : BaseTemplate(context) {
 
 }
 
