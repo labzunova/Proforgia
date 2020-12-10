@@ -7,7 +7,10 @@ add_definitions(${MYCOMPILE_FLAGS})
 
 set(CMAKE_CXX_STANDARD 17)
 
-#add_subdirectory(core)
+
+add_subdirectory(database)
+add_subdirectory(core)
+
 SET(Boost_USE_STATIC_LIBS ON)
 FIND_PACKAGE(Boost REQUIRED COMPONENTS log)
 include_directories(${Boost_INCLUDE_DIRS})
@@ -21,11 +24,6 @@ include_directories("${PROJECT_SOURCE_DIR}/core")
 set(UNIT_TESTS
         tests/tests.cpp
         tests/network/parser_tests.cpp)
-
-
-#add_subdirectory(database)
-#add_executable(Proforgia main.cpp)
-#target_link_libraries(Proforgia database_lib)
 
 
 #---------------------------google-tests---------------------------

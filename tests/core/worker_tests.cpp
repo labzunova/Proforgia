@@ -2,13 +2,13 @@
 // Created by sergei on 02.12.2020.
 //
 
-#include "Worker.cpp"
 #include "gtest/gtest.h"
 #include <string>
 #include <queue>
 #include <utility>
 #include <iostream>
 
+#include "Worker.cpp"
 
 typedef std::map<std::string, std::string> Context;
 

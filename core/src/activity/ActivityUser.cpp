@@ -4,30 +4,29 @@
 
 #include "ActivityUser.h"
 
-template<class User, class Session>
-ActivityManager::Status ActivityUser<User, Session>::signUp() {
+ActivityManager::Status ActivityUser::signUp() {
     if(!validate_signUp())
         return CLIENT_ERROR;
 
     std::string login = context_["login"];
     std::string email = context_["email"];
     std::string password = context_["password"]; // TODO кодирование пароля
-    typename User::User user(email, login, password);
-    int id = User::add(user); // TODO проверка на то прошло ли сохранение
+    typename DBUser::User user(email, login, password);
+    int id = DBUser::add(user); // TODO проверка на то прошло ли сохранение
 
     string session = create_session(id);
     context_["session"] = session;
     return OK;
 }
 
-template<class User, class Session>
-ActivityManager::Status ActivityUser<User, Session>::signIn() {
+ActivityManager::Status ActivityUser::signIn() {
     if(!validate_signIn())
         return CLIENT_ERROR;
 
     string login = context_["login"];
     string password = context_["password"]; // TODO кодирование
-    User user = User::get(login); // TODO проверка на то пришел ли User
+    ErrorCodes er;
+    DBUser user = DBUser::get(login, er); // TODO проверка на то пришел ли User
     if(user.password != password)
         return CLIENT_ERROR;
 
@@ -36,12 +35,10 @@ ActivityManager::Status ActivityUser<User, Session>::signIn() {
     return OK;
 }
 
-template<class User, class Session>
-ActivityUser<User, Session>::ActivityUser(Context &context) : ActivityManager(context) {
+ActivityUser::ActivityUser(Context &context) : ActivityManager(context) {
 }
 
-template<class User, class Session>
-bool ActivityUser<User, Session>::validate_signUp() {
+bool ActivityUser::validate_signUp() {
     // TODO добавить еще разные проверки
     auto end = context_.end();
     if((context_.find("login") == end) ||
@@ -54,15 +51,13 @@ bool ActivityUser<User, Session>::validate_signUp() {
 }
 
 
-template<class User, class Session>
-string ActivityUser<User, Session>::create_session(const int& id) {
+string ActivityUser::create_session(const int& id) {
     string session_str; // TODO генерируем стоку сессии
-    typename Session::Session session(id, session_str);
-    Session::add(session);
+    typename DBSession::Session session(id, session_str);
+    DBSession::add(session);
 }
 
-template<class User, class Session>
-bool ActivityUser<User, Session>::validate_signIn() {
+bool ActivityUser::validate_signIn() {
     // TODO добавить еще разные проверки
     auto end = context_.end();
     if((context_.find("login") == end) ||

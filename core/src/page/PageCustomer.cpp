@@ -7,82 +7,68 @@
 #include <utility>
 #include <boost/lexical_cast.hpp>
 
-template<class View, class User, class Room>
-PageCustomer<View, User, Room>::PageCustomer(const View &view, const User& user)
-        : PageManager<View>(view)
-        , user_(std::move(user)) {}
+PageCustomer::PageCustomer(DBUser& user)
+        : user_(std::move(user)) {}
 
 
-
-template<class View, class User, class Room>
-string PageCustomer<View, User, Room>::get_main_page() {
-    Context context = {{"page", "MAIN"}};
+string PageCustomer::get_main_page() {
+    Context context = {{"page", "main"}};
     write_user(context); // TODO возможно сразу запись комнаты
-    return PageManager<View>::view_.render(context);
+    return view_.render(context);
 }
 
-template<class View, class User, class Room>
-string PageCustomer<View, User, Room>::get_room_page(string id) {
-    Context context = {{"page", "ROOM"}};
+string PageCustomer::get_room_page(string id) {
+    Context context = {{"page", "room"}};
     write_user(context);
 
     int id_room = boost::lexical_cast<int>(id);
-    write_room(context, Room::get(id_room));
-    return PageManager<View>::view_.render(context);
+    ErrorCodes er;
+    write_room(context, DBRoom::get(id_room, er));
+    return view_.render(context);
 }
 
 // TODO пока не известно будет ли это в проекте
-template<class View, class User, class Room>
-string PageCustomer<View, User, Room>::get_favorite_page() {
+string PageCustomer::get_favorite_page() {
     return get_main_page();
 }
 
 // TODO пока не известно будет ли это в проекте
-template<class View, class User, class Room>
-string PageCustomer<View, User, Room>::get_deadline_page() {
+string PageCustomer::get_deadline_page() {
     return get_main_page();
 }
 
-template<class View, class User, class Room>
-string PageCustomer<View, User, Room>::get_registr_page() {
+string PageCustomer::get_registr_page() {
     return get_main_page();
 }
 
-template<class View, class User, class Room>
-string PageCustomer<View, User, Room>::get_login_page() {
+string PageCustomer::get_login_page() {
     return get_main_page();
 }
 
-template<class View, class User, class Room>
-string PageCustomer<View, User, Room>::get_info_tags(int id_room, std::unique_ptr<std::vector<string>> tags) {
+string PageCustomer::get_info_tags(int id_room, std::unique_ptr<std::vector<string>> tags) {
     return std::__cxx11::string();
 }
 
-template<class View, class User, class Room>
-string PageCustomer<View, User, Room>::get_not_found() {
-    Context context = {{"page", "NOT_FOUND"}};
-    return PageManager<View>::view_.render(context);
+string PageCustomer::get_not_found() {
+    Context context = {{"page", "not_found"}};
+    return view_.render(context);
 }
 
-template<class View, class User, class Room>
-void PageCustomer<View, User, Room>::write_user(std::map<string, string> &ctx) {
+void PageCustomer::write_user(std::map<string, string> &ctx) {
     ctx["user_name"] = user_.nick_name;
     /// Добавление всей информации пользователя
 }
 
-template<class View, class User, class Room>
-void PageCustomer<View, User, Room>::write_room(std::map<string, string> &ctx, const Room &room) {
+void PageCustomer::write_room(std::map<string, string> &ctx, const DBRoom &room) {
     ctx["room_name"] = room.room_name;
     /// Добавление всей информации комнаты
 }
 
-template<class View, class User, class Room>
-void PageCustomer<View, User, Room>::write_info_tag(std::map<string, string> &ctx, const Room &room, string tag) {
+void PageCustomer::write_info_tag(std::map<string, string> &ctx, const DBRoom &room, string tag) {
 
 }
 
-template<class View, class User, class Room>
-string PageCustomer<View, User, Room>::get_server_err() {
+string PageCustomer::get_server_err() {
     Context context = {{"page", "500"}};
-    return PageManager<View>::view_.render(context);
+    return view_.render(context);
 }

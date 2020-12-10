@@ -1,8 +1,8 @@
 set(CORE_LIB core_lib)
 
 set(HEADER_FILES
-#        include/Worker.h
-#        include/Handler.h
+        include/Worker.h
+        include/Handler.h
         include/page/PageCustomer.h
         include/page/PageUser.h
         include/page/PageManager.h
@@ -15,16 +15,17 @@ set(HEADER_FILES
         )
 
 set(INCLUDE
-#        include/activity
+        include/activity
 #        include/entities
         include/external_api
         include/page
-#        include
+        include
+        src
         )
 
 set(SOURCE_FILES
-#        src/Worker.cpp
-#        src/Handler.cpp
+        src/Worker.cpp
+        src/Handler.cpp
         src/page/PageCustomer.cpp
         src/page/PageUser.cpp
 #        src/activity/ActivityManager.cpp
@@ -44,13 +45,11 @@ SET(Boost_USE_STATIC_LIBS ON)
 FIND_PACKAGE(Boost REQUIRED COMPONENTS log)
 find_package(GTest)
 include_directories(${Boost_INCLUDE_DIRS})
-include_directories(${INCLUDE})
 
 add_library(${CORE_LIB} STATIC ${SOURCE_FILES})
-target_link_libraries(${CORE_LIB} ${Boost_LIBRARIES})
+target_link_libraries(${CORE_LIB} ${Boost_LIBRARIES} database_lib)
 target_include_directories(${CORE_LIB} PUBLIC ${INCLUDE})
 
 add_executable(tests_core ${SOURCE_FILES_TESTS})
-target_include_directories(tests_core PUBLIC ${INCLUDE})
-target_include_directories(tests_core PUBLIC ${PROJECT_SOURCE_DIR}/core/src)
-target_link_libraries(tests_core gtest gmock gtest_main rt -ldl pthread ${CORE_LIB})
+#add "rt" flag  if not on mac
+target_link_libraries(tests_core gtest gmock gtest_main -ldl pthread ${CORE_LIB} )

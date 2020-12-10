@@ -6,10 +6,9 @@
 
 #include "PageManager.h"
 
-template<class View>
-class PageUser : public PageManager<View> {
+class PageUser : public PageManager {
 public:
-    explicit PageUser(const View& view) : PageManager<View>(view) {};
+    explicit PageUser() = default;;
     ~PageUser() override = default;
     PageUser(const PageUser&) = delete;
     PageUser& operator = (PageUser&) = delete;
