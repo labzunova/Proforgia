@@ -13,7 +13,7 @@
 
 using namespace boost::gregorian;
 
-std::string Handler::get_response() {
+std::string Handler::get_respons() {
     start_session();
 
     /////// для теста шаблонизатора ///////
@@ -23,7 +23,7 @@ std::string Handler::get_response() {
 //    ctx["date"] = to_iso_string(second_clock::local_time());
 //    ctx["server"] = "SERVER";
 //    ctx["content-length"] = body.size();
-//    return HttpResponse::get_response(ctx);
+//    return HttpResponse::get_respons(ctx);
     /////////////////////////
 
 
@@ -105,9 +105,9 @@ void Handler::start_session() {
 
     /////// тест для бд ///////
     ErrorCodes er;
-    DBUser user = DBUser::get(1, er);
-    page_manager_ = std::make_unique<PageCustomer>(user);
-    activity_manager_ = std::make_unique<ActivityCustomer>(ctx, std::move(user));
+    auto user = DBUser::get(1, er);
+    page_manager_ = std::make_unique<PageCustomer>(*user);
+    activity_manager_ = std::make_unique<ActivityCustomer>(ctx, std::move(*user));
     //////////////////////////
 
 
@@ -135,13 +135,13 @@ void Handler::start_session() {
 // проверяем пришедшую сессию, не протухла ли
 Handler::Status Handler::check_session(DBSession& session) {
 
-    date start_time = session.date_of_creation;
-    ptime today = second_clock::local_time(); // TODO подумать над временем часового пояса
-    if(today > ptime(start_time, LIVE_TIME))
-         // TODO удаление ссесии
-        return Rotten;
-    else
-        return OK;
+//    date start_time = session.date_of_creation;
+//    ptime today = second_clock::local_time(); // TODO подумать над временем часового пояса
+//    if(today > ptime(start_time, LIVE_TIME))
+//         // TODO удаление ссесии
+//        return Rotten;
+//    else
+//        return OK;
 }
 
 string Handler::redirect(const string& page) {
@@ -153,5 +153,6 @@ string Handler::redirect(const string& page) {
 void Handler::set_user_right() {
     BOOST_LOG_TRIVIAL(debug) << "Start customer session";
     page_manager_ = std::make_unique<PageUser>();
-    activity_manager_ = std::make_unique<ActivityUser>(DBSession::get("session"));
+    Context ctx = {};
+    activity_manager_ = std::make_unique<ActivityUser>(ctx);
 }

@@ -6,6 +6,11 @@ set(SOURCE_FILES
         src/DataManager.cpp
         src/DBEntities.cpp)
 
+set(INCLUDE
+        include/Utils
+        include/Wrappers
+        include)
+
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 find_package(AWSSDK REQUIRED COMPONENTS s3)
 find_package(PostgreSQL REQUIRED)
@@ -16,7 +21,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 
 add_library(${DATABASE_LIB} STATIC ${SOURCE_FILES})
 target_link_libraries(${DATABASE_LIB} ${AWSSDK_LINK_LIBRARIES} ${PostgreSQL_LIBRARIES} ${Boost_LIBRARIES})
-target_include_directories(${DATABASE_LIB} PRIVATE ${PostgreSQL_INCLUDE_DIRS})
+target_include_directories(${DATABASE_LIB} PUBLIC ${PostgreSQL_INCLUDE_DIRS} ${INCLUDE})
 
 #----------------------------------------tests---------------------------------------------#
 set(SOURCE_FILES_TESTS

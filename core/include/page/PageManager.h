@@ -4,12 +4,18 @@
 
 #pragma once
 
+
+
 //#include "TemplateWrapper.h"
 #include <string>
 #include <vector>
 #include <memory>
+#include <map>
+#include "View.h"
 
 using std::string;
+
+typedef std::map<std::string, std::string> Context;
 
 class PageManager {
 protected:
@@ -35,5 +41,5 @@ public:
     virtual string get_server_err() = 0;
 
 protected:
-//    TemplateWrapper view_;
+    View view_;
 };

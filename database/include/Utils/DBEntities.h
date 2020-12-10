@@ -94,7 +94,7 @@ struct DBUser : public DBEntity {
 	    std::cout << "email: " << this->email << std::endl;
 	}
 
-    [[nodiscard]] const string &getPassword() const;
+    const string &getPassword() const;
 
     std::string nick_name;
     std::string email;

@@ -7,7 +7,7 @@
 #include "PageManager.h"
 #include "ActivityManager.h"
 #include "View.h"
-#include "entities.h"
+#include "DBEntities.h"
 #include "ErrorCodes.h"
 
 #include <string>
@@ -37,7 +37,7 @@ public:
     Handler(const Handler&) = delete;
     Handler& operator=(const Handler&) = delete;
 
-    std::string get_response();
+    std::string get_respons();
 
 private:
     void start_session();

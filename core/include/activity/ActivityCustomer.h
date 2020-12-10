@@ -7,7 +7,7 @@
 #include "ActivityManager.h"
 #include <map>
 #include <string>
-#include "entities.h"
+#include "DBEntities.h"
 
 using std::string;
 

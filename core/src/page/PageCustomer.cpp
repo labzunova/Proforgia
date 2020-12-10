@@ -14,7 +14,7 @@ PageCustomer::PageCustomer(DBUser& user)
 string PageCustomer::get_main_page() {
     Context context = {{"page", "main"}};
     write_user(context); // TODO возможно сразу запись комнаты
-    return view_.render(context);
+    return PageManager::view_.render(context);
 }
 
 string PageCustomer::get_room_page(string id) {
@@ -23,8 +23,8 @@ string PageCustomer::get_room_page(string id) {
 
     int id_room = boost::lexical_cast<int>(id);
     ErrorCodes er;
-    write_room(context, DBRoom::get(id_room, er));
-    return view_.render(context);
+    write_room(context, *DBRoom::get(id_room, er));
+    return PageManager::view_.render(context);
 }
 
 // TODO пока не известно будет ли это в проекте
@@ -46,12 +46,12 @@ string PageCustomer::get_login_page() {
 }
 
 string PageCustomer::get_info_tags(int id_room, std::unique_ptr<std::vector<string>> tags) {
-    return std::__cxx11::string();
+    return "fdfdsgdsfgdsfgdfgdsfgsdfgdfglgiggglkdfsj";
 }
 
 string PageCustomer::get_not_found() {
     Context context = {{"page", "not_found"}};
-    return view_.render(context);
+    return PageManager::view_.render(context);
 }
 
 void PageCustomer::write_user(std::map<string, string> &ctx) {
@@ -70,5 +70,5 @@ void PageCustomer::write_info_tag(std::map<string, string> &ctx, const DBRoom &r
 
 string PageCustomer::get_server_err() {
     Context context = {{"page", "500"}};
-    return view_.render(context);
+    return PageManager::view_.render(context);
 }

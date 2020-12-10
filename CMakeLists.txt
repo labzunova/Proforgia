@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.15)
 project(Proforgia)
 
-SET(MYCOMPILE_FLAGS " -lpthread -o ")
-add_definitions(${MYCOMPILE_FLAGS})
-#add_compile_options(-pthread)
+# SET(MYCOMPILE_FLAGS " -lpthread -o ")
+# add_definitions(${MYCOMPILE_FLAGS})
+# add_compile_options(-pthread)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -15,8 +15,8 @@ SET(Boost_USE_STATIC_LIBS ON)
 FIND_PACKAGE(Boost REQUIRED COMPONENTS log)
 include_directories(${Boost_INCLUDE_DIRS})
 
-add_executable(Proforgia main.cpp network/connection/Connection.cpp network/connection/Connection.h network/server/Server.cpp network/server/Server.h network/parser/Parser.cpp network/parser/Parser.h network/connection_queue/Connection_queue.cpp network/connection_queue/Connection_queue.h network/request/Request.cpp network/request/Request.h core/src/Worker.cpp core/include/Worker.h)
-target_link_libraries(Proforgia boost_system pthread ${Boost_LIBRARIES})
+# add_executable(Proforgia main.cpp)
+# target_link_libraries(Proforgia database_lib)
 
 include_directories("${PROJECT_SOURCE_DIR}/network")
 include_directories("${PROJECT_SOURCE_DIR}/core")
@@ -25,6 +25,8 @@ set(UNIT_TESTS
         tests/tests.cpp
         tests/network/parser_tests.cpp)
 
+add_executable(Proforgia main.cpp)
+target_link_libraries(Proforgia database_lib)
 
 #---------------------------google-tests---------------------------
 

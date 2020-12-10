@@ -37,8 +37,8 @@ set(SOURCE_FILES
 set(SOURCE_FILES_TESTS
 #        ../tests/core/gmock_tests.cpp
 #        ../tests/core/http_response_tests.cpp
-        ../tests/core/page_tests.cpp
-#        ../tests/core/worker_tests.cpp
+#        ../tests/core/page_tests.cpp
+        ../tests/core/worker_tests.cpp
         )
 
 SET(Boost_USE_STATIC_LIBS ON)
@@ -52,4 +52,5 @@ target_include_directories(${CORE_LIB} PUBLIC ${INCLUDE})
 
 add_executable(tests_core ${SOURCE_FILES_TESTS})
 #add "rt" flag  if not on mac
-target_link_libraries(tests_core gtest gmock gtest_main -ldl pthread ${CORE_LIB} )
+target_link_libraries(tests_core gtest gmock gtest_main -ldl pthread ${CORE_LIB})
+

@@ -5,8 +5,9 @@
 #pragma once
 
 #include "PageManager.h"
-#include "entities.h"
+#include "DBEntities.h"
 #include "ErrorCodes.h"
+
 
 #include <map>
 #include <string>
