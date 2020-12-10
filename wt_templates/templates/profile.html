@@ -1,0 +1,19 @@
+{% include ../wt_templates/templates/inc/base_header.html %}
+<style type="text/css">
+    {% include ../wt_templates/templates/static/css/profile.css %}
+</style>
+
+<main role="main" class="d-flex justify-content-center container">
+    <div class="row container d-flex justify-content-between">
+        <div class="col-9">
+            <div class="name-page col-12">
+                <h4>Choose Rooms</h4>
+            </div>
+            {% block rooms %}
+            <p><a href="{{ room_src }}">{{ room_name }}</a></p>
+            {% endblock %}
+        </div>
+    </div>
+</main>
+</body>
+</html>
