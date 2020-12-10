@@ -37,7 +37,7 @@ public:
     Handler(const Handler&) = delete;
     Handler& operator=(const Handler&) = delete;
 
-    std::string get_respons();
+    std::string get_response();
 
 private:
     void start_session();
@@ -53,6 +53,6 @@ private:
 
     Context context_;
 
-    PageManager* page_manager_;
-    ActivityManager* activity_manager_;
+    std::unique_ptr<PageManager> page_manager_;
+    std::unique_ptr<ActivityManager> activity_manager_;
 };

@@ -37,7 +37,7 @@ TEST(WorkerTests, TimeWork) {
     Context context = {{"method", "GET"},
                      {"action", "MAIN"}};
     Handler h(context);
-    h.get_respons();
+    std::cout << h.get_response();
 
 }
 

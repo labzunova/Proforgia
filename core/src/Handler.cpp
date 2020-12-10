@@ -13,17 +13,18 @@
 
 using namespace boost::gregorian;
 
-std::string Handler::get_respons() {
-    start_session();
+std::string Handler::get_response() {
+//    start_session();
 
     /////// для теста шаблонизатора ///////
-//    Context ctx = {{"code", "200"}};
-//    std::string body = page_manager_->get_login_page();
-//    ctx["body"] = body;
-//    ctx["date"] = to_iso_string(second_clock::local_time());
-//    ctx["server"] = "SERVER";
-//    ctx["content-length"] = body.size();
-//    return HttpResponse::get_respons(ctx);
+    page_manager_ = std::make_unique<PageUser>();
+    Context ctx = {{"code", "200"}};
+    std::string body = page_manager_->get_login_page();
+    ctx["body"] = body;
+    ctx["date"] = to_iso_string(second_clock::local_time());
+    ctx["server"] = "SERVER";
+    ctx["content-length"] = body.size();
+    return HttpResponse::get_response(ctx);
     /////////////////////////
 
 
@@ -106,8 +107,8 @@ void Handler::start_session() {
     /////// тест для бд ///////
     ErrorCodes er;
     auto user = DBUser::get(1, er);
-    page_manager_ = new PageCustomer(*(user));
-    activity_manager_ = new ActivityCustomer(ctx, *(user));
+    page_manager_ = std::make_unique<PageCustomer>(*user);
+    activity_manager_ = std::make_unique<ActivityCustomer>(ctx, *user);
     //////////////////////////
 
 
@@ -152,7 +153,7 @@ string Handler::redirect(const string& page) {
 
 void Handler::set_user_right() {
     BOOST_LOG_TRIVIAL(debug) << "Start customer session";
-    page_manager_ = new PageUser();
+    page_manager_ = std::make_unique<PageUser>();
     Context ctx = {};
-    activity_manager_ = new ActivityUser(ctx);
+    activity_manager_ = std::make_unique<ActivityUser>(ctx);
 }
