@@ -7,10 +7,10 @@
 #include "ActivityManager.h"
 #include <map>
 #include <string>
+#include "ErrorCodes.h"
 
 using std::string;
 
-template<class User, class Session>
 class ActivityUser : public ActivityManager {
 public:
     explicit ActivityUser(Context& context);

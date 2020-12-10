@@ -7,13 +7,13 @@
 #include "ActivityManager.h"
 #include <map>
 #include <string>
+#include "entities.h"
 
 using std::string;
 
-template<class User, class Room, class Session>
 class ActivityCustomer : public ActivityManager {
 public:
-    ActivityCustomer(Context &context, User user);
+    ActivityCustomer(Context &context, DBUser user);
     ~ActivityCustomer() override = default;
     ActivityCustomer(const ActivityCustomer&) = delete;
     ActivityCustomer& operator = (ActivityCustomer&) = delete;
@@ -34,5 +34,5 @@ public:
     Status add_deadline() override;
 
 private:
-    User user_;
+    DBUser user_;
 };

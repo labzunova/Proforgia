@@ -5,16 +5,17 @@
 #pragma once
 
 #include "PageManager.h"
+#include "entities.h"
+#include "ErrorCodes.h"
 
 #include <map>
 #include <string>
 
 using std::string;
 
-template<class View, class User, class Room>
-class PageCustomer : public PageManager<View> {
+class PageCustomer : public PageManager {
 public:
-    PageCustomer(const View& view, const User& user);
+    explicit PageCustomer(DBUser& user);
     ~PageCustomer() override = default;
     PageCustomer(const PageCustomer&) = delete;
     PageCustomer& operator = (PageCustomer&) = delete;
@@ -39,9 +40,9 @@ public:
 
 private:
     void write_user(std::map<string, string>& ctx);
-    void write_room(std::map<string, string>& ctx, const Room& room);
-    void write_info_tag(std::map<string, string>& ctx, const Room& room, string tag);
+    void write_room(std::map<string, string>& ctx, const DBRoom& room);
+    void write_info_tag(std::map<string, string>& ctx, const DBRoom& room, string tag);
 
 private:
-    User user_;
+    DBUser user_;
 };

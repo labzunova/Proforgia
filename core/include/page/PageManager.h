@@ -4,17 +4,18 @@
 
 #pragma once
 
-#include "View.h"
+//#include "TemplateWrapper.h"
 #include <string>
 #include <vector>
 #include <memory>
 
 using std::string;
 
-template<class View>
 class PageManager {
 protected:
-    explicit PageManager(const View& view) : view_(std::move(view)) {}
+    explicit PageManager() {
+        // TODO из синголтона достаем view
+    }
 
 private:
     PageManager(const PageManager&) = default;
@@ -34,5 +35,5 @@ public:
     virtual string get_server_err() = 0;
 
 protected:
-    View view_;
+//    TemplateWrapper view_;
 };

@@ -7,19 +7,18 @@
 #include <utility>
 #include <boost/lexical_cast.hpp>
 
-template<class User, class Room, class Session>
-ActivityManager::Status ActivityCustomer<User, Room, Session>::exit() {
+ActivityManager::Status ActivityCustomer::exit() {
     string session = context_["session"];
-    Session::remove(session);
+    DBSession::remove(session);
     return CLIENT_ERROR;
 }
 
-template<class User, class Room, class Session>
-ActivityManager::Status ActivityCustomer<User, Room, Session>::add_room() {
+ActivityManager::Status ActivityCustomer::add_room() {
     if(context_.find("id_room") == context_.end())
         return CLIENT_ERROR;
     int id_room = boost::lexical_cast<int>(context_["id_room"]); /// возможно какой то другой индификатор который вводит пользователь
-    Room room = Room::get(id_room); // TODO проверка существует ли комната
+    ErrorCodes er;
+    DBRoom room = DBRoom::get(id_room, er); // TODO проверка существует ли комната
     room.add_user(user_.id);
     user_.add_room(id_room);
     user_.update(); // TODO проверка прошло ли сохранение
@@ -27,54 +26,49 @@ ActivityManager::Status ActivityCustomer<User, Room, Session>::add_room() {
 }
 
 // TODO пока не понятно в каком виде придут данные
-template<class User, class Room, class Session>
-ActivityManager::Status ActivityCustomer<User, Room, Session>::add_content() {
+ActivityManager::Status ActivityCustomer::add_content() {
     return CLIENT_ERROR;
 }
 
-template<class User, class Room, class Session>
-ActivityManager::Status ActivityCustomer<User, Room, Session>::create_room() {
+ActivityManager::Status ActivityCustomer::create_room() {
     if(context_.find("name_room") == context_.end())
         return CLIENT_ERROR;
 
-    typename Room::Room room(context_["name_room"]);
+    typename DBRoom::Room room(context_["name_room"]);
     int id_room = room.add(room); // TODO проверка на ошибку добавления
     // TODO возможно выделение админа как то отдельно в комнате
-    Room::add_user(id_room, user_.id); // TODO проверка на ошибку добавления
-    User::add_room(user_.id, id_room); // TODO проверка прошло ли сохранение
+    DBRoom::add_user(id_room, user_.id); // TODO проверка на ошибку добавления
+    DBUser::add_room(user_.id, id_room); // TODO проверка прошло ли сохранение
 
     return OK;
 }
 
-template<class User, class Room, class Session>
-ActivityManager::Status ActivityCustomer<User, Room, Session>::remove_room() {
+ActivityManager::Status ActivityCustomer::remove_room() {
     if(context_.find("name_room") == context_.end())
         return CLIENT_ERROR;
 
     /// возможно какая то проверка, есть ли права у пользователя на удаление
 
     int id_room = boost::lexical_cast<int>(context_["id_room"]);
-    Room room = Room::get(id_room);
+    ErrorCodes er;
+    DBRoom room = DBRoom::get(id_room, er);
     // TODO удаление комнаты у всех ее user
-    Room::remove(id_room); // TODO проверка прошло ли удаление
+    DBRoom::remove(id_room); // TODO проверка прошло ли удаление
 
     return OK;
 }
 
 /// Пока не понятно буддет ли эта возможность в итоговом проекте
-template<class User, class Room, class Session>
-ActivityManager::Status ActivityCustomer<User, Room, Session>::add_favorite() {
+ActivityManager::Status ActivityCustomer::add_favorite() {
     return CLIENT_ERROR;
 }
 
 /// Пока не понятно буддет ли эта возможность в итоговом проекте
-template<class User, class Room, class Session>
-ActivityManager::Status ActivityCustomer<User, Room, Session>::add_deadline() {
+ActivityManager::Status ActivityCustomer::add_deadline() {
     return CLIENT_ERROR;
 }
 
-template<class User, class Room, class Session>
-ActivityCustomer<User, Room, Session>::ActivityCustomer(Context &context, User user)
+ActivityCustomer::ActivityCustomer(Context &context, DBUser user)
         : ActivityManager(context)
-        , user_(std::move(user)) {}
+        , user_(user) {}
 

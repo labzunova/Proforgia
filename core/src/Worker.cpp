@@ -3,9 +3,7 @@
 //
 
 
-//extern "C++" {
 #include "Worker.h"
-//}
 
 static std::mutex mtx;
 static std::condition_variable cv;

@@ -8,13 +8,25 @@
 #include "PageCustomer.h"
 #include "ActivityUser.h"
 #include "ActivityCustomer.h"
-#include "entities.h"
 #include <boost/lexical_cast.hpp>
+#include <boost/log/trivial.hpp>
 
 using namespace boost::gregorian;
 
 std::string Handler::get_response() {
     start_session();
+
+    /////// для теста шаблонизатора ///////
+//    Context ctx = {{"code", "200"}};
+//    std::string body = page_manager_->get_login_page();
+//    ctx["body"] = body;
+//    ctx["date"] = to_iso_string(second_clock::local_time());
+//    ctx["server"] = "SERVER";
+//    ctx["content-length"] = body.size();
+//    return HttpResponse::get_response(ctx);
+    /////////////////////////
+
+
 
     if(context_.find("action") == context_.end()) {
         return page_manager_->get_not_found();
@@ -85,28 +97,48 @@ std::string Handler::get_response() {
     }
 }
 
+// создаем разные обработики событий взависимости от того
+// есть ли сессия
 void Handler::start_session() {
-    View view; // TODO получаем другим способом(синголтоном)
     Context ctx; // TODO запись в контекст нужной информации
 
-    if (check_session() == Handler::OK) {
-        DBUser user = DBUser::get(DBSession::get("session").get_user());
-        page_manager_ = std::make_shared<PageCustomer<View, DBUser, DBSession>>(view, user);
-        activity_manager_ = std::make_shared<ActivityCustomer<DBUser, DBRoom, DBSession>>(ctx, user);
-    } else {
-        page_manager_ = std::make_shared<PageUser<View>>(view);
-        activity_manager_ = std::make_shared<ActivityUser<DBUser, DBSession>>(DBSession::get("session"))
-    }
+
+    /////// тест для бд ///////
+    ErrorCodes er;
+    DBUser user = DBUser::get(1, er);
+    page_manager_ = std::make_unique<PageCustomer>(user);
+    activity_manager_ = std::make_unique<ActivityCustomer>(ctx, std::move(user));
+    //////////////////////////
+
+
+///////////
+//    if(context_.find("session") == context_.end()) {
+//        set_user_right();
+//        return;
+//    }
+//
+//    DBSession session = DBSession::get(context_["session"]);
+
+//    if (check_session(session) == Handler::OK) {
+//        BOOST_LOG_TRIVIAL(debug) << "Start user session";
+//
+//        DBUser user = DBUser::get(session.get_user());
+//        page_manager_ = std::make_unique<PageCustomer>(user);
+//        activity_manager_ = std::make_unique<ActivityCustomer>(ctx, std::move(user));
+//    } else {
+//        set_user_right();
+//    }
+///////////
 }
 
-Handler::Status Handler::check_session() {
-    if(context_.find("session") == context_.end()) {
-        return NotFound;
-    }
 
-    date today = day_clock::local_day();
-    days days_live = today - DBSession::get(context_["session"]).date_of_creation;
-    if(days_live > LIVE_TIME)
+// проверяем пришедшую сессию, не протухла ли
+Handler::Status Handler::check_session(DBSession& session) {
+
+    date start_time = session.date_of_creation;
+    ptime today = second_clock::local_time(); // TODO подумать над временем часового пояса
+    if(today > ptime(start_time, LIVE_TIME))
+         // TODO удаление ссесии
         return Rotten;
     else
         return OK;
@@ -116,4 +148,10 @@ string Handler::redirect(const string& page) {
     Context ctx = {{"code", "302"},
                     {"location", page}}; // TODO заполнение контекста
     return HttpResponse::get_response(ctx);
+}
+
+void Handler::set_user_right() {
+    BOOST_LOG_TRIVIAL(debug) << "Start customer session";
+    page_manager_ = std::make_unique<PageUser>();
+    activity_manager_ = std::make_unique<ActivityUser>(DBSession::get("session"));
 }
