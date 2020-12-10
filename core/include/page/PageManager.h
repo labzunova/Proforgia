@@ -4,7 +4,7 @@
 
 #pragma once
 
-//#include "TemplateWrapper.h"
+#include "TemplateWrapper.h"
 #include <string>
 #include <vector>
 #include <memory>
@@ -35,5 +35,5 @@ public:
     virtual string get_server_err() = 0;
 
 protected:
-//    TemplateWrapper view_;
+    TemplateWrapper view_;
 };

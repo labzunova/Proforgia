@@ -3,6 +3,7 @@
 //
 
 #include "page/PageUser.cpp"
+#include "TemplateWrapper.h"
 #include "gtest/gtest.h"
 #include <string>
 
@@ -48,9 +49,9 @@ public:
 
 
 TEST(PageUserTests, MainPage){
-    TestView view;
-    PageUser<TestView> page(view);
-    std::string response = "page: MAIN\n";
+    TemplateWrapper view;
+    PageUser page;
+    std::string response = "page: main\n";
     EXPECT_EQ(response, page.get_main_page());
     EXPECT_EQ(response, page.get_room_page("5"));
     EXPECT_EQ(response, page.get_deadline_page());

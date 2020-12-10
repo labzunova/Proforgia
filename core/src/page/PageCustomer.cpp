@@ -27,12 +27,12 @@ string PageCustomer::get_room_page(string id) {
     return view_.render(context);
 }
 
-// TODO пока не известно будет ли это в проекте
+/// пока не известно будет ли это в проекте
 string PageCustomer::get_favorite_page() {
     return get_main_page();
 }
 
-// TODO пока не известно будет ли это в проекте
+/// пока не известно будет ли это в проекте
 string PageCustomer::get_deadline_page() {
     return get_main_page();
 }

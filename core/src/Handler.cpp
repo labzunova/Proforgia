@@ -104,31 +104,29 @@ void Handler::start_session() {
 
 
     /////// тест для бд ///////
-    ErrorCodes er;
-    DBUser user = DBUser::get(1, er);
-    page_manager_ = std::make_unique<PageCustomer>(user);
-    activity_manager_ = std::make_unique<ActivityCustomer>(ctx, std::move(user));
+//    ErrorCodes er;
+//    DBUser user = DBUser::get(1, er);
+//    page_manager_ = std::make_unique<PageCustomer>(user);
+//    activity_manager_ = std::make_unique<ActivityCustomer>(ctx, std::move(user));
     //////////////////////////
 
 
-///////////
-//    if(context_.find("session") == context_.end()) {
-//        set_user_right();
-//        return;
-//    }
-//
-//    DBSession session = DBSession::get(context_["session"]);
+    if(context_.find("session") == context_.end()) {
+        set_user_right();
+        return;
+    }
 
-//    if (check_session(session) == Handler::OK) {
-//        BOOST_LOG_TRIVIAL(debug) << "Start user session";
-//
-//        DBUser user = DBUser::get(session.get_user());
-//        page_manager_ = std::make_unique<PageCustomer>(user);
-//        activity_manager_ = std::make_unique<ActivityCustomer>(ctx, std::move(user));
-//    } else {
-//        set_user_right();
-//    }
-///////////
+    DBSession session = DBSession::get(context_["session"]);
+
+    if (check_session(session) == Handler::OK) {
+        BOOST_LOG_TRIVIAL(debug) << "Start user session";
+
+        DBUser user = DBUser::get(session.get_user());
+        page_manager_ = std::make_unique<PageCustomer>(user);
+        activity_manager_ = std::make_unique<ActivityCustomer>(ctx, std::move(user));
+    } else {
+        set_user_right();
+    }
 }
 
 
