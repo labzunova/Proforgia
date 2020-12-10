@@ -771,7 +771,7 @@ bool PostgreDBWrapper::add_tags_to_post(vector<std::string> &_tags, const int &p
     query += ") and room_id = " + std::to_string(room_id) + ");";
 
     std::unique_ptr <PGresult, decltype(res_deleter)> get_tags_of_this_post_result(PQexec(connection.get(), query.c_str()), res_deleter);
-    if (PQresultStatus(add_tags_result.get()) != PGRES_TUPLES_OK) {
+    if (PQresultStatus(get_tags_of_this_post_result.get()) != PGRES_TUPLES_OK) {
         error = ErrorCodes::UNKNOWN_DB_ERROR;
         return false;
     }
@@ -785,9 +785,28 @@ bool PostgreDBWrapper::add_tags_to_post(vector<std::string> &_tags, const int &p
     }
 
     // очистить все ранние связи этого поста с тэгами
+    query = "delete from tags_to_posts where post_id = " + std::to_string(post_id) + ";";
+    std::unique_ptr <PGresult, decltype(res_deleter)> delete_post_tags(PQexec(connection.get(), query.c_str()), res_deleter);
+    if (PQresultStatus(delete_post_tags.get()) != PGRES_COMMAND_OK) {
+        error = ErrorCodes::UNKNOWN_DB_ERROR;
+        return false;
+    }
 
     // вставить актуальные записи связей тэгов с этим постом
+    if (tags_ids.empty()) return true;
+    s_id = std::to_string(room_id);
+    query = "insert into tags_to_posts (tag_id, post_id) values (" + std::to_string(tags_ids[0]) + ", " + s_id + ")";
+    for (int i = 1; i < tags_ids.size(); i++) {
+        query += ", (" + std::to_string(tags_ids[i]) + ", " + s_id + ")";
+    }
+    query += ";";
+    std::unique_ptr <PGresult, decltype(res_deleter)> add_new_post_tags(PQexec(connection.get(), query.c_str()), res_deleter);
+    if (PQresultStatus(add_new_post_tags.get()) != PGRES_COMMAND_OK) {
+        error = ErrorCodes::UNKNOWN_DB_ERROR;
+        return false;
+    }
 
+    return true;
 }
 
 

@@ -209,7 +209,8 @@ struct DBPost : public DBEntity {
     bool add_file(string filename, ErrorCodes &error); // filename - имя файла, с которым он загрузился в Хранилище
     bool remove_file(string filename, ErrorCodes &error); // filename - имя файла, с которым он загрузился в Хранилище
 
-    bool update_tags(vector<string>& new_tags, ErrorCodes &error); // для добавления/обновления списка тэгов у поста
+    // !!! полностью заменяет текущие тэги этого поста на тэги в new_tags
+    bool update_tags(vector<string> new_tags, ErrorCodes &error); // для добавления/обновления списка тэгов у поста
 
 	// методы получения связанных полей 
 	DBRoom get_room(ErrorCodes &error);

@@ -61,7 +61,7 @@ bool DBPost::update(ErrorCodes &error) {
     return DataManager::getInstance().edit_post(id, Post(room_id, user_id, title, text), error);
 }
 
-bool DBPost::update_tags(vector<string>& new_tags, ErrorCodes &error) {
+bool DBPost::update_tags(vector<string> new_tags, ErrorCodes &error) {
     return DataManager::getInstance().add_tags_to_post(new_tags, id, room_id, error);
 }
 
