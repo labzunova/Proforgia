@@ -1,11 +1,11 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.15)
 project(Proforgia)
 
 SET(MYCOMPILE_FLAGS " -lpthread -o ")
 add_definitions(${MYCOMPILE_FLAGS})
 #add_compile_options(-pthread)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 #add_subdirectory(core)
 SET(Boost_USE_STATIC_LIBS ON)
@@ -21,6 +21,12 @@ include_directories("${PROJECT_SOURCE_DIR}/core")
 set(UNIT_TESTS
         tests/tests.cpp
         tests/network/parser_tests.cpp)
+
+
+#add_subdirectory(database)
+#add_executable(Proforgia main.cpp)
+#target_link_libraries(Proforgia database_lib)
+
 
 #---------------------------google-tests---------------------------
 
@@ -61,6 +67,9 @@ endif()
 #add_test(NAME example_test COMMAND example)
 
 add_executable(Tests ${UNIT_TESTS})
-target_link_libraries(Tests gtest gtest_main rt -ldl pthread)
+
+#add "rt" flag  if not on mac
+target_link_libraries(Tests gtest gtest_main -ldl pthread)
 
 #-----------------------------end-google-tests-----------------------------
+
