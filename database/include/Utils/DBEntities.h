@@ -99,7 +99,6 @@ struct DBUser : public DBEntity {
     std::string nick_name;
     std::string email;
     date register_date;
-private:
     std::string password;
 };
 

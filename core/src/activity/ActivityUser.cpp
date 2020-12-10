@@ -12,10 +12,10 @@ ActivityManager::Status ActivityUser::signUp() {
     std::string email = context_["email"];
     std::string password = context_["password"]; // TODO кодирование пароля
     typename DBUser::User user(email, login, password);
-    int id = DBUser::add(user); // TODO проверка на то прошло ли сохранение
+    //int id = DBUser::add(user); // TODO проверка на то прошло ли сохранение
 
-    string session = create_session(id);
-    context_["session"] = session;
+  //  string session = create_session(id);
+   // context_["session"] = session;
     return OK;
 }
 
@@ -26,12 +26,12 @@ ActivityManager::Status ActivityUser::signIn() {
     string login = context_["login"];
     string password = context_["password"]; // TODO кодирование
     ErrorCodes er;
-    DBUser user = DBUser::get(login, er); // TODO проверка на то пришел ли User
-    if(user.password != password)
+    auto user = DBUser::get(login, er); // TODO проверка на то пришел ли User
+    if(user->password != password)
         return CLIENT_ERROR;
 
-    string session = create_session(user.id);
-    context_["session"] = session;
+    //string session = create_session(user.id);
+    //context_["session"] = session;
     return OK;
 }
 
@@ -53,8 +53,8 @@ bool ActivityUser::validate_signUp() {
 
 string ActivityUser::create_session(const int& id) {
     string session_str; // TODO генерируем стоку сессии
-    typename DBSession::Session session(id, session_str);
-    DBSession::add(session);
+    //typename DBSession::Session session(id, session_str);
+    //DBSession::add(session);
 }
 
 bool ActivityUser::validate_signIn() {

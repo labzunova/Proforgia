@@ -28,10 +28,10 @@ set(SOURCE_FILES
         src/Handler.cpp
         src/page/PageCustomer.cpp
         src/page/PageUser.cpp
-#        src/activity/ActivityManager.cpp
-#        src/activity/ActivityCustomer.cpp
-#        src/activity/ActivityUser.cpp
-#        src/HttpResponse.cpp
+        src/activity/ActivityManager.cpp
+        src/activity/ActivityCustomer.cpp
+        src/activity/ActivityUser.cpp
+        src/HttpResponse.cpp
         )
 
 set(SOURCE_FILES_TESTS

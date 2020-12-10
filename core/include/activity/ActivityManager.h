@@ -7,6 +7,8 @@
 #include <map>
 #include <string>
 #include <utility>
+#include "DBEntities.h"
+#include "ErrorCodes.h"
 
 using std::string;
 

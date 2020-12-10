@@ -106,8 +106,8 @@ void Handler::start_session() {
     /////// тест для бд ///////
     ErrorCodes er;
     auto user = DBUser::get(1, er);
-    page_manager_ = std::make_unique<PageCustomer>(*user);
-    activity_manager_ = std::make_unique<ActivityCustomer>(ctx, std::move(*user));
+    page_manager_ = new PageCustomer(*(user));
+    activity_manager_ = new ActivityCustomer(ctx, *(user));
     //////////////////////////
 
 
@@ -152,7 +152,7 @@ string Handler::redirect(const string& page) {
 
 void Handler::set_user_right() {
     BOOST_LOG_TRIVIAL(debug) << "Start customer session";
-    page_manager_ = std::make_unique<PageUser>();
+    page_manager_ = new PageUser();
     Context ctx = {};
-    activity_manager_ = std::make_unique<ActivityUser>(ctx);
+    activity_manager_ = new ActivityUser(ctx);
 }

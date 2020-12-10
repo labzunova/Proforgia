@@ -53,6 +53,6 @@ private:
 
     Context context_;
 
-    std::unique_ptr<PageManager> page_manager_;
-    std::unique_ptr<ActivityManager> activity_manager_;
+    PageManager* page_manager_;
+    ActivityManager* activity_manager_;
 };

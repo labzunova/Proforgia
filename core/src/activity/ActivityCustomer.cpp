@@ -9,7 +9,7 @@
 
 ActivityManager::Status ActivityCustomer::exit() {
     string session = context_["session"];
-    DBSession::remove(session);
+    //DBSession::remove(session);
     return CLIENT_ERROR;
 }
 
@@ -18,10 +18,10 @@ ActivityManager::Status ActivityCustomer::add_room() {
         return CLIENT_ERROR;
     int id_room = boost::lexical_cast<int>(context_["id_room"]); /// возможно какой то другой индификатор который вводит пользователь
     ErrorCodes er;
-    DBRoom room = DBRoom::get(id_room, er); // TODO проверка существует ли комната
-    room.add_user(user_.id);
-    user_.add_room(id_room);
-    user_.update(); // TODO проверка прошло ли сохранение
+    auto room = DBRoom::get(id_room, er); // TODO проверка существует ли комната
+    //room->add_user(user_.id);
+    //user_.add_room(id_room);
+    //user_.update(); // TODO проверка прошло ли сохранение
     return OK;
 }
 
@@ -35,10 +35,10 @@ ActivityManager::Status ActivityCustomer::create_room() {
         return CLIENT_ERROR;
 
     typename DBRoom::Room room(context_["name_room"]);
-    int id_room = room.add(room); // TODO проверка на ошибку добавления
+    //int id_room = room.add(room); // TODO проверка на ошибку добавления
     // TODO возможно выделение админа как то отдельно в комнате
-    DBRoom::add_user(id_room, user_.id); // TODO проверка на ошибку добавления
-    DBUser::add_room(user_.id, id_room); // TODO проверка прошло ли сохранение
+    //DBRoom::add_user(id_room, user_.id); // TODO проверка на ошибку добавления
+    //DBUser::add_room(user_.id, id_room); // TODO проверка прошло ли сохранение
 
     return OK;
 }
@@ -51,9 +51,9 @@ ActivityManager::Status ActivityCustomer::remove_room() {
 
     int id_room = boost::lexical_cast<int>(context_["id_room"]);
     ErrorCodes er;
-    DBRoom room = DBRoom::get(id_room, er);
+    auto room = DBRoom::get(id_room, er);
     // TODO удаление комнаты у всех ее user
-    DBRoom::remove(id_room); // TODO проверка прошло ли удаление
+    //DBRoom::remove(id_room); // TODO проверка прошло ли удаление
 
     return OK;
 }
