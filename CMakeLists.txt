@@ -3,11 +3,14 @@ project(Proforgia)
 
 set(CMAKE_CXX_STANDARD 14)
 
+add_subdirectory(core)
+
 set(UNIT_TESTS
         tests/tests.cpp
         )
 
 add_executable(Proforgia main.cpp)
+target_link_libraries(Proforgia core_lib)
 
 #---------------------------google-tests---------------------------
 
