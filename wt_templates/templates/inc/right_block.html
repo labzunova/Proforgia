@@ -1,0 +1,9 @@
+<form>
+    <button type="submit" class="btn btn-primary btn-dark">Add post</button>
+</form>
+<h2 class="best-members">Tags</h2>
+<ul class="list-unstyled">
+    {% block right_block.tags %}
+        <a href="{{ tag.url }}"><li>{{ tag }}</li></a>
+    {% endblock %}
+</ul>

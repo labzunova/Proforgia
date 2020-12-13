@@ -1,0 +1,25 @@
+{% include ../wt_templates/templates/inc/base_header.html %}
+        <style type="text/css">
+            {% include ../wt_templates/templates/static/css/main.css %}
+            {% include ../wt_templates/templates/static/css/right_block.css %}
+        </style>
+
+        <main role="main" class="d-flex justify-content-center container">
+            <div class="row container d-flex justify-content-between">
+                <div class="col-9">
+                    <div class="row">
+                        <h4>{{ main_title }}</h4>
+                    </div>
+                    <div class="row">
+                        {% block posts_block %}
+                            {% include ../wt_templates/templates/inc/post.html %}
+                        {% endblock %}
+                    </div>
+                </div>
+                <div class="col-3">
+                    {% include ../wt_templates/templates/inc/right_block.html %}
+                </div>
+            </div>
+        </main>
+    </body>
+</html>
