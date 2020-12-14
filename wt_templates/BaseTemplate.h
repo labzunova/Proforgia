@@ -4,8 +4,10 @@
 #include <map>
 #include <vector>
 #include <string>
+#include "NLTemplate.h"
+#include "../Context.h"
 
-typedef std::map<std::string, std::string> Context;
+using namespace NL::Template;
 
 class BaseTemplate {
 public:
@@ -16,6 +18,10 @@ protected:
     std::vector<std::string> getCSS();
 
     std::vector<std::string> getJS();
+
+    void setLoggedNavBar(Template& temp) const;
+
+    void setRightBlock(Template& temp);
 
     Context& context;
 };

@@ -12,17 +12,10 @@ std::string & AddPostTemplate::getHTML() {
     temp.load("../wt_templates/templates/add_post.html");
 
     //---------------logged block--------------------
-    std::string username = "cmorrec";
-    auto& block_logged = temp.block("logged_block");
-    block_logged.set("username", username);
-    block_logged.set("avatar_res", "aaaaaaaaaaaaaaaaavvvvvvvvvvvvvaaaaaaaaaaaaaa");
+    setRightBlock(temp);
 
     //---------------right  block--------------------
-    std::vector<std::string> right_tags = {"Термодед", "Случайный дед", "ОБЖ", "Стройсмех", "Базы данных"};
-    auto& block_right = temp.block("right_block.tags");
-    block_right.repeat(right_tags.size());
-    for (int i = 0; i < right_tags.size(); i++)
-        block_right[i].set("tag", right_tags[i]);
+    setRightBlock(temp);
 
     std::stringstream os;
     temp.render(os);

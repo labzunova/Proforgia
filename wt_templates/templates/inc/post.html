@@ -7,7 +7,7 @@
             <div class="row">
                 {% block post.tags %}
                     <div class="col tag">
-                        {{ tag }}
+                        <a href="{{ tag.url }}">{{ tag }}</a>
                     </div>
                 {% endblock %}
             </div>

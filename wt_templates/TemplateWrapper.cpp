@@ -1,7 +1,7 @@
 #include "TemplateWrapper.h"
 
 TemplateWrapper::TemplateWrapper(Context& context) {
-    auto page = context.at("page");
+    auto page = context.page;
     if (page == "signup") {
         temp = std::make_unique<SignUpTemplate>(context);
     } else if (page == "profile") {
