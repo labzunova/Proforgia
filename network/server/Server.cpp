@@ -3,11 +3,11 @@
 
 #include "Server.h"
 
-Server::Server(const std::string &address, const std::string &port, Connection_queue &loop  ):
+Server::Server(const std::string &address, const std::string &port, std::shared_ptr<Connection_queue> loop  ):
         io_service_(),
         acceptor_( io_service_ ),
-        connection_queue(loop ),
-        new_connection( new Connection(io_service_, connection_queue ) )
+        connection_queue( loop ),
+        new_connection( new Connection( io_service_, connection_queue ) )
 {
     boost::asio::ip::tcp::resolver resolver(io_service_);
     boost::asio::ip::tcp::resolver::query query( address, port );
@@ -46,7 +46,10 @@ void Server::handle_accept( error_code err ) // TODO: or &?
         acceptor_.async_accept(new_connection->get_socket(),
                                boost::bind(&Server::handle_accept, this,
                                            boost::asio::placeholders::error));
+        BOOST_LOG_TRIVIAL( info ) << ( "New connection accepted" );
     }
+    else
+        BOOST_LOG_TRIVIAL( error ) << ( "ERROR in handle accept" );
 }
 
 void Server::handle_stop() {

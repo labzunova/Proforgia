@@ -1,18 +1,18 @@
 cmake_minimum_required(VERSION 3.17)
 project(Proforgia)
 
-SET(MYCOMPILE_FLAGS " -lpthread -o ")
+set(MYCOMPILE_FLAGS " -lpthread -o ")
 add_definitions(${MYCOMPILE_FLAGS})
 #add_compile_options(-pthread)
 
 set(CMAKE_CXX_STANDARD 14)
 
 #add_subdirectory(core)
-SET(Boost_USE_STATIC_LIBS ON)
-FIND_PACKAGE(Boost REQUIRED COMPONENTS log)
+set(Boost_USE_STATIC_LIBS ON)
+find_package(Boost REQUIRED COMPONENTS log)
 include_directories(${Boost_INCLUDE_DIRS})
 
-add_executable(Proforgia main.cpp network/connection/Connection.cpp network/connection/Connection.h network/server/Server.cpp network/server/Server.h network/parser/Parser.cpp network/parser/Parser.h network/connection_queue/Connection_queue.cpp network/connection_queue/Connection_queue.h network/request/Request.cpp network/request/Request.h)
+add_executable(Proforgia main.cpp network/connection/Connection.cpp network/connection/Connection.h network/server/Server.cpp network/server/Server.h network/parser/Parser.cpp network/parser/Parser.h network/connection_queue/Connection_queue.cpp network/connection_queue/Connection_queue.h network/request_handler/Request_handler.cpp network/request_handler/Request_handler.h)
 target_link_libraries(Proforgia boost_system pthread ${Boost_LIBRARIES})
 
 include_directories("${PROJECT_SOURCE_DIR}/network")
@@ -25,7 +25,7 @@ set(HEADER_FILES_SERVER
         network/connection/Connection.h
         network/connection_queue/Connection_queue.h
         network/parser/Parser.h
-        network/request/Request.h
+        network/request_handler/Request_handler.h
         network/server/Server.h
         )
 
@@ -33,7 +33,7 @@ set(SOURCE_FILES_SERVER
         network/connection/Connection.cpp
         network/connection_queue/Connection_queue.cpp
         network/parser/Parser.cpp
-        network/request/Request.cpp
+        network/request_handler/Request_handler.cpp
         network/server/Server.cpp
         )
 

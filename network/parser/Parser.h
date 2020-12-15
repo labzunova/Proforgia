@@ -44,12 +44,14 @@ class Parser
 {
 public:
     Parser( string request_ ): request( std::move( request_ ) ) {};
-    string request;
     const unordered_map<string, string> parse_cookies();
     const unordered_map<string, string> parse_body();
     const string parse_method();
     const string parse_path(); // все пути в нашем приложении - или одно слово, или rooms/some_room или rooms/some_room/tag
     const std::pair<string, string> parse_room_properties(string& path );
+
+private:
+    string request;
 };
 
 #endif //PROFORGIA_PARSER_H

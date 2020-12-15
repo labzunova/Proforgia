@@ -3,9 +3,7 @@
 
 const string Parser::parse_method()
 {
-    string method;
-    method = request.substr( 0, request.find(' ')); // первое слово до пробела в запросе - метод
-    return method;
+    return request.substr( 0, request.find(' '));// первое слово до пробела в запросе - метод
 }
 
 const string Parser::parse_path()
@@ -21,8 +19,8 @@ const string Parser::parse_path()
 
 const std::pair<string, string> Parser::parse_room_properties(string& path )
 {
-    string room = "",
-           tag = "";
+    string room,
+           tag;
     path.erase(0, path.find('/') + 1);
     if ( path.find( '/') != -1 ) // если требуется получить не просто комнату, а комнату с постами по тегу
     {
