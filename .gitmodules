@@ -1,0 +1,3 @@
+[submodule "database/aws-sdk/aws-sdk-cpp"]
+	path = database/aws-sdk/aws-sdk-cpp
+	url = https://github.com/aws/aws-sdk-cpp.git

@@ -1,2 +1,11 @@
 cmake-build-debug
 .idea
+
+CMakeFiles/
+build/
+
+.DS_Store
+*/.DS_Store
+
+database/.DS_Store
+database/include/.DS_Store

@@ -1,17 +1,30 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.15)
 project(Proforgia)
 
 set(MYCOMPILE_FLAGS " -lpthread -o ")
 add_definitions(${MYCOMPILE_FLAGS})
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
-#set(Boost_USE_STATIC_LIBS ON)
-#find_package(Boost REQUIRED COMPONENTS log)
-#include_directories(${Boost_INCLUDE_DIRS})
+#------------------tempates engine---------------------
+set(wt_views
+        wt_templates/NLTemplate.cpp
+        wt_templates/BaseTemplate.cpp
+        wt_templates/Login/LoginTemplate.cpp
+        wt_templates/SignUp/SignUpTemplate.cpp
+        wt_templates/Profile/ProfileTemplate.cpp
+        wt_templates/TemplateWrapper.cpp)
+include_directories(wt_templates)
 
+add_library(TemplatesEngine ${wt_views})
+
+#add_subdirectory(database)
+add_subdirectory(core)
 add_subdirectory(network)
 
+SET(Boost_USE_STATIC_LIBS ON)
+FIND_PACKAGE(Boost REQUIRED COMPONENTS log)
+include_directories(${Boost_INCLUDE_DIRS})
 
 set(UNIT_TESTS
         tests/tests.cpp
@@ -20,23 +33,25 @@ set(UNIT_TESTS
 add_executable(Proforgia main.cpp)
 
 target_link_libraries(Proforgia boost_system pthread ${Boost_LIBRARIES})
-target_link_libraries(Proforgia server_lib)
+target_link_libraries(Proforgia server_lib core_lib)
+target_link_libraries(Proforgia core_lib)
+
 #---------------------------google-tests---------------------------
 
 # Download and unpack googletest at configure time
 configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
 execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
         RESULT_VARIABLE result
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
-if(result)
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download)
+if (result)
     message(FATAL_ERROR "CMake step for googletest failed: ${result}")
-endif()
+endif ()
 execute_process(COMMAND ${CMAKE_COMMAND} --build .
         RESULT_VARIABLE result
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
-if(result)
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download)
+if (result)
     message(FATAL_ERROR "Build step for googletest failed: ${result}")
-endif()
+endif ()
 
 # Prevent overriding the parent project's compiler/linker
 # settings on Windows
@@ -53,13 +68,16 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
 # later. Otherwise we have to add them here ourselves.
 if (CMAKE_VERSION VERSION_LESS 2.8.11)
     include_directories("${gtest_SOURCE_DIR}/include")
-endif()
+endif ()
 
 # Now simply link against gtest or gtest_main as needed. Eg
 #target_link_libraries(example gtest_main)
 #add_test(NAME example_test COMMAND example)
 
 add_executable(Tests ${UNIT_TESTS})
+
+#add "rt" flag  if not on mac
 target_link_libraries(Tests gtest gtest_main -ldl pthread)
 
 #-----------------------------end-google-tests-----------------------------
+
