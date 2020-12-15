@@ -7,8 +7,11 @@
 #include <utility>
 #include <boost/lexical_cast.hpp>
 
-PageCustomer::PageCustomer(DBUser& user)
-        : user_(std::move(user)) {}
+/// поработать над Context
+
+PageCustomer::PageCustomer(std::shared_ptr<DBUser>& user) {
+    user_ = user;
+}
 
 
 string PageCustomer::get_main_page() {
@@ -58,7 +61,7 @@ string PageCustomer::get_not_found() {
 }
 
 void PageCustomer::write_user(std::map<string, string> &ctx) {
-    ctx["user_name"] = user_.nick_name;
+    ctx["user_name"] = user_->nick_name;
     /// Добавление всей информации пользователя
 }
 

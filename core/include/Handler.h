@@ -6,7 +6,6 @@
 
 #include "PageManager.h"
 #include "ActivityManager.h"
-#include "View.h"
 #include "DBEntities.h"
 #include "ErrorCodes.h"
 
@@ -44,11 +43,9 @@ private:
     Status check_session(DBSession& session);
     static string redirect(const string& page);
     void set_user_right();
+    static void set_header_data(Context& context);
 
 private:
-//    const boost::posix_time::ptime now= boost::posix_time::second_clock::local_time();
-//    boost::local_time::local_date_time LIVE_TIME =;
-
     const time_duration LIVE_TIME = hours(100);
 
     Context context_;

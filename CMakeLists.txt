@@ -16,7 +16,7 @@ set(wt_views
         wt_templates/TemplateWrapper.cpp)
 include_directories(wt_templates)
 
-add_library(TemplatesEngine ${wt_views})
+#add_library(TemplatesEngine ${wt_views})
 
 #add_subdirectory(database)
 add_subdirectory(core)
@@ -25,6 +25,12 @@ add_subdirectory(network)
 SET(Boost_USE_STATIC_LIBS ON)
 FIND_PACKAGE(Boost REQUIRED COMPONENTS log)
 include_directories(${Boost_INCLUDE_DIRS})
+
+# add_executable(Proforgia main.cpp)
+# target_link_libraries(Proforgia database_lib)
+
+include_directories("${PROJECT_SOURCE_DIR}/network")
+#include_directories("${PROJECT_SOURCE_DIR}/core")
 
 set(UNIT_TESTS
         tests/tests.cpp

@@ -11,21 +11,18 @@
 #include <vector>
 #include <memory>
 #include <map>
-//#include "View.h"
 
 using std::string;
 
-typedef std::map<std::string, std::string> Context;
+typedef std::map<std::string, std::string> Context; /// временное решение, заменится на другой context
 
 class PageManager {
 protected:
-    explicit PageManager() {
-        // TODO из синголтона достаем view
-    }
+    explicit PageManager() = default;
 
 private:
-    PageManager(const PageManager&) = default;
-    PageManager& operator = (PageManager&) = default;
+    PageManager(const PageManager&) = delete;
+    PageManager& operator = (PageManager&) = delete;
 
 public:
     virtual ~PageManager() = default;
@@ -39,7 +36,4 @@ public:
     virtual string get_info_tags(int id_room, std::unique_ptr<std::vector<string>> tags) = 0;
     virtual string get_not_found() = 0;
     virtual string get_server_err() = 0;
-
-protected:
-//    TemplateWrapper view_;
 };

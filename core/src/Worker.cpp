@@ -56,13 +56,12 @@ void Worker<Queue, Handler>::run() {
             request = new typename Queue::Event(queue_->pop_front());
         }
 
-//        context = {{"method", "GET"},    релиз
-//                           {"action", "MAIN"}};    релиз
-//        Handler handler(request->data);   релиз
-        std::map<std::string, std::string> ctx = {{"method", "GET"}, {"action", "MAIN"}};     // для тестов
-        Handler handler(ctx);   // для тестов
+//        context = {{"method", "GET"},    // релиз
+//                           {"action", "MAIN"}};    // релиз
+        Handler handler(request->data);   // релиз
+//        std::map<std::string, std::string> ctx = {{"method", "GET"}, {"action", "MAIN"}};     // для тестов
+//        Handler handler(ctx);   // для тестов
         request->callback(handler.get_response());
-//        assert(false);
     }
     BOOST_LOG_TRIVIAL(info) << ("Delete worker: " + boost::lexical_cast<std::string>(std::this_thread::get_id()));
 }
