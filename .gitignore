@@ -9,3 +9,4 @@ build/
 
 database/.DS_Store
 database/include/.DS_Store
+database/aws-sdk-cpp

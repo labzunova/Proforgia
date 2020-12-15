@@ -16,7 +16,7 @@ using std::string;
 
 class PageCustomer : public PageManager {
 public:
-    explicit PageCustomer(DBUser& user);
+    explicit PageCustomer(std::shared_ptr<DBUser>& user);
     ~PageCustomer() override = default;
     PageCustomer(const PageCustomer&) = delete;
     PageCustomer& operator = (PageCustomer&) = delete;
@@ -45,5 +45,5 @@ private:
     void write_info_tag(std::map<string, string>& ctx, const DBRoom& room, string tag);
 
 private:
-    DBUser user_;
+    std::shared_ptr<DBUser> user_;
 };

@@ -4,6 +4,8 @@
 
 #include "PageUser.h"
 
+// TODO разобраться с Context
+
 string PageUser::get_main_page() {
     Context context = {{"page", "main"}};
     TemplateWrapper view(context);

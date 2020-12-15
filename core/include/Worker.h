@@ -4,8 +4,6 @@
 
 #pragma once
 
-#include <queue>
-#include <string>
 #include <map>
 #include <mutex>
 #include <condition_variable>
@@ -15,7 +13,6 @@
 #include <vector>
 #include <boost/log/trivial.hpp>
 #include <boost/lexical_cast.hpp>
-#include <iostream>
 
 
 template<class Queue, class Handler>

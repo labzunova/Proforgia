@@ -51,6 +51,8 @@ TEST(HttpResponseTests, HttpResponse_300){
             "< X-Frame-Options: DENY\n"
             "< Content-Length: 0\n"
             "< Vary: Cookie\n"
+            "< Set-Cookie: lol=kek; Expires=Wed, 21 Oct 2015 07:28:00\n"
+            "< GMT; Secure; HttpOnly; Domain: 127.0.0.1:3000"
             "< X-Content-Type-Options: nosniff\n"
             "< Referrer-Policy: same-origin";
 
