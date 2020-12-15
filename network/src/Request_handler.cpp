@@ -1,5 +1,5 @@
 #include "Request_handler.h"
-#include "parser/Parser.h"
+#include "Parser.h"
 
 Request_handler::Request_handler( const string &request )
 {

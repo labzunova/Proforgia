@@ -1,8 +1,8 @@
 #ifndef PROFORGIA_CONNECTION_H
 #define PROFORGIA_CONNECTION_H
 
-#include "connection_queue/Connection_queue.h"
-#include "request_handler/Request_handler.h"
+#include "Connection_queue.h"
+#include "Request_handler.h"
 
 class Connection_queue;
 

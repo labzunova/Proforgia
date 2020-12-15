@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 #include <string>
 
-#include "parser/Parser.cpp" // wtf...but working TODO
+#include "src/Parser.cpp" // wtf...but working TODO
 
 const static string POST_request_random1 = "POST /login/process.cgi HTTP/1.1\r\n"
                                            "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"

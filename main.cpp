@@ -1,5 +1,5 @@
 #include <iostream>
-#include "server/Server.h"
+#include "Server.h"
 
 int main( int argc, char* argv[] ) {
   //  if ( argc != 2 )

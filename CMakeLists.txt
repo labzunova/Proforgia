@@ -3,41 +3,24 @@ project(Proforgia)
 
 set(MYCOMPILE_FLAGS " -lpthread -o ")
 add_definitions(${MYCOMPILE_FLAGS})
-#add_compile_options(-pthread)
 
 set(CMAKE_CXX_STANDARD 14)
 
-#add_subdirectory(core)
-set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost REQUIRED COMPONENTS log)
-include_directories(${Boost_INCLUDE_DIRS})
+#set(Boost_USE_STATIC_LIBS ON)
+#find_package(Boost REQUIRED COMPONENTS log)
+#include_directories(${Boost_INCLUDE_DIRS})
 
-add_executable(Proforgia main.cpp network/connection/Connection.cpp network/connection/Connection.h network/server/Server.cpp network/server/Server.h network/parser/Parser.cpp network/parser/Parser.h network/connection_queue/Connection_queue.cpp network/connection_queue/Connection_queue.h network/request_handler/Request_handler.cpp network/request_handler/Request_handler.h)
-target_link_libraries(Proforgia boost_system pthread ${Boost_LIBRARIES})
+add_subdirectory(network)
 
-include_directories("${PROJECT_SOURCE_DIR}/network")
 
 set(UNIT_TESTS
         tests/tests.cpp
-        tests/network/parser_tests.cpp)
-
-set(HEADER_FILES_SERVER
-        network/connection/Connection.h
-        network/connection_queue/Connection_queue.h
-        network/parser/Parser.h
-        network/request_handler/Request_handler.h
-        network/server/Server.h
         )
 
-set(SOURCE_FILES_SERVER
-        network/connection/Connection.cpp
-        network/connection_queue/Connection_queue.cpp
-        network/parser/Parser.cpp
-        network/request_handler/Request_handler.cpp
-        network/server/Server.cpp
-        )
+add_executable(Proforgia main.cpp)
 
-add_library(${SERVER_LIB} STATIC ${SOURCE_FILES_SERVER})
+target_link_libraries(Proforgia boost_system pthread ${Boost_LIBRARIES})
+target_link_libraries(Proforgia server_lib)
 #---------------------------google-tests---------------------------
 
 # Download and unpack googletest at configure time
@@ -77,6 +60,6 @@ endif()
 #add_test(NAME example_test COMMAND example)
 
 add_executable(Tests ${UNIT_TESTS})
-target_link_libraries(Tests gtest gtest_main rt -ldl pthread)
+target_link_libraries(Tests gtest gtest_main -ldl pthread)
 
 #-----------------------------end-google-tests-----------------------------

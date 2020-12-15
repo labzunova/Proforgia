@@ -46,10 +46,10 @@ void Server::handle_accept( error_code err ) // TODO: or &?
         acceptor_.async_accept(new_connection->get_socket(),
                                boost::bind(&Server::handle_accept, this,
                                            boost::asio::placeholders::error));
-        BOOST_LOG_TRIVIAL( info ) << ( "New connection accepted" );
+       // BOOST_LOG_TRIVIAL( info ) << ( "New connection accepted" );
     }
-    else
-        BOOST_LOG_TRIVIAL( error ) << ( "ERROR in handle accept" );
+   // else
+       // BOOST_LOG_TRIVIAL( error ) << ( "ERROR in handle accept" );
 }
 
 void Server::handle_stop() {

@@ -4,7 +4,7 @@
 #include <string>
 #include <boost/log/trivial.hpp>
 
-#include "connection/Connection.h"
+#include "Connection.h"
 
 typedef boost::system::error_code error_code;
 class Server: boost::asio::noncopyable
