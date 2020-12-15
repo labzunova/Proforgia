@@ -16,9 +16,9 @@ set(wt_views
         wt_templates/TemplateWrapper.cpp)
 include_directories(wt_templates)
 
-#add_library(TemplatesEngine ${wt_views})
+add_library(TemplatesEngine ${wt_views})
 
-#add_subdirectory(database)
+add_subdirectory(database)
 add_subdirectory(core)
 add_subdirectory(network)
 

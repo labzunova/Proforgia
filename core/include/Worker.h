@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <map>
 #include <mutex>
 #include <condition_variable>
 #include <atomic>
