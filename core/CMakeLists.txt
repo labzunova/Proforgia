@@ -16,8 +16,8 @@ set(HEADER_FILES
 
 set(INCLUDE
         include/activity
-        include/entities
-        include/external_api
+#        include/entities
+#        include/external_api
         include/page
         include
         src
@@ -49,7 +49,7 @@ find_package(GTest)
 include_directories(${Boost_INCLUDE_DIRS})
 
 add_library(${CORE_LIB} STATIC ${SOURCE_FILES})
-#target_link_libraries(${CORE_LIB} ${Boost_LIBRARIES} TemplatesEngine)
+#target_link_libraries(${CORE_LIB} ${Boost_LIBRARIES} database_lib)
 target_link_libraries(${CORE_LIB} ${Boost_LIBRARIES} database_lib TemplatesEngine)
 target_include_directories(${CORE_LIB} PUBLIC ${INCLUDE})
 

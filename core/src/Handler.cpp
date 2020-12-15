@@ -29,12 +29,12 @@ std::string Handler::get_response() {
 
     start_session();
 
-    if(context_.find("action") == context_.end()) {
+    if(context_.find("path") == context_.end()) {
         return page_manager_->get_not_found();
     }
 
     if(context_["method"] == "POST") {
-        if(context_["action"] == "signup") {
+        if(context_["path"] == "signup") {
             auto code = activity_manager_->signUp();
             if(code == ActivityManager::CLIENT_ERROR)
                 return page_manager_->get_registr_page();
@@ -47,7 +47,7 @@ std::string Handler::get_response() {
                 return redirect("MAIN");
             }
         }
-        else if(context_["action"] == "login") {
+        else if(context_["path"] == "login") {
             auto code = activity_manager_->signIn();
             if(code == ActivityManager::CLIENT_ERROR)
                 return page_manager_->get_login_page();
@@ -60,7 +60,7 @@ std::string Handler::get_response() {
                 return redirect("MAIN");
             }
         }
-        else if(context_["action"] == "add_file") {
+        else if(context_["path"] == "room") {
             auto code = activity_manager_->add_content();
             if(code == ActivityManager::CLIENT_ERROR)
                 return page_manager_->get_room_page(context_["id_room"]);
@@ -74,7 +74,7 @@ std::string Handler::get_response() {
 
     }
     else {
-        if(context_["action"] == "MAIN") {
+        if(context_["path"] == "profile") {
             Context ctx = {{"code", "200"}};
             set_header_data(ctx);
             string body = page_manager_->get_main_page();
@@ -82,7 +82,7 @@ std::string Handler::get_response() {
             ctx["body"] = body;
             return HttpResponse::get_response(ctx);
 
-        } else if(context_["action"] == "LOGIN") {
+        } else if(context_["path"] == "login") {
             Context ctx = {{"code", "200"}};
             set_header_data(ctx);
             string body = page_manager_->get_login_page();
@@ -90,7 +90,7 @@ std::string Handler::get_response() {
             ctx["body"] = body;
             return HttpResponse::get_response(ctx);
 
-        } else if(context_["action"] == "SIGNUP") {
+        } else if(context_["path"] == "signup") {
             Context ctx = {{"code", "200"}};
             set_header_data(ctx);
             string body = page_manager_->get_registr_page();
@@ -98,7 +98,7 @@ std::string Handler::get_response() {
             ctx["body"] = body;
             return HttpResponse::get_response(ctx);
 
-        } else if(context_["action"] == "FILES_BY_TAG") {
+        } else if(context_["path"] == "roomtag") {
             // TODO запись id комнаты в context_
             auto tags = std::make_unique<std::vector<std::string>>();
             tags->push_back(context_["tag"]);

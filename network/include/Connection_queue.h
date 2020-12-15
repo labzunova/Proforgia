@@ -14,8 +14,8 @@ class Connection_queue: private boost::asio::noncopyable
 {
 public:
     struct Event { // событие, которое может по вызову callback записать данные в нужный сокет
-        Event( std::unordered_map<std::string, std::string>&  data_, boost::asio::ip::tcp::socket& socket ): data(std::move( data_ )), socket_(  std::move(socket)  ) {}
-        std::unordered_map<std::string, std::string> data;  // метод запроса, что нужно выполнить, необходимые данные, полученные из прасинга запроса
+        Event( std::map<std::string, std::string>&  data_, boost::asio::ip::tcp::socket& socket ): data(std::move( data_ )), socket_(  std::move(socket)  ) {}
+        std::map<std::string, std::string> data;  // метод запроса, что нужно выполнить, необходимые данные, полученные из прасинга запроса
         void callback( std::string buffer )
         {
             boost::asio::async_write(socket_, boost::asio::buffer( buffer ),
@@ -37,7 +37,7 @@ public:
     std::queue<Event> connections;
 public:
     std::mutex queue_mutex;
-    void push_back( std::unordered_map<std::string, std::string>& data, boost::asio::ip::tcp::socket &socket_  ); // так кладутся задачи в очередь
+    void push_back( std::map<std::string, std::string>& data, boost::asio::ip::tcp::socket &socket_  ); // так кладутся задачи в очередь
     Event pop_front(); // для воркеров
     const int is_empty(); // для воркеров
 //    Connection_queue(Connection_queue *pQueue); // TODO: убрать(но попозже)

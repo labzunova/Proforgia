@@ -39,7 +39,7 @@ void Connection::handle_read( const Connection::error_code &e, std::size_t bytes
                              boost::bind(&Connection::handle_write, shared_from_this(),boost::asio::placeholders::error));*/
     string request_( std::begin( buffer_ ), std::end( buffer_ ) );
     Request_handler request( request_ ); // внутри реквеста вызывается парсер и записывает в поля реквеста готовые значения
-    std::unordered_map<string, string> to_put_in_loop = request.get_map();  // эта мапа передается в воркеры для обработки апи
+    std::map<string, string> to_put_in_loop = request.get_map();  // эта мапа передается в воркеры для обработки апи
 
     connection_queue->push_back( to_put_in_loop, socket_ ); // пихаем в очередь мапу и сокет для колбэка: моя обработка данного запроса окончена, отправит уже колбэк
 }

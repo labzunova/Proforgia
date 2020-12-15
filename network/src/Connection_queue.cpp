@@ -4,7 +4,7 @@
 
 #include "Connection_queue.h"
 
-void Connection_queue::push_back(std::unordered_map<std::string, std::string>& data, boost::asio::ip::tcp::socket &socket_  )
+void Connection_queue::push_back(std::map<std::string, std::string>& data, boost::asio::ip::tcp::socket &socket_  )
 {
     const std::lock_guard<std::mutex> lock(queue_mutex);
     Event new_connection = Event( data, socket_ );

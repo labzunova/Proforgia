@@ -19,7 +19,7 @@ Request_handler::Request_handler( const string &request )
     create_map();
 }
 
-std::unordered_map<std::string, std::string> Request_handler::get_map() const
+std::map<std::string, std::string> Request_handler::get_map() const
 {
     return to_put_in_loop;
 }

@@ -3,6 +3,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <map>
 
 using std::string;
 
@@ -10,9 +11,9 @@ class Request_handler
 {
 public:
     explicit Request_handler(const string &request );
-    std::unordered_map<std::string, std::string> get_map() const;
+    std::map<std::string, std::string> get_map() const;
 private:
-    std::unordered_map<std::string, std::string> to_put_in_loop;
+    std::map<std::string, std::string> to_put_in_loop;
     void create_map();
     void fill_GET_login();
     void fill_GET_signup();
