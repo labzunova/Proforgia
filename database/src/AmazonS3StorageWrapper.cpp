@@ -54,7 +54,7 @@ std::string AmazonS3StorageWrapper::get_file_link(const std::string &filename, E
         Aws::S3::S3Client s3_client(config);
         // TODO: consider POST http method
         url = s3_client.GeneratePresignedUrl((Aws::String)this->bucket_name, (Aws::String)filename, Aws::Http::HttpMethod::HTTP_GET, 2000);
-        std::cout << "Get file URL for " << filename << ":" << std::endl << url << std::endl;
+        // std::cout << "Get file URL for " << filename << ":" << std::endl << url << std::endl;
     }
 
     Aws::ShutdownAPI(options);

@@ -71,7 +71,7 @@ std::pair
 // если возвращаемое значение метода обернуто в std::optional, то при неудаче оно сконвертируется в false
 // соответственно, если метод завершился неудачно, смотрим ErrorCodes &error на тип ошибки и обрабатываем
 
-const static string POSTS_TABLE_NAME = "posts";
+
 
 
 struct DBEntity {
@@ -214,7 +214,7 @@ private:
     date create_date;
 };
 
-
+const static string POSTS_TABLE_NAME = "posts";
 struct DBPost : public DBEntity {
 	struct Post {
         Post(int roomId, int userId, const string &title, const string &text);
@@ -242,7 +242,6 @@ struct DBPost : public DBEntity {
 
     // TODO: !!! допродумать работу с файлами на клиенте
     // TODO: и дописать до рабочего состояния методы по работе с файлами поста с учетом работы формы
-    // TODO: get_file_link добавить метод получения ссылки на файл в хранилище
     static string get_upload_link(int post_id, ErrorCodes &error); // !!! чтобы отдать ссылку нужно знать название файла ИНАЧЕ название будет генерится автоматом
     static bool add_file_to_db(string filename, ErrorCodes &error); // filename - имя файла, с которым он загрузился в Хранилище
     static bool remove_file(string filename, ErrorCodes &error); // filename - имя файла, с которым он загрузился в Хранилище
@@ -255,6 +254,7 @@ struct DBPost : public DBEntity {
     shared_ptr<DBUser> get_author(ErrorCodes &error);
     std::optional< vector<DBTag> > get_tags(ErrorCodes &error);
     std::optional< vector<std::string> > get_attachments(ErrorCodes &error); // list of links to storage locations of files
+
 
     void print() {
         std::cout << "Post info:" << std::endl;

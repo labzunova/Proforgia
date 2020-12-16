@@ -165,7 +165,18 @@ std::optional<std::vector<DBTag> > DataManager::get_post_tags(int post_id, Error
 }
 
 std::optional<std::vector<std::string> > DataManager::get_post_attachments(int post_id, ErrorCodes &error) const {
-    return database->get_post_attachments(post_id, error);
+    // беру из БД название файлов
+    auto filenames = database->get_post_attachments(post_id, error);
+    if (!filenames)
+        return std::nullopt;
+    // получаю ccылки на эти файлы в хранилище
+    std::vector<string> attachments_links;
+    for (int i = 0; i < filenames->size(); i++) {
+        string storage_path = POSTS_TABLE_NAME + "/" + std::to_string(post_id) + "/" + filenames.value()[i];
+        string link = get_file_link(storage_path, error);
+        attachments_links.push_back(link);
+    }
+    return attachments_links;
 }
 
 

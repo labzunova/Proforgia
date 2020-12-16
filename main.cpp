@@ -238,14 +238,14 @@ int main()
     }
     if (tags->empty()) cout << "No tags";
 
-    auto post = DBPost::get(2, error);
+    auto post = DBPost::get(4, error);
     auto attachments = post->get_attachments(error);
     for (int i = 0; i < attachments->size(); i++) {
-        cout << attachments.value()[i] << " ";
+        cout << attachments.value()[i] << endl;
     }
-    */
+*/
 
-    
+
 
 
     return 0;
