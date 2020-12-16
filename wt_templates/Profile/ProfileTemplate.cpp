@@ -3,7 +3,6 @@
 using namespace NL::Template;
 
 ProfileTemplate::ProfileTemplate(Context& context) : BaseTemplate(context) {
-    //auto username = context.at("username");
 
 }
 
@@ -13,17 +12,16 @@ std::string& ProfileTemplate::getHTML() {
 
     temp.load("../wt_templates/templates/profile.html");
 
-    std::string username = "cmorrec";
-    auto& block_logged = temp.block("logged_fragment");
-    block_logged.set("username", username);
-    block_logged.set("avatar_res", "aaaaaaaaaaaaaaaaavvvvvvvvvvvvvaaaaaaaaaaaaaa");
+    //---------------logged block--------------------
+    setLoggedNavBar(temp);
 
-    temp.block( "rooms" ).repeat( 3 );
-    for (int i = 0; i < 3; i++) {
-        temp.block("rooms")[i].set("room_name", "room");
-        temp.block("rooms")[i].set("room_src", "room-src");
+    //---------------rooms block--------------------
+    auto& roomsBlock = temp.block("rooms" );
+    roomsBlock.repeat(context.rooms.size() );
+    for (int i = 0; i < context.rooms.size(); i++) {
+        roomsBlock[i].set("room_name", context.rooms[i].title);
+        roomsBlock[i].set("room_src", context.rooms[i].url);
     }
-
 
     std::stringstream os;
     temp.render(os);

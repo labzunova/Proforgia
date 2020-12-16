@@ -1,0 +1,20 @@
+<div class="container parent">
+    <div class="row question-box">
+        <div class="col-9">
+            <div class="row">
+                {{ post.title }}
+            </div>
+            <div class="row">
+                {% block post.tags %}
+                    <div class="col tag">
+                        <a href="{{ tag.url }}">{{ tag }}</a>
+                    </div>
+                {% endblock %}
+            </div>
+        </div>
+        <div class="col-3">
+            {{ post.author }}
+        </div>
+    </div>
+</div>
+

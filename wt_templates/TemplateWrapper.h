@@ -6,6 +6,8 @@
 #include "Login/LoginTemplate.h"
 #include "SignUp/SignUpTemplate.h"
 #include "Profile/ProfileTemplate.h"
+#include "Main/MainTemplate.h"
+#include "AddPost/AddPostTemplate.h"
 
 class TemplateWrapper {
 public:

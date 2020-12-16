@@ -5,13 +5,43 @@
 
 <main role="main" class="d-flex justify-content-center container">
     <div class="row container d-flex justify-content-between">
-        <div class="col-9">
+        <div class="col-6">
             <div class="name-page col-12">
                 <h4>Choose Rooms</h4>
             </div>
             {% block rooms %}
-            <p><a href="{{ room_src }}">{{ room_name }}</a></p>
+                <p><a href="{{ room_src }}">{{ room_name }}</a></p>
             {% endblock %}
+        </div>
+        <div class="col-6">
+            <div class="row">
+                <form class="body-page col-12" method="POST">
+                    <div class="form-group row">
+                        <label for="inputTitle" class="col-sm-3 col-form-label">Title</label>
+                        <div class="col-sm-9">
+                            <input class="form-control" id="inputTitle" name="inputTitle" placeholder="dr_pepper">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6"></div>
+                        <button type="submit" class="btn btn-primary mb-2 btn-dark reg-btn">Create room</button>
+                    </div>
+                </form>
+            </div>
+            <div class="row">
+                <form class="body-page col-12" method="POST">
+                    <div class="form-group row">
+                        <label for="roomID" class="col-sm-3 col-form-label">ROOM ID</label>
+                        <div class="col-sm-9">
+                            <input class="form-control" id="roomID" name="roomID" placeholder="id">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6"></div>
+                        <button type="submit" class="btn btn-primary mb-2 btn-dark reg-btn">Sign in room</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </main>

@@ -13,6 +13,8 @@ set(wt_views
         wt_templates/Login/LoginTemplate.cpp
         wt_templates/SignUp/SignUpTemplate.cpp
         wt_templates/Profile/ProfileTemplate.cpp
+        wt_templates/Main/MainTemplate.cpp
+        wt_templates/AddPost/AddPostTemplate.cpp
         wt_templates/TemplateWrapper.cpp)
 include_directories(wt_templates)
 

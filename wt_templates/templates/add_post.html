@@ -1,0 +1,54 @@
+{% include ../wt_templates/templates/inc/base_header.html %}
+
+<style type="text/css">
+    {% include ../wt_templates/templates/static/css/add_post.css %}
+</style>
+
+<main role="main" class="d-flex justify-content-center container">
+    <div class="row container d-flex justify-content-between">
+        <div class="col-9">
+            <div>
+                <form>
+                    <h1 class="h3 mb-3 font-weight-normal">New post</h1>
+                    <div class="form-group row" style="margin-top: 16px;">
+                        <label for="title" class="col-sm-3 col-form-label">Title</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="title" name="title">
+                        </div>
+                    </div>
+                    <div class="form-group row" style="margin-top: 16px;">
+                        <label for="text" class="col-sm-3 col-form-label">Text</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="text" name="text">
+                        </div>
+                    </div>
+                    <div class="form-group row" style="margin-top: 16px;">
+                        <label for="tags" class="col-sm-3 col-form-label">Tags</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="tags" name="tags">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 16px;">
+                        <div class="col-2">
+
+                        </div>
+                        <div class="col-2">
+                            <button type="submit" class="page_btn btn btn-outline-secondary">ADD POST!</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-3">
+            {% include ../wt_templates/templates/inc/right_block.html %}
+        </div>
+    </div>
+</main>
+<footer class="d-flex container justify-content-center">
+
+</footer>
+<script src="../js/jquery.slim.min.js"></script>
+<script src="../js/popper.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+</body>
+</html>

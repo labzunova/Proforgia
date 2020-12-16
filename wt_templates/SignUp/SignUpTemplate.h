@@ -1,7 +1,6 @@
 #ifndef PROFORGIA_SIGNUPTEMPLATE_H
 #define PROFORGIA_SIGNUPTEMPLATE_H
 
-#include "NLTemplate.h"
 #include "BaseTemplate.h"
 
 class SignUpTemplate : public BaseTemplate {
