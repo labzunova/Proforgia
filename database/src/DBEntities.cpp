@@ -34,14 +34,6 @@ const string &DBUser::getPassword() const {
     return password;
 }
 
-
-
-
-// TODO: дописать псевдокод и сделать рабочий метод
-std::vector<std::string> DBPost::get_attachments(ErrorCodes &error) {
-
-}
-
 std::optional< vector<DBPost> > DBPost::get(std::vector<std::string> _tags, int room_id, ErrorCodes &error) {
 	// get all posts, that contain all tags in _tags
     return DataManager::getInstance().get_posts_by_tags(_tags, room_id, error);
@@ -88,30 +80,37 @@ string gen_random(const int len) {
 
 string DBPost::get_upload_link(int post_id, ErrorCodes &error) {
     // пока имя файла в ссылке генерируется рандомно, как вариант можно заменять в процессе
-    string filename = gen_random(10); // !
+    string filename = gen_random(10);
     string storage_file_path = POSTS_TABLE_NAME + "/" + std::to_string(post_id) + "/" + filename;
 
     return DataManager::getInstance().get_file_upload_link(storage_file_path, error);
 }
 
-bool DBPost::add_file(string filename, ErrorCodes &error) {
+bool DBPost::add_file_to_db(string filename, ErrorCodes &error) {
     // добавить запись о файле в БД
+
 }
 
 bool DBPost::remove_file(string filename, ErrorCodes &error) {
-    return DataManager::getInstance().remove_file_from_storage(filename, error);
+    DataManager::getInstance().remove_file_from_storage(filename, error);
+    // TODO: remove from db
+    assert(false);
 }
 
-DBRoom DBPost::get_room(ErrorCodes &error) {
-
+shared_ptr<DBRoom> DBPost::get_room(ErrorCodes &error) {
+    return DBRoom::get(room_id, error);
 }
 
-DBUser DBPost::get_author(ErrorCodes &error) {
-
+shared_ptr<DBUser> DBPost::get_author(ErrorCodes &error) {
+    return DBUser::get(user_id, error);
 }
 
-std::vector<DBTag> DBPost::get_tags(ErrorCodes &error) {
+std::optional< std::vector<DBTag> > DBPost::get_tags(ErrorCodes &error) {
+    return DataManager::getInstance().get_post_tags(id, error);
+}
 
+std::optional< std::vector<std::string> > DBPost::get_attachments(ErrorCodes &error) {
+    return DataManager::getInstance().get_post_attachments(id, error);
 }
 
 // Это не надо, сережа реализует у себя!
@@ -171,6 +170,18 @@ DBTag::DBTag(int &id, string name, int roomId) : DBEntity(id), name(std::move(na
 
 bool DBTag::update(ErrorCodes &error) {
     return false;
+}
+
+shared_ptr<DBTag> DBTag::get(int _id, ErrorCodes &error) {
+    return DataManager::getInstance().get_tag_info(_id, error);
+}
+
+const string &DBTag::getName() const {
+    return name;
+}
+
+int DBTag::getRoomId() const {
+    return room_id;
 }
 
 DBPost::Post::Post(int roomId, int userId, const string &title, const string &text) : room_id(roomId), user_id(userId),

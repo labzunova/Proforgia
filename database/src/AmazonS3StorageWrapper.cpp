@@ -95,7 +95,7 @@ bool AmazonS3StorageWrapper::remove_file_from_storage(const std::string &filenam
     {
         if (DeleteObject((Aws::String) filename, (Aws::String) this->bucket_name, (Aws::String) this->region))
         {
-            std::cout << "Deleted object " << filename << " from " << this->bucket_name << "." << std::endl;
+            // std::cout << "Deleted object " << filename << " from " << this->bucket_name << "." << std::endl;
         } else {
             error = ErrorCodes::UNKNOWN_STORAGE_ERROR;
             ShutdownAPI(options);

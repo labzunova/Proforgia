@@ -140,6 +140,34 @@ bool DataManager::remove_file_from_storage(const std::string &filename, ErrorCod
     return storage->remove_file_from_storage(filename, error);
 }
 
+bool DataManager::add_file(const string& filename, int post_id, ErrorCodes &error) const {
+    return database->add_file(filename, post_id, error);
+}
+
+shared_ptr<DBTag> DataManager::get_tag_info(const int &tag_id, ErrorCodes &error) const {
+    return database->get_tag_info(tag_id, error);
+}
+
+std::optional<std::vector<DBTag> > DataManager::get_post_tags(int post_id, ErrorCodes &error) const {
+    // взять id всех тэгов этого поста
+    auto tags_ids = database->get_post_tags_ids(post_id, error);
+    if (!tags_ids)
+        return std::nullopt;
+    // получить в цикле все тэги по id
+    std::vector<DBTag> tags;
+    for (int i = 0; i < tags_ids->size(); i++) {
+        auto tag = database->get_tag_info(tags_ids.value()[i], error);
+        if (!tag)
+            return std::nullopt;
+        tags.emplace_back(*tag);
+    }
+    return tags;
+}
+
+std::optional<std::vector<std::string> > DataManager::get_post_attachments(int post_id, ErrorCodes &error) const {
+    return database->get_post_attachments(post_id, error);
+}
+
 
 
 

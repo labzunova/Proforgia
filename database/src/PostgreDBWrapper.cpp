@@ -809,6 +809,135 @@ bool PostgreDBWrapper::add_tags_to_post(vector<std::string> &_tags, const int &p
     return true;
 }
 
+bool PostgreDBWrapper::add_file(const string &filename, int post_id, ErrorCodes &error) {
+    std::shared_ptr<PGconn> connection;
+    try {
+        connection = get_connection();
+    }
+    catch(std::exception &exc) {
+        error = ErrorCodes::DB_CONNECTION_ERROR;
+        std::cout << exc.what();
+        return false;
+    }
+
+    string query = "insert into files (post_id, filename) values "
+                   "(" + std::to_string(post_id) +
+                   "', '" + filename + "');";
+
+    auto res_deleter = [](PGresult* r) { PQclear(r);};
+    std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
+    if (PQresultStatus(result.get()) != PGRES_COMMAND_OK) {
+        error = ErrorCodes::UNKNOWN_DB_ERROR;
+        return false;
+    }
+
+    return true;
+}
+
+shared_ptr<DBTag> PostgreDBWrapper::get_tag_info(const int &tag_id, ErrorCodes &error) const {
+    std::shared_ptr<PGconn> connection;
+    try {
+        connection = get_connection();
+    }
+    catch(std::exception &exc) {
+        error = ErrorCodes::DB_CONNECTION_ERROR;
+        std::cout << exc.what();
+        return nullptr;
+    }
+
+    std::string s_id = std::to_string(tag_id);
+    std::string query = "select id, tag_name, room_id from tags where id=" + s_id + ";";
+
+    auto res_deleter = [](PGresult* r) { PQclear(r);};
+    std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
+
+    if (PQresultStatus(result.get()) != PGRES_TUPLES_OK) {
+        error = ErrorCodes::UNKNOWN_DB_ERROR;
+        return nullptr;
+    }
+
+    if (PQntuples(result.get()) == 0) {
+        error = ErrorCodes::DB_ENTITY_NOT_FOUND;
+        return nullptr;
+    }
+    else if (PQntuples(result.get()) > 1) {
+        error = ErrorCodes::UNKNOWN_DB_ERROR;
+        return nullptr;
+    }
+    else {
+        int id = std::stoi(PQgetvalue(result.get(), 0, 0));
+        std::string tag_name = PQgetvalue(result.get(), 0, 1);
+        int room_id = std::stoi(PQgetvalue(result.get(), 0, 2));
+
+        return std::make_shared<DBTag>(id, tag_name, room_id);
+    }
+}
+
+std::optional<vector<int> > PostgreDBWrapper::get_post_tags_ids(int post_id, ErrorCodes &error) const {
+    std::shared_ptr<PGconn> connection;
+    try {
+        connection = get_connection();
+    }
+    catch(std::exception &exc) {
+        error = ErrorCodes::DB_CONNECTION_ERROR;
+        std::cout << exc.what();
+        return std::nullopt;
+    }
+
+    std::string s_id = std::to_string(post_id);
+    std::string query = "select tag_id from tags_to_posts where post_id = " + s_id + ";";
+
+    auto res_deleter = [](PGresult* r) { PQclear(r);};
+    std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
+
+    if (PQresultStatus(result.get()) != PGRES_TUPLES_OK) {
+        error = ErrorCodes::UNKNOWN_DB_ERROR;
+        return std::nullopt;
+    }
+
+    std::vector<int> tags_ids;
+    int number_of_rows = PQntuples(result.get());
+    for (int i = 0; i < number_of_rows; i++) {
+        int _tag_id = std::stoi(PQgetvalue(result.get(), i, 0));
+        tags_ids.push_back(_tag_id);
+    }
+
+    return tags_ids;
+}
+
+std::optional<std::vector<std::string> > PostgreDBWrapper::get_post_attachments(int post_id, ErrorCodes &error) const {
+    std::shared_ptr<PGconn> connection;
+    try {
+        connection = get_connection();
+    }
+    catch(std::exception &exc) {
+        error = ErrorCodes::DB_CONNECTION_ERROR;
+        std::cout << exc.what();
+        return std::nullopt;
+    }
+
+    std::string s_id = std::to_string(post_id);
+    std::string query = "select filename from files where post_id = " + s_id + ";";
+
+    auto res_deleter = [](PGresult* r) { PQclear(r);};
+    std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
+
+    if (PQresultStatus(result.get()) != PGRES_TUPLES_OK) {
+        error = ErrorCodes::UNKNOWN_DB_ERROR;
+        return std::nullopt;
+    }
+
+    std::vector<std::string> files_names_in_storage;
+    int number_of_rows = PQntuples(result.get());
+    for (int i = 0; i < number_of_rows; i++) {
+        string filename = PQgetvalue(result.get(), i, 0);
+        files_names_in_storage.push_back(filename);
+    }
+
+    return files_names_in_storage;
+}
+
+
 
 
 

@@ -24,7 +24,6 @@ using std::pair;
 
 /*
 ЧТО ИСПОЛЬЗОВАЛ ИЗ STL
-
 std::unordered_map
 - Для удобного получения id элемента по его имени
 
@@ -59,6 +58,7 @@ std::pair
  TODO: исправить typo room_desciption на room_description
  TODO: сделать поля user_id и room_id not null в таблице posts
  TODO: сделать поле room_id not null в таблице tags
+ TODO: сделать unique constraint на post_id && filename в таблице files
  */
 
 
@@ -141,6 +141,8 @@ public:
 
     bool update(ErrorCodes &error) override; // поля тэга менять нельзя, всегда вернет false
 
+    static shared_ptr<DBTag> get(int _id, ErrorCodes &error);
+
     struct Tag {
         Tag(string name, int roomId);
 
@@ -154,6 +156,10 @@ public:
         std::cout << "name: " << this->name << std::endl;
         std::cout << "room id: " << this->room_id << std::endl;
     }
+
+    const string &getName() const;
+
+    int getRoomId() const;
 
 private:
 	// size_t use_count; // счетчик количества упоминаний тэга для более эффективной сортировки тэгов по популярности
@@ -224,9 +230,6 @@ struct DBPost : public DBEntity {
             DBEntity(id), room_id(_room_id), user_id(_user_id), title(_title), text(_text), publication_date(_ldt)
 	{}
 
-	int room_id;
-	int user_id; // post author
-
 	std::string title;
 	std::string text;
 
@@ -237,18 +240,21 @@ struct DBPost : public DBEntity {
 
     static std::optional< vector<DBPost> > get(std::vector<std::string> _tags, int room_id, ErrorCodes &error);
 
+    // TODO: !!! допродумать работу с файлами на клиенте
+    // TODO: и дописать до рабочего состояния методы по работе с файлами поста с учетом работы формы
+    // TODO: get_file_link добавить метод получения ссылки на файл в хранилище
     static string get_upload_link(int post_id, ErrorCodes &error); // !!! чтобы отдать ссылку нужно знать название файла ИНАЧЕ название будет генерится автоматом
-    static bool add_file(string filename, ErrorCodes &error); // filename - имя файла, с которым он загрузился в Хранилище
+    static bool add_file_to_db(string filename, ErrorCodes &error); // filename - имя файла, с которым он загрузился в Хранилище
     static bool remove_file(string filename, ErrorCodes &error); // filename - имя файла, с которым он загрузился в Хранилище
 
     // !!! полностью заменяет текущие тэги этого поста на тэги в new_tags
     bool update_tags(vector<string> new_tags, ErrorCodes &error); // для добавления/обновления списка тэгов у поста
 
 	// методы получения связанных полей 
-	DBRoom get_room(ErrorCodes &error);
-	DBUser get_author(ErrorCodes &error);
-	vector<DBTag> get_tags(ErrorCodes &error);
-	vector<std::string> get_attachments(ErrorCodes &error); // list of links to storage locations of files
+    shared_ptr<DBRoom> get_room(ErrorCodes &error);
+    shared_ptr<DBUser> get_author(ErrorCodes &error);
+    std::optional< vector<DBTag> > get_tags(ErrorCodes &error);
+    std::optional< vector<std::string> > get_attachments(ErrorCodes &error); // list of links to storage locations of files
 
     void print() {
         std::cout << "Post info:" << std::endl;
@@ -261,6 +267,8 @@ struct DBPost : public DBEntity {
     }
 
 private:
+    int room_id;
+    int user_id; // post author
     local_date_time publication_date;
 };
 

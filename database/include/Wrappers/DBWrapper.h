@@ -27,6 +27,7 @@ public:
     virtual bool add_user( const DBUser::User& user_info, ErrorCodes &error ) = 0;
 	virtual bool add_room( const DBRoom::Room& room_info, ErrorCodes &error ) = 0;
 	virtual bool add_post( const DBPost::Post& post_info, ErrorCodes &error ) = 0;
+    virtual bool add_file( const string& filename, int post_id, ErrorCodes &error ) = 0;
 	virtual bool add_user_to_room( const int& room_id, const int& user_id, Rights user_rights, ErrorCodes &error ) = 0;
 	virtual bool add_tags_to_post( std::vector<std::string>& _tags, const int& post_id, const int& room_id, ErrorCodes &error ) = 0;
 //	virtual bool add_session( const std::string& session_id, const DBSession::Session& session_info, ErrorCodes &error ) = 0;
@@ -46,6 +47,9 @@ public:
     virtual std::optional< vector<DBTag> > get_room_tags( const int& room_id, ErrorCodes &error ) const = 0;
 	virtual shared_ptr<DBPost> get_post_info( const int& post_id, ErrorCodes &error ) const = 0;
 	virtual std::optional< vector<int> > get_posts_by_tags(std::vector<std::string>& _tags, int room_id, ErrorCodes &error) const = 0;
+    virtual std::optional< vector<int> > get_post_tags_ids(int post_id, ErrorCodes &error) const = 0;
+    virtual std::optional< std::vector<std::string> > get_post_attachments(int post_id, ErrorCodes &error) const = 0;
+    virtual shared_ptr<DBTag> get_tag_info( const int& tag_id, ErrorCodes &error ) const = 0;
 //	virtual DBSession get_session_info( const std::string& session_id, ErrorCodes &error ) const = 0;
 
 	virtual bool edit_user( const int& id, const DBUser::User& user_info, ErrorCodes &error ) = 0;

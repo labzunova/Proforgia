@@ -222,9 +222,32 @@ int main()
         }
     }
 
-
     auto link = DBPost::get_upload_link(2, error);
- */
+    DBPost::remove_file("file-with-text.txt", error);
+
+    auto tag = DBTag::get(2, error);
+    if (!tag) assert(false);
+    cout << tag->getName() << " ";
+    cout << tag->getRoomId();
+
+
+    auto post = DBPost::get(1, error);
+    auto tags = post->get_tags(error);
+    for (int i = 0; i < tags->size(); i++) {
+        cout << tags.value()[i].getName() << " ";
+    }
+    if (tags->empty()) cout << "No tags";
+
+    auto post = DBPost::get(2, error);
+    auto attachments = post->get_attachments(error);
+    for (int i = 0; i < attachments->size(); i++) {
+        cout << attachments.value()[i] << " ";
+    }
+    */
+
+    
+
+
     return 0;
 }
 
