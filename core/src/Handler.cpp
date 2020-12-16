@@ -134,9 +134,9 @@ void Handler::start_session() {
     set_user_right();
 
     /// записать user тоже временное решение
-    std::shared_ptr<DBUser> user = std::make_shared<DBUser>();
-    page_manager_ = std::make_unique<PageCustomer>(user);
-    activity_manager_ = std::make_unique<ActivityCustomer>(ctx, std::move(user));
+//    std::shared_ptr<DBUser> user = std::make_shared<DBUser>();
+//    page_manager_ = std::make_unique<PageCustomer>(user);
+//    activity_manager_ = std::make_unique<ActivityCustomer>(ctx, std::move(user));
 
     /// вернуться когда будет готов интерфейс сессии
 //    if(context_.find("session") == context_.end()) {

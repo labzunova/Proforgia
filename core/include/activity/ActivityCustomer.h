@@ -34,5 +34,5 @@ public:
     Status add_deadline() override;
 
 private:
-    DBUser user_;
+    std::shared_ptr<DBUser> user_;
 };

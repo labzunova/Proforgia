@@ -5,7 +5,7 @@
 
 class SignUpTemplate : public BaseTemplate {
 public:
-    SignUpTemplate(ContextMap& context);
+    SignUpTemplate(Context& context);
     std::string& getHTML() override;
 private:
     std::string signUpHTML;

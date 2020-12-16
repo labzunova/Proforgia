@@ -12,7 +12,7 @@ using namespace NL::Template;
 
 class BaseTemplate {
 public:
-    BaseTemplate(ContextMap& context);
+    BaseTemplate(Context& context);
     virtual std::string& getHTML() = 0;
 
 protected:
