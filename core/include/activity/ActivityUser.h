@@ -20,7 +20,7 @@ public:
 
     Status signUp() override;
 
-    Status signIn() override;
+    Status login() override;
 
 private:
     bool validate_signUp();

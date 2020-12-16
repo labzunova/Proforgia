@@ -8,7 +8,7 @@ ActivityManager::Status ActivityManager::signUp() {
     return ActivityManager::CLIENT_ERROR;
 }
 
-ActivityManager::Status ActivityManager::signIn() {
+ActivityManager::Status ActivityManager::login() {
     return ActivityManager::CLIENT_ERROR;
 }
 

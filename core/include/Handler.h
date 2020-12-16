@@ -43,6 +43,7 @@ private:
     Status check_session(DBSession& session);
     static string redirect(const string& page);
     void set_user_right();
+    void set_customer_right(std::shared_ptr<DBUser>& user);
     static void set_header_data(ContextMap& context);
 
 private:

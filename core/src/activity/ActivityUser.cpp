@@ -23,7 +23,7 @@ ActivityManager::Status ActivityUser::signUp() {
     return OK;
 }
 
-ActivityManager::Status ActivityUser::signIn() {
+ActivityManager::Status ActivityUser::login() {
     if(!validate_signIn())
         return CLIENT_ERROR;
 

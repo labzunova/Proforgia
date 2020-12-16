@@ -29,7 +29,7 @@ public:
     virtual ~ActivityManager() = default;
 
     virtual Status signUp();
-    virtual Status signIn();
+    virtual Status login();
     virtual Status exit();
     virtual Status add_room();
     virtual Status add_content();
