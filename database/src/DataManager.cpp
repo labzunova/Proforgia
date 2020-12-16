@@ -179,6 +179,19 @@ std::optional<std::vector<std::string> > DataManager::get_post_attachments(int p
     return attachments_links;
 }
 
+shared_ptr<DBSession> DataManager::get_session_info(const int &session_id, ErrorCodes &error) const {
+    return database->get_session_info(session_id, error);
+}
+
+bool DataManager::remove_session(const int &session_id, ErrorCodes &error) {
+    return database->remove_session(session_id, error);
+}
+
+bool DataManager::add_session(const DBSession::Session &session_info, ErrorCodes &error) const {
+    return database->add_session(session_info, error);
+}
+
+
 
 
 

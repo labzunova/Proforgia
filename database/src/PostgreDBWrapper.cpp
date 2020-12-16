@@ -937,7 +937,87 @@ std::optional<std::vector<std::string> > PostgreDBWrapper::get_post_attachments(
     return files_names_in_storage;
 }
 
+shared_ptr<DBSession> PostgreDBWrapper::get_session_info(const int &session_id, ErrorCodes &error) const {
+    std::shared_ptr<PGconn> connection;
+    try {
+        connection = get_connection();
+    }
+    catch(std::exception &exc) {
+        error = ErrorCodes::DB_CONNECTION_ERROR;
+        std::cout << exc.what();
+        return nullptr;
+    }
 
+    std::string query = "select * from sessions where id='" + std::to_string(session_id) + "';";
 
+    auto res_deleter = [](PGresult* r) { PQclear(r);};
+    std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
 
+    if ((PQresultStatus(result.get()) != PGRES_TUPLES_OK) && (PQntuples(result.get()) > 1)) {
+        error = ErrorCodes::UNKNOWN_DB_ERROR;
+        return nullptr;
+    }
 
+    if (PQntuples(result.get()) == 0) {
+        error = ErrorCodes::DB_ENTITY_NOT_FOUND;
+        return nullptr;
+    }
+    else {
+        int id = std::stoi(PQgetvalue(result.get(), 0, 0));
+        string session_id_str = PQgetvalue(result.get(), 0, 1);
+        int user_id = std::stoi(PQgetvalue(result.get(), 0, 2));
+        string create_time = PQgetvalue(result.get(), 0, 3);
+
+        return std::make_shared<DBSession>(id, parse_timestamp_to_local_date_time(create_time), session_id_str, user_id);
+    }
+}
+
+bool PostgreDBWrapper::remove_session(const int &session_id, ErrorCodes &error) {
+    std::shared_ptr<PGconn> connection;
+    try {
+        connection = get_connection();
+    }
+    catch(std::exception &exc) {
+        error = ErrorCodes::DB_CONNECTION_ERROR;
+        std::cout << exc.what();
+        return false;
+    }
+
+    string s_id = std::to_string(session_id);
+    string query = "delete from sessions where id=" + s_id + ";";
+
+    auto res_deleter = [](PGresult* r) { PQclear(r);};
+    std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
+    if (PQresultStatus(result.get()) != PGRES_COMMAND_OK) {
+        error = ErrorCodes::UNKNOWN_DB_ERROR;
+        return false;
+    }
+
+    return true;
+}
+
+bool PostgreDBWrapper::add_session(const DBSession::Session &session_info, ErrorCodes &error) {
+    std::shared_ptr<PGconn> connection;
+    try {
+        connection = get_connection();
+    }
+    catch(std::exception &exc) {
+        error = ErrorCodes::DB_CONNECTION_ERROR;
+        std::cout << exc.what();
+        return false;
+    }
+
+    string s_user_id = std::to_string(session_info.user_id);
+    string query = "insert into sessions (user_id, session_id) values "
+                   "(" + s_user_id +
+                   ", '" + session_info.session_identificator + "');";
+
+    auto res_deleter = [](PGresult* r) { PQclear(r);};
+    std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
+    if (PQresultStatus(result.get()) != PGRES_COMMAND_OK) {
+        error = ErrorCodes::UNKNOWN_DB_ERROR;
+        return false;
+    }
+
+    return true;
+}

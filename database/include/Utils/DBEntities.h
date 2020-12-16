@@ -2,6 +2,7 @@
 #define PROFORGIA_DBENTITIES_H
 
 #include <string>
+#include <utility>
 #include <vector>
 #include <optional>
 #include <iostream>
@@ -52,8 +53,7 @@ std::pair
 
 /*
  ЗАДАЧИ ПО САМОЙ БАЗЕ ДАННЫХ:
- TODO: поле password у юзер должно хранить хэш (скорее всего это будет число, уточнить у сережи)
- TODO: сессия должна хранить строковый идентификатор сессии (скорее всего строка фикс. размера, уточнить)
+ TODO: строковый идентификатор сессии должен быть уникальным, сделать unique constraint на него
  TODO: сделать имеил уникальным
  TODO: исправить typo room_desciption на room_description
  TODO: сделать поля user_id и room_id not null в таблице posts
@@ -61,27 +61,19 @@ std::pair
  TODO: сделать unique constraint на post_id && filename в таблице files
  */
 
-
-// TODO: ДОБАВИТЬ ENTITY DBFILE
-// TODO: ДОБАВИТЬ ДАТЫ почти ко всем энтити!!!!
-
-
 // при неудаче методов, возвращающих bool, вернется false
 // при неудаче get-методов, возвращающих умный указатель на какое-либо DBEntity, вернется nullptr
 // если возвращаемое значение метода обернуто в std::optional, то при неудаче оно сконвертируется в false
 // соответственно, если метод завершился неудачно, смотрим ErrorCodes &error на тип ошибки и обрабатываем
 
-
-
-
 struct DBEntity {
 	virtual bool update(ErrorCodes &error) = 0; // аналог save() в API UML
 
-    int get_id() const;
+    [[nodiscard]] int get_id() const;
 
 protected:
     int id;
-    DBEntity(int& _id);
+    explicit DBEntity(int& _id);
 };
 
 
@@ -89,10 +81,10 @@ class DBRoom;
 
 struct DBUser : public DBEntity {
 	struct User {
-		User( string _nick_name, string _email, string _password) :
-			nick_name(_nick_name), 
-			email(_email),
-			password(_password) {}
+        User( string _nick_name, string _email, string _password) :
+			nick_name(std::move(_nick_name)),
+			email(std::move(_email)),
+			password(std::move(_password)) {}
 
 		std::string nick_name;
 		std::string email;
@@ -274,22 +266,30 @@ private:
 
 struct DBSession : public DBEntity {
 	struct Session {
-	    Session( std::string& _user_id ) : user_id(_user_id) {}
+        Session(const string sessionId, int userId);
 
-	    std::string user_id;
+        string session_identificator;
+	    int user_id;
 	};
 
-	DBSession(int &id, std::string &_user_id) : DBEntity(id), user_id(_user_id) {}
+    DBSession(int &id, const local_date_time &creationDate, const string &sessionId, int userId);
 
-	std::string user_id;
-
-	static DBSession get(std::string& _id, ErrorCodes &error);
-	static std::string add(Session _session, ErrorCodes &error); // return id in DB on success, а при неудаче, вернет строку специального вида
-	static bool remove(std::string& id, ErrorCodes &error);
-	bool update(ErrorCodes &error) override;
+	static shared_ptr<DBSession> get(int _id, ErrorCodes &error);
+	static bool add(Session _session, ErrorCodes &error);
+	static bool remove(int id, ErrorCodes &error);
+	bool update(ErrorCodes &error) override; // поля сессии менять нельзя, всегда вернет false
 
 	// методы получения связанных полей 
-	DBUser get_user(ErrorCodes &error);
+    shared_ptr<DBUser> get_user(ErrorCodes &error);
+
+    // getters
+    const local_date_time &getCreationDate() const;
+    const string &getSessionIdentificator() const;
+    int getUserId() const;
+private:
+    local_date_time creation_date;
+    string session_identificator;
+    int user_id;
 };
 
 #endif // PROFORGIA_DBENTITIES_H

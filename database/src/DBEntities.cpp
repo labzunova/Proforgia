@@ -186,3 +186,40 @@ int DBTag::getRoomId() const {
 
 DBPost::Post::Post(int roomId, int userId, const string &title, const string &text) : room_id(roomId), user_id(userId),
                                                                                       title(title), text(text) {}
+
+DBSession::Session::Session(const string sessionId, int userId) : session_identificator(sessionId), user_id(userId) {}
+
+DBSession::DBSession(int &id, const local_date_time &creationDate, const string &sessionId, int userId)
+        : DBEntity(id), creation_date(creationDate), session_identificator(sessionId), user_id(userId) {}
+
+shared_ptr<DBSession> DBSession::get(int _id, ErrorCodes &error) {
+    return DataManager::getInstance().get_session_info(_id, error);
+}
+
+bool DBSession::remove(int id, ErrorCodes &error) {
+    return DataManager::getInstance().remove_session(id, error);
+}
+
+bool DBSession::add(DBSession::Session _session, ErrorCodes &error) {
+    return DataManager::getInstance().add_session(_session, error);
+}
+
+bool DBSession::update(ErrorCodes &error) {
+    return false;
+}
+
+shared_ptr<DBUser> DBSession::get_user(ErrorCodes &error) {
+    return DBUser::get(user_id, error);
+}
+
+const local_date_time &DBSession::getCreationDate() const {
+    return creation_date;
+}
+
+const string &DBSession::getSessionIdentificator() const {
+    return session_identificator;
+}
+
+int DBSession::getUserId() const {
+    return user_id;
+}

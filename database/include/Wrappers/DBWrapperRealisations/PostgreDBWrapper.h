@@ -18,13 +18,6 @@ public:
 	PostgreDBWrapper( const PostgreDBWrapper& ) = delete;
 	PostgreDBWrapper& operator=( const PostgreDBWrapper& ) = delete;
 
-protected:
-//	bool add_file_record( 
-//		const std::string& file_id,
-//		const std::string& filename,
-//		const std::string& file_storage_ref,
-//		const std::string& post_id,
-//		ErrorCodes &error ) override;
 public:
 	bool add_user( const DBUser::User& user_info, ErrorCodes &error ) override;
 	bool add_room( const DBRoom::Room& room_info, ErrorCodes &error ) override;
@@ -32,14 +25,14 @@ public:
     bool add_file(const string &filename, int post_id, ErrorCodes &error) override;
     bool add_user_to_room( const int& room_id, const int& user_id, Rights user_rights, ErrorCodes &error ) override;
     bool add_tags_to_post( std::vector<std::string>& _tags, const int& post_id, const int& room_id, ErrorCodes &error) override;
-//	bool add_session( const std::string& session_id, const DBSession::Session& session_info, ErrorCodes &error ) override;
-//
+    bool add_session( const DBSession::Session& session_info, ErrorCodes &error ) override;
+
 	bool remove_user( const int& user_id, ErrorCodes &error ) override;
 	bool remove_room( const int& room_id, ErrorCodes &error ) override;
 	bool remove_post( const int& post_id, ErrorCodes &error ) override;
 	bool remove_user_from_room( const int& room_id, const int& user_id, ErrorCodes &error ) override;
-//	bool remove_session( const std::string& session_id, ErrorCodes &error ) override;
-//
+	bool remove_session( const int& session_id, ErrorCodes &error ) override;
+
     shared_ptr<DBUser> get_user_info( const int& user_id, ErrorCodes &error ) const override;
     shared_ptr<DBUser> get_user_info( const string& nickname, ErrorCodes &error ) const override;
     std::optional< vector<pair<DBRoom, Rights>> > get_user_rooms( const int& user_id, ErrorCodes &error ) const override;
@@ -52,8 +45,8 @@ public:
     std::optional< vector<int> > get_post_tags_ids(int post_id, ErrorCodes &error) const override;
     shared_ptr<DBTag> get_tag_info( const int& tag_id, ErrorCodes &error ) const override;
     std::optional< std::vector<std::string> > get_post_attachments(int post_id, ErrorCodes &error) const override;
-//	DBSession get_session_info( const std::string& session_id, ErrorCodes &error ) const override;
-//
+    shared_ptr<DBSession> get_session_info( const int& session_id, ErrorCodes &error ) const override;
+
 	bool edit_user( const int& id, const DBUser::User& user_info, ErrorCodes &error ) override;
 	bool edit_room( const int& id, const DBRoom::Room& room_info, ErrorCodes &error ) override;
 	bool edit_post( const int& id, const DBPost::Post& post_info, ErrorCodes &error ) override;
