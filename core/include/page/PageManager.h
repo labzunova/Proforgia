@@ -5,16 +5,14 @@
 #pragma once
 
 
-
 #include "TemplateWrapper.h"
+#include "Context.h"
 #include <string>
 #include <vector>
 #include <memory>
 #include <map>
 
 using std::string;
-
-typedef std::map<std::string, std::string> Context; /// временное решение, заменится на другой context
 
 class PageManager {
 protected:

@@ -9,12 +9,12 @@
 
 #include "Worker.cpp"
 
-typedef std::map<std::string, std::string> Context;
+typedef std::map<std::string, std::string> ContextMap;
 
 
 class TestHandler {
 public:
-    explicit TestHandler(Context&) {};
+    explicit TestHandler(ContextMap&) {};
     std::string get_response() {
         sleep(1);
         return "response";
@@ -24,9 +24,9 @@ public:
 class TestQueue {
 public:
     struct Event {
-        explicit Event(Context& ctx) : data(ctx) {}
+        explicit Event(ContextMap& ctx) : data(ctx) {}
 
-        Context data;
+        ContextMap data;
         void callback( std::string buffer ) {
             std::cout << "done work\n";
         }
@@ -51,8 +51,8 @@ private:
 
 TEST(WorkerTests, TimeWork){
 
-    Context context = {{"method", "GET"},
-                       {"action", "MAIN"}};
+    ContextMap context = {{"method", "GET"},
+                          {"action", "MAIN"}};
     TestQueue::Event event(context);
     auto queue = std::make_shared<TestQueue>();
 

@@ -13,7 +13,7 @@ using std::string;
 
 class ActivityUser : public ActivityManager {
 public:
-    explicit ActivityUser(Context& context);
+    explicit ActivityUser(ContextMap& context);
     ~ActivityUser() override = default;
     ActivityUser(const ActivityUser&) = delete;
     ActivityUser& operator = (ActivityUser&) = delete;

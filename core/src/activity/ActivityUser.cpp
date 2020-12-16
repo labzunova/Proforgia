@@ -35,7 +35,7 @@ ActivityManager::Status ActivityUser::signIn() {
     return OK;
 }
 
-ActivityUser::ActivityUser(Context &context) : ActivityManager(context) {
+ActivityUser::ActivityUser(ContextMap &context) : ActivityManager(context) {
 }
 
 bool ActivityUser::validate_signUp() {

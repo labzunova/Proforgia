@@ -6,13 +6,13 @@
 #include <string>
 #include <map>
 
-typedef std::map<std::string, std::string> Context;
+typedef std::map<std::string, std::string> ContextMap;
 class HttpResponse {
 public:
-    static std::string get_response(Context& context);
+    static std::string get_response(ContextMap& context);
 
 private:
-    static std::string get_response_200(Context& context);
-    static std::string get_response_300(Context& context);
-    static std::string get_response_400(Context& context);
+    static std::string get_response_200(ContextMap& context);
+    static std::string get_response_300(ContextMap& context);
+    static std::string get_response_400(ContextMap& context);
 };

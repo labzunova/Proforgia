@@ -40,9 +40,9 @@ public:
     string get_server_err() override;
 
 private:
-    void write_user(std::map<string, string>& ctx);
-    void write_room(std::map<string, string>& ctx, const DBRoom& room);
-    void write_info_tag(std::map<string, string>& ctx, const DBRoom& room, string tag);
+    void write_user(Context& ctx);
+    void write_room(Context& ctx, const DBRoom& room);
+    void write_info_tag(Context& ctx, const DBRoom& room, string tag);
 
 private:
     std::shared_ptr<DBUser> user_;

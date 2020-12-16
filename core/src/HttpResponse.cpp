@@ -5,7 +5,7 @@
 #include "HttpResponse.h"
 
 
-std::string HttpResponse::get_response(Context& context) {
+std::string HttpResponse::get_response(ContextMap& context) {
     std::string response;
     if(context["code"][0] == '2') {
         response = get_response_200(context);
@@ -18,7 +18,7 @@ std::string HttpResponse::get_response(Context& context) {
     return response;
 }
 
-std::string HttpResponse::get_response_200(Context& context) {
+std::string HttpResponse::get_response_200(ContextMap& context) {
     return "HTTP/1.1 " + context["code"] + " OK\n"
         + "< Date: "+ context["date"] +"\n"
         + "< Server: " + context["server"] + "\n"
@@ -31,7 +31,7 @@ std::string HttpResponse::get_response_200(Context& context) {
         + context["body"];
 }
 
-std::string HttpResponse::get_response_300(Context& context) {
+std::string HttpResponse::get_response_300(ContextMap& context) {
     return "HTTP/1.1 " + context["code"] + " Found\n"
            + "< Date: "+ context["date"] +"\n"
            + "< Server: " + context["server"] + "\n"
@@ -44,7 +44,7 @@ std::string HttpResponse::get_response_300(Context& context) {
            + "< Referrer-Policy: same-origin";
 }
 
-std::string HttpResponse::get_response_400(Context& context) {
+std::string HttpResponse::get_response_400(ContextMap& context) {
     return "HTTP/1.1 " + context["code"] + " Not Found\n"
            + "< Date: "+ context["date"] +"\n"
            + "< Server: " + context["server"] + "\n"

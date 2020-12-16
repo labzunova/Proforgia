@@ -5,11 +5,11 @@
 #include <vector>
 #include <string>
 
-typedef std::map<std::string, std::string> Context;
+//typedef std::map<std::string, std::string> ContextMap;
 
 class BaseTemplate {
 public:
-    BaseTemplate(Context& context);
+    BaseTemplate(ContextMap& context);
     virtual std::string& getHTML() = 0;
 
 protected:
@@ -17,7 +17,7 @@ protected:
 
     std::vector<std::string> getJS();
 
-    Context& context;
+    ContextMap& context;
 };
 
 

@@ -6,7 +6,7 @@
 
 class ProfileTemplate : public BaseTemplate {
 public:
-    explicit ProfileTemplate(Context& context);
+    explicit ProfileTemplate(ContextMap& context);
 
     std::string& getHTML() override;
 

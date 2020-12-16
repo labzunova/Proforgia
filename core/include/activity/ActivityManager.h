@@ -12,7 +12,7 @@
 
 using std::string;
 
-typedef std::map<std::string, std::string> Context;
+typedef std::map<std::string, std::string> ContextMap;
 
 class ActivityManager {
 public:
@@ -23,7 +23,7 @@ public:
     };
 
 protected:
-    explicit ActivityManager(Context& context) : context_(std::move(context)) {};
+    explicit ActivityManager(ContextMap& context) : context_(std::move(context)) {};
 
 public:
     virtual ~ActivityManager() = default;
@@ -39,5 +39,5 @@ public:
     virtual Status add_deadline();
 
 protected:
-    Context context_;
+    ContextMap context_;
 };

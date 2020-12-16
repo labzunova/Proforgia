@@ -68,7 +68,7 @@ ActivityManager::Status ActivityCustomer::add_deadline() {
     return CLIENT_ERROR;
 }
 
-ActivityCustomer::ActivityCustomer(Context &context, DBUser user)
+ActivityCustomer::ActivityCustomer(ContextMap &context, shared_ptr<DBUser> user)
         : ActivityManager(context)
         , user_(user) {}
 

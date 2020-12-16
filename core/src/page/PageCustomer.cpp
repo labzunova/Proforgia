@@ -7,7 +7,7 @@
 #include <utility>
 #include <boost/lexical_cast.hpp>
 
-/// поработать над Context
+/// поработать над ContextMap
 
 PageCustomer::PageCustomer(std::shared_ptr<DBUser>& user) {
     user_ = user;
@@ -15,14 +15,27 @@ PageCustomer::PageCustomer(std::shared_ptr<DBUser>& user) {
 
 
 string PageCustomer::get_main_page() {
-    Context context = {{"page", "main"}};
-    write_user(context); // TODO возможно сразу запись комнаты
+    string page = "profile";
+    Context context(page);
+    Context::User user;
+
+    user.username = user_->nick_name;
+    user.avatarUrl = "/34534534";  // TODO берем из юзера эту информацию, когда будет в бд это
+
+    // TODO правильно преобразовать одно в другое
+    ErrorCodes er;
+    auto db_rooms = user_->get_rooms(er);
+    vector<Context::Room> room;
+
+    context.setProfileContext(user, room);
+
     TemplateWrapper view(context);
     return view.getHTML();
 }
 
 string PageCustomer::get_room_page(string id) {
-    Context context = {{"page", "room"}};
+    string page = "main";
+    Context context(page);
     write_user(context);
 
     int id_room = boost::lexical_cast<int>(id);
@@ -55,27 +68,29 @@ string PageCustomer::get_info_tags(int id_room, std::unique_ptr<std::vector<stri
 }
 
 string PageCustomer::get_not_found() {
-    Context context = {{"page", "not_found"}};
+    string page = "not_found";
+    Context context(page);
     TemplateWrapper view(context);
     return view.getHTML();
 }
 
-void PageCustomer::write_user(std::map<string, string> &ctx) {
-    ctx["user_name"] = user_->nick_name;
-    /// Добавление всей информации пользователя
+void PageCustomer::write_user(Context &ctx) {
+    ctx.user.username = user_->nick_name;
+    ctx.user.avatarUrl = "/34534534";  // TODO берем из юзера эту информацию, когда будет в бд это
 }
 
-void PageCustomer::write_room(std::map<string, string> &ctx, const DBRoom &room) {
-    ctx["room_name"] = room.room_name;
+void PageCustomer::write_room(Context &ctx, const DBRoom &room) {
+//    ctx["room_name"] = room.room_name;
     /// Добавление всей информации комнаты
 }
 
-void PageCustomer::write_info_tag(std::map<string, string> &ctx, const DBRoom &room, string tag) {
+void PageCustomer::write_info_tag(Context &ctx, const DBRoom &room, string tag) {
 
 }
 
 string PageCustomer::get_server_err() {
-    Context context = {{"page", "500"}};
+    string page = "500";
+    Context context(page);
     TemplateWrapper view(context);
     return view.getHTML();
 }

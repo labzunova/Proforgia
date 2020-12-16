@@ -13,7 +13,7 @@ using std::string;
 
 class ActivityCustomer : public ActivityManager {
 public:
-    ActivityCustomer(Context &context, DBUser user);
+    ActivityCustomer(ContextMap &context, shared_ptr<DBUser> user);
     ~ActivityCustomer() override = default;
     ActivityCustomer(const ActivityCustomer&) = delete;
     ActivityCustomer& operator = (ActivityCustomer&) = delete;

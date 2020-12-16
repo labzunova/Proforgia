@@ -1,9 +1,9 @@
 #include <map>
 #include "BaseTemplate.h"
 
-typedef std::map<std::string, std::string> Context;
+typedef std::map<std::string, std::string> ContextMap;
 
-BaseTemplate::BaseTemplate(Context& context) : context(context) {
+BaseTemplate::BaseTemplate(ContextMap& context) : context(context) {
 }
 
 std::vector<std::string> BaseTemplate::getCSS() {

@@ -3,10 +3,10 @@
 #include "Handler.h"
 #include "Worker.cpp"
 
-//typedef std::unordered_map<std::string, std::string> Context;
+//typedef std::unordered_map<std::string, std::string> ContextMap;
 //class TestHandler {
 //public:
-//    explicit TestHandler(Context& context_): context(context_) {};
+//    explicit TestHandler(ContextMap& context_): context(context_) {};
 //    std::string get_response() {
 //        return
 //        "< HTTP/1.1 200 OK\n"
@@ -21,7 +21,7 @@
 //        +context["path"];
 //    }
 //private:
-//    Context context;
+//    ContextMap context;
 //};
 
 int main( int argc, char* argv[] ) {

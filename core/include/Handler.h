@@ -20,7 +20,7 @@
 using std::string;
 using namespace boost::posix_time;
 
-typedef std::map<std::string, std::string> Context;
+typedef std::map<std::string, std::string> ContextMap;
 
 class Handler {
 private:
@@ -31,7 +31,7 @@ private:
     };
 
 public:
-    explicit Handler(Context& context) : context_(context) {};
+    explicit Handler(ContextMap& context) : context_(context) {};
     ~Handler() = default;
     Handler(const Handler&) = delete;
     Handler& operator=(const Handler&) = delete;
@@ -43,12 +43,12 @@ private:
     Status check_session(DBSession& session);
     static string redirect(const string& page);
     void set_user_right();
-    static void set_header_data(Context& context);
+    static void set_header_data(ContextMap& context);
 
 private:
     const time_duration LIVE_TIME = hours(100);
 
-    Context context_;
+    ContextMap context_;
 
     std::unique_ptr<PageManager> page_manager_;
     std::unique_ptr<ActivityManager> activity_manager_;

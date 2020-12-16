@@ -17,7 +17,7 @@ std::string Handler::get_response() {
 
     /////// для теста шаблонизатора ///////
 //    page_manager_ = std::make_unique<PageUser>();
-//    Context ctx = {{"code", "200"}};
+//    ContextMap ctx = {{"code", "200"}};
 //    std::string body = page_manager_->get_login_page();
 //    ctx["body"] = body;
 //    ctx["date"] = to_iso_string(second_clock::local_time());
@@ -75,7 +75,7 @@ std::string Handler::get_response() {
     }
     else {
         if(context_["path"] == "profile") {
-            Context ctx = {{"code", "200"}};
+            ContextMap ctx = {{"code", "200"}};
             set_header_data(ctx);
             string body = page_manager_->get_main_page();
             ctx["content-length"] = body.size();
@@ -83,7 +83,7 @@ std::string Handler::get_response() {
             return HttpResponse::get_response(ctx);
 
         } else if(context_["path"] == "login") {
-            Context ctx = {{"code", "200"}};
+            ContextMap ctx = {{"code", "200"}};
             set_header_data(ctx);
             string body = page_manager_->get_login_page();
             ctx["content-length"] = body.size();
@@ -91,7 +91,7 @@ std::string Handler::get_response() {
             return HttpResponse::get_response(ctx);
 
         } else if(context_["path"] == "signup") {
-            Context ctx = {{"code", "200"}};
+            ContextMap ctx = {{"code", "200"}};
             set_header_data(ctx);
             string body = page_manager_->get_registr_page();
             ctx["content-length"] = body.size();
@@ -103,7 +103,7 @@ std::string Handler::get_response() {
             auto tags = std::make_unique<std::vector<std::string>>();
             tags->push_back(context_["tag"]);
 
-            Context ctx = {{"code", "200"}};
+            ContextMap ctx = {{"code", "200"}};
             set_header_data(ctx);
             string body = page_manager_->get_info_tags(boost::lexical_cast<int>(context_["id_room"]), std::move(tags));
             ctx["content-length"] = body.size();
@@ -117,7 +117,7 @@ std::string Handler::get_response() {
 // создаем разные обработики событий взависимости от того
 // есть ли сессия
 void Handler::start_session() {
-    Context ctx; // TODO запись в контекст нужной информации
+    ContextMap ctx; // TODO запись в контекст нужной информации
 
 
     /////// тест для бд ///////
@@ -133,6 +133,10 @@ void Handler::start_session() {
     /// временное решение
     set_user_right();
 
+    /// записать user тоже временное решение
+    std::shared_ptr<DBUser> user = std::make_shared<DBUser>();
+    page_manager_ = std::make_unique<PageCustomer>(user);
+    activity_manager_ = std::make_unique<ActivityCustomer>(ctx, std::move(user));
 
     /// вернуться когда будет готов интерфейс сессии
 //    if(context_.find("session") == context_.end()) {
@@ -170,19 +174,19 @@ Handler::Status Handler::check_session(DBSession& session) {
 }
 
 string Handler::redirect(const string& page) {
-    Context ctx = {{"code", "302"},
-                    {"location", page}}; // TODO заполнение контекста
+    ContextMap ctx = {{"code",     "302"},
+                      {"location", page}}; // TODO заполнение контекста
     return HttpResponse::get_response(ctx);
 }
 
 void Handler::set_user_right() {
     BOOST_LOG_TRIVIAL(debug) << "Start user session";
     page_manager_ = std::make_unique<PageUser>();
-    Context ctx = {};  // TODO подумать что нужно передать в этот контекст
+    ContextMap ctx = {};  // TODO подумать что нужно передать в этот контекст
     activity_manager_ = std::make_unique<ActivityUser>(ctx);
 }
 
-void Handler::set_header_data(Context& context) {
+void Handler::set_header_data(ContextMap& context) {
     context["date"] = to_simple_string(second_clock::local_time());
     context["server"] = "OurBestServer 0.1";
 }
