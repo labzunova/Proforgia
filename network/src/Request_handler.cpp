@@ -8,7 +8,7 @@ Request_handler::Request_handler( const string &request )
     path = parser.parse_path();
     if( method == "POST" )
         data = parser.parse_body();
-    if( path.find( "rooms" ) != 0 ) // если это запрос на какую-то комнату: выяснить, какую
+    if( path.find( "room" ) != 0 ) // если это запрос на какую-то комнату: выяснить, какую
     {
         std::pair<string, string> properties = parser.parse_room_properties( path );
         room = properties.first;
@@ -41,11 +41,11 @@ void Request_handler::create_map()
     {
         if ( path == "login" )
             fill_GET_login();
-        else if ( path == "login" )
+        else if ( path == "signup" )
             fill_GET_signup();
         else if ( path == "profile" )// получить список комнат пользователя
             fill_GET_profile();
-        else if ( path.find("rooms" ) != -1 ) // тут может быть, к примеру, rooms/first
+        else if ( path.find("room" ) != -1 ) // тут может быть, к примеру, rooms/first
             fill_GET_room(); // случай, когда нужно получить какую-то комнату или комнату с выведенными по тегу данными
     }
     else
@@ -59,7 +59,7 @@ void Request_handler::create_map()
         {
             fill_POST_signup();
         }
-        if ( path.find( "rooms" ) != -1 ) // добавить файл с указанным тегом и вернуть ту же главную страницу
+        if ( path.find( "room" ) != -1 ) // добавить файл с указанным тегом и вернуть ту же главную страницу
         {
             fill_POST_room();
         }
@@ -120,7 +120,7 @@ void Request_handler::fill_POST_room()
 {
     to_put_in_loop.emplace( "method","POST" );
 //    to_put_in_loop.emplace( "path", path );
-    to_put_in_loop.emplace( "path", "room" );
+    to_put_in_loop.emplace( "path", "add" );
     to_put_in_loop.emplace( "room", room );
     to_put_in_loop.emplace( "session", get_cookie("session" ) );
     to_put_in_loop.emplace("title", get_data( "title" ) );
@@ -129,6 +129,8 @@ void Request_handler::fill_POST_room()
     to_put_in_loop.emplace( "fileurl", get_data( "fileurl" ) );
 }
 
-
-
+// TODO create room title
+// TODO join room roomID
+// TODO exit
+// TODO remove room title
 

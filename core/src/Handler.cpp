@@ -44,7 +44,8 @@ std::string Handler::get_response() {
 
             else {
                 // TODO запись сессии
-                return redirect("MAIN");
+                BOOST_LOG_TRIVIAL(info) << ("redirect");
+                return redirect("profile");
             }
         }
         else if(context_["path"] == "login") {
@@ -57,7 +58,7 @@ std::string Handler::get_response() {
 
             else {
                 // TODO запись сессии
-                return redirect("MAIN");
+                return redirect("profile");
             }
         }
         else if(context_["path"] == "room") {
@@ -182,7 +183,7 @@ string Handler::redirect(const string& page) {
 void Handler::set_user_right() {
     BOOST_LOG_TRIVIAL(debug) << "Start user session";
     page_manager_ = std::make_unique<PageUser>();
-    ContextMap ctx = {};  // TODO подумать что нужно передать в этот контекст
+    ContextMap ctx = context_;  // TODO подумать что нужно передать в этот контекст
     activity_manager_ = std::make_unique<ActivityUser>(ctx);
 }
 

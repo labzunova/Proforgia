@@ -7,6 +7,8 @@
 
 #include "Connection.h"
 
+#include <boost/log/trivial.hpp>
+
 using std::string;
 
 Connection::Connection ( boost::asio::io_service &io_service, std::shared_ptr<Connection_queue> loop ):
@@ -22,6 +24,7 @@ boost::asio::ip::tcp::socket &Connection::get_socket()
 
 void Connection::start()
 {
+    BOOST_LOG_TRIVIAL(info) << ("connection created");
     socket_.async_read_some( boost::asio::buffer( buffer_ ),
                             boost::bind( &Connection::handle_read, shared_from_this(),
                             boost::asio::placeholders::error,

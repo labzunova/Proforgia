@@ -3,10 +3,13 @@
 //
 
 #include "HttpResponse.h"
+#include <boost/log/trivial.hpp>
 
 
 std::string HttpResponse::get_response(ContextMap& context) {
     std::string response;
+    BOOST_LOG_TRIVIAL(info) << ("code " + context["code"]);
+
     if(context["code"][0] == '2') {
         response = get_response_200(context);
     } else if(context["code"][0] == '3') {

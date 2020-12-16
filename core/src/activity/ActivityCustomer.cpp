@@ -14,7 +14,7 @@ ActivityManager::Status ActivityCustomer::exit() {
 }
 
 ActivityManager::Status ActivityCustomer::add_room() {
-    if(context_.find("id_room") == context_.end())
+    if(context_.find("roomID") == context_.end())
         return CLIENT_ERROR;
     int id_room = boost::lexical_cast<int>(context_["id_room"]); /// возможно какой то другой индификатор который вводит пользователь
     ErrorCodes er;
@@ -31,10 +31,10 @@ ActivityManager::Status ActivityCustomer::add_content() {
 }
 
 ActivityManager::Status ActivityCustomer::create_room() {
-    if(context_.find("name_room") == context_.end())
+    if(context_.find("title") == context_.end())
         return CLIENT_ERROR;
 
-    typename DBRoom::Room room(context_["name_room"]);
+    typename DBRoom::Room room(context_["title"]);
     //int id_room = room.add(room); // TODO проверка на ошибку добавления
     // TODO возможно выделение админа как то отдельно в комнате
     //DBRoom::add_user(id_room, user_.id); // TODO проверка на ошибку добавления
@@ -44,12 +44,12 @@ ActivityManager::Status ActivityCustomer::create_room() {
 }
 
 ActivityManager::Status ActivityCustomer::remove_room() {
-    if(context_.find("name_room") == context_.end())
+    if(context_.find("title") == context_.end())
         return CLIENT_ERROR;
 
     /// возможно какая то проверка, есть ли права у пользователя на удаление
 
-    int id_room = boost::lexical_cast<int>(context_["id_room"]);
+    int id_room = boost::lexical_cast<int>(context_["title"]);
     ErrorCodes er;
     auto room = DBRoom::get(id_room, er);
     // TODO удаление комнаты у всех ее user

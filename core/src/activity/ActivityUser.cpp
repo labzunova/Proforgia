@@ -3,15 +3,19 @@
 //
 
 #include "ActivityUser.h"
+#include <boost/log/trivial.hpp>
 
 ActivityManager::Status ActivityUser::signUp() {
     if(!validate_signUp())
         return CLIENT_ERROR;
 
     std::string login = context_["login"];
-    std::string email = context_["email"];
+    std::string email = context_["mail"];
+    BOOST_LOG_TRIVIAL(info) << ("meh1");
     std::string password = context_["password"]; // TODO кодирование пароля
     typename DBUser::User user(email, login, password);
+    BOOST_LOG_TRIVIAL(info) << ("meh2");
+
     //int id = DBUser::add(user); // TODO проверка на то прошло ли сохранение
 
   //  string session = create_session(id);
@@ -43,7 +47,7 @@ bool ActivityUser::validate_signUp() {
     auto end = context_.end();
     if((context_.find("login") == end) ||
         (context_.find("password") == end) ||
-        (context_.find("email") == end))
+        (context_.find("mail") == end))
 
         return false;
 
