@@ -27,3 +27,8 @@ void BaseTemplate::setRightBlock(Template& temp) {
         blockRight[i].set("tag.url", context.tags[i].url);
     }
 }
+
+void BaseTemplate::offLoggedNavBar(Template& temp) {
+    auto& block_logged = temp.block("logged_block");
+    block_logged.disable();
+}

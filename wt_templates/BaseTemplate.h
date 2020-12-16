@@ -22,6 +22,8 @@ protected:
 
     void setLoggedNavBar(Template& temp) const;
 
+    void offLoggedNavBar(Template& temp);
+
     void setRightBlock(Template& temp);
 
     Context& context;

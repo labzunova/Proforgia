@@ -30,11 +30,20 @@ std::string& MainTemplate::getHTML() {
     for (int i = 0; i < context.posts.size(); i++) {
         block_posts[i].set("post.title", context.posts[i].title);
         block_posts[i].set("post.author", context.posts[i].author);
+        block_posts[i].set("post.text", context.posts[i].text);
+        auto& block_files = block_posts[i].block("post.files");
+        block_files.repeat(context.posts[i].fileUrls.size());
+        for (int j = 0; j < context.posts[i].fileUrls.size(); j++) {
+            block_files[j].set("file.url", context.posts[i].fileUrls[j]);
+            block_files[j].set("file.name", context.posts[i].fileUrls[j]);
+        }
+
         auto& block_tags = block_posts[i].block("post.tags");
         block_tags.repeat(context.posts[i].tags.size());
         for (int j = 0; j < context.posts[i].tags.size(); j++) {
             block_tags[j].set("tag", context.posts[i].tags[j].tag);
             block_tags[j].set("tag.url", context.posts[i].tags[j].url);
+            block_tags[j].set("room.url", context.currentRoom.url);
         }
     }
 

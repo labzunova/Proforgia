@@ -11,8 +11,7 @@ std::string& SignUpTemplate::getHTML() {
     Template temp(loader);
     temp.load("../wt_templates/templates/signup.html");
 
-    auto& block_logged = temp.block("logged_block");
-    block_logged.disable();
+    offLoggedNavBar(temp);
 
     std::stringstream os;
     temp.render(os);
