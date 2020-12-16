@@ -5,9 +5,17 @@
                 {{ post.title }}
             </div>
             <div class="row">
+                {{ post.text }}
+                {% block post.files %}
+                <div class="row">
+                    <a href="{{ file.url }}">{{ file.name }}</a>
+                </div>
+                {% endblock %}
+            </div>
+            <div class="row">
                 {% block post.tags %}
                     <div class="col tag">
-                        <a href="{{ tag.url }}">{{ tag }}</a>
+                        <a href="{{ room.url }}/{{ tag.url }}">{{ tag }}</a>
                     </div>
                 {% endblock %}
             </div>
