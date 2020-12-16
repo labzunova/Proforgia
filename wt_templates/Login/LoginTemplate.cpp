@@ -13,7 +13,7 @@ std::string& LoginTemplate::getHTML() {
 
     temp.load("../wt_templates/templates/login.html");
 
-    auto& block_logged = temp.block("logged_fragment");
+    auto& block_logged = temp.block("logged_block");
     block_logged.disable();
 
     std::stringstream os;

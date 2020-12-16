@@ -20,6 +20,7 @@ struct Context {
     };
 
     struct Tag {
+
         std::string tag;
         std::string url;
 
@@ -47,7 +48,7 @@ struct Context {
 
     std::string page;
 
-    Context(std::string& page_) : page(page_) {}
+    explicit Context(std::string& page_) : page(page_) {}
 
     User user;
     std::vector<Room> rooms;

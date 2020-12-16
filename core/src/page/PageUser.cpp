@@ -9,7 +9,25 @@
 string PageUser::get_main_page() {
 
     // хз как будет в итоговом проекте
-    get_login_page();
+    // get_login_page();
+//    std::string username = "cmorrec";
+//    std::string ava = "ava_url";
+//    Context::User user(username, ava);
+//    std::string page_value = "tag";
+//    std::string title = "title";
+//    std::string author = "author";
+//    std::string text = "text";
+//    std::string tag = "tag";
+//    std::string url = "url";
+//    std::vector<std::string> urls = {"url1", "url2"};
+//    Context::Room room(title, url);
+//    std::vector<Context::Tag> tags = {Context::Tag(tag, url),
+//                                      Context::Tag(tag, url)};
+//    std::vector<Context::Post> posts = {Context::Post(title, author, tags, text, urls),
+//                                        Context::Post(title, author, tags, text, urls)};
+//    Context::Tag currentTag(tag, url);
+//    Context context(page_value);
+//    context.setTagContext(user, room, tags, posts, currentTag);
 
     //
     string page = "main";
@@ -38,6 +56,7 @@ string PageUser::get_registr_page() {
 }
 
 string PageUser::get_login_page() {
+
     string page = "login";
     Context context(page);
     TemplateWrapper view(context);
