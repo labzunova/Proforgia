@@ -18,6 +18,9 @@
 #define DEFAULT_REGION "eu-central-1"
 #define DEFAULT_TO_CLIENT_PATH "/Users/Ivan/Proforgia-files/files-to-client/"
 #define DEFAULT_FROM_CLIENT_PATH "/Users/Ivan/Proforgia-files/files-from-client/"
+#define POSTS_FILES_FOLDER_NAME "posts/"
+
+// TODO: add boost log
 
 bool put_object(const Aws::String& bucketName,
                 const Aws::String& objectName,
@@ -51,7 +54,7 @@ std::string AmazonS3StorageWrapper::get_file_link(const std::string &filename, E
         Aws::S3::S3Client s3_client(config);
         // TODO: consider POST http method
         url = s3_client.GeneratePresignedUrl((Aws::String)this->bucket_name, (Aws::String)filename, Aws::Http::HttpMethod::HTTP_GET, 2000);
-        std::cout << "Get file URL for " << filename << ":" << std::endl << url << std::endl;
+        // std::cout << "Get file URL for " << filename << ":" << std::endl << url << std::endl;
     }
 
     Aws::ShutdownAPI(options);
@@ -92,7 +95,7 @@ bool AmazonS3StorageWrapper::remove_file_from_storage(const std::string &filenam
     {
         if (DeleteObject((Aws::String) filename, (Aws::String) this->bucket_name, (Aws::String) this->region))
         {
-            std::cout << "Deleted object " << filename << " from " << this->bucket_name << "." << std::endl;
+            // std::cout << "Deleted object " << filename << " from " << this->bucket_name << "." << std::endl;
         } else {
             error = ErrorCodes::UNKNOWN_STORAGE_ERROR;
             ShutdownAPI(options);
