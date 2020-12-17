@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 project(Proforgia)
 
-set(MYCOMPILE_FLAGS " -lpthread -o ")
+set(MYCOMPILE_FLAGS " -lpthread -o -std=c++17")
 add_definitions(${MYCOMPILE_FLAGS})
 
 set(CMAKE_CXX_STANDARD 17)
@@ -39,7 +39,7 @@ set(UNIT_TESTS
         )
 
 add_executable(Proforgia main.cpp)
-
+message("Boost_LIBRARIES:  "${Boost_LIBRARIES})
 target_link_libraries(Proforgia boost_system pthread ${Boost_LIBRARIES})
 target_link_libraries(Proforgia server_lib core_lib)
 target_link_libraries(Proforgia core_lib)

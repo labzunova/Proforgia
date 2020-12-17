@@ -58,8 +58,6 @@ struct DBUser : public DBEntity {
 		std::string password;
 	};
 
-	DBUser() {};
-
     DBUser(int &id, std::string &_nick_name, std::string& _date, std::string &_email, std::string& _password) :
             DBEntity(id), nick_name(_nick_name), register_date(from_simple_string(_date)), email(_email), password(_password) {
 
