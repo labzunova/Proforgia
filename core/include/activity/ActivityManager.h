@@ -23,13 +23,13 @@ public:
     };
 
 protected:
-    explicit ActivityManager(ContextMap& context) : context_(std::move(context)) {};
+    explicit ActivityManager(ContextMap& context) : context_(context) {};
 
 public:
     virtual ~ActivityManager() = default;
 
-    virtual Status signUp();
-    virtual Status signIn();
+    virtual Status signUp(string& session);
+    virtual Status login(string& session);
     virtual Status exit();
     virtual Status add_room();
     virtual Status add_content();

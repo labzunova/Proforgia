@@ -14,7 +14,7 @@ PageCustomer::PageCustomer(std::shared_ptr<DBUser>& user) {
 }
 
 
-string PageCustomer::get_main_page() {
+string PageCustomer::get_profile_page() {
     string page = "profile";
     Context context(page);
     Context::User user;
@@ -34,7 +34,7 @@ string PageCustomer::get_main_page() {
 }
 
 string PageCustomer::get_room_page(string id) {
-    string page = "main";
+    string page = "room";
     Context context(page);
     write_user(context);
 
@@ -47,23 +47,23 @@ string PageCustomer::get_room_page(string id) {
 
 // TODO пока не известно будет ли это в проекте
 string PageCustomer::get_favorite_page() {
-    return get_main_page();
+    return get_profile_page();
 }
 
 // TODO пока не известно будет ли это в проекте
 string PageCustomer::get_deadline_page() {
-    return get_main_page();
+    return get_profile_page();
 }
 
-string PageCustomer::get_registr_page() {
-    return get_main_page();
+string PageCustomer::get_signup_page() {
+    return get_profile_page();
 }
 
 string PageCustomer::get_login_page() {
-    return get_main_page();
+    return get_profile_page();
 }
 
-string PageCustomer::get_info_tags(int id_room, std::unique_ptr<std::vector<string>> tags) {
+string PageCustomer::get_info_tags(string id_room, std::unique_ptr<std::vector<string>> tags) {
     return "fdfdsgdsfgdsfgdfgdsfgsdfgdfglgiggglkdfsj";
 }
 

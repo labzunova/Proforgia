@@ -4,11 +4,11 @@
 
 #include "ActivityManager.h"
 
-ActivityManager::Status ActivityManager::signUp() {
+ActivityManager::Status ActivityManager::signUp(string& session) {
     return ActivityManager::CLIENT_ERROR;
 }
 
-ActivityManager::Status ActivityManager::signIn() {
+ActivityManager::Status ActivityManager::login(string& session) {
     return ActivityManager::CLIENT_ERROR;
 }
 

@@ -8,7 +8,6 @@
 #include "PageCustomer.h"
 #include "ActivityUser.h"
 #include "ActivityCustomer.h"
-#include <boost/lexical_cast.hpp>
 #include <boost/log/trivial.hpp>
 
 using namespace boost::gregorian;
@@ -29,35 +28,40 @@ std::string Handler::get_response() {
 
     start_session();
 
-    if(context_.find("path") == context_.end()) {
-        return page_manager_->get_not_found();
-    }
+//    if(context_.find("path") == context_.end()) {
+//        return page_manager_->get_not_found();
+//    }
+
+
+    string body;
+    ContextMap context_response = {{"Code", "200 OK"}};
 
     if(context_["method"] == "POST") {
         if(context_["path"] == "signup") {
-            auto code = activity_manager_->signUp();
+            string session;
+            auto code = activity_manager_->signUp(session);
             if(code == ActivityManager::CLIENT_ERROR)
-                return page_manager_->get_registr_page();
+                body = page_manager_->get_signup_page();
 
             else if(code == ActivityManager::SERVER_ERROR)
-                return page_manager_->get_server_err();
+                body = page_manager_->get_server_err();
 
             else {
-                // TODO запись сессии
-                BOOST_LOG_TRIVIAL(info) << ("redirect");
+                context_["new_session"] = session;
                 return redirect("profile");
             }
         }
         else if(context_["path"] == "login") {
-            auto code = activity_manager_->signIn();
+            string session;
+            auto code = activity_manager_->login(session);
             if(code == ActivityManager::CLIENT_ERROR)
-                return page_manager_->get_login_page();
+                body = page_manager_->get_login_page();
 
             else if(code == ActivityManager::SERVER_ERROR)
-                return page_manager_->get_server_err();
+                body = page_manager_->get_server_err();
 
             else {
-                // TODO запись сессии
+                context_["new_session"] = session;
                 return redirect("profile");
             }
         }
@@ -76,49 +80,40 @@ std::string Handler::get_response() {
     }
     else {
         if(context_["path"] == "profile") {
-            ContextMap ctx = {{"code", "200"}};
-            set_header_data(ctx);
-            string body = page_manager_->get_main_page();
-            ctx["content-length"] = body.size();
-            ctx["body"] = body;
-            return HttpResponse::get_response(ctx);
+            body = page_manager_->get_profile_page();
 
         } else if(context_["path"] == "login") {
-            ContextMap ctx = {{"code", "200"}};
-            set_header_data(ctx);
-            string body = page_manager_->get_login_page();
-            ctx["content-length"] = body.size();
-            ctx["body"] = body;
-            return HttpResponse::get_response(ctx);
+            body = page_manager_->get_login_page();
 
         } else if(context_["path"] == "signup") {
-            ContextMap ctx = {{"code", "200"}};
-            set_header_data(ctx);
-            string body = page_manager_->get_registr_page();
-            ctx["content-length"] = body.size();
-            ctx["body"] = body;
-            return HttpResponse::get_response(ctx);
+            body = page_manager_->get_signup_page();
+
+        } else if(context_["path"] == "room") {
+            body = page_manager_->get_room_page(context_["room"]);
 
         } else if(context_["path"] == "roomtag") {
             // TODO запись id комнаты в context_
             auto tags = std::make_unique<std::vector<std::string>>();
             tags->push_back(context_["tag"]);
 
-            ContextMap ctx = {{"code", "200"}};
-            set_header_data(ctx);
-            string body = page_manager_->get_info_tags(boost::lexical_cast<int>(context_["id_room"]), std::move(tags));
-            ctx["content-length"] = body.size();
-            ctx["body"] = body;
-            return HttpResponse::get_response(ctx);
+            // boost::lexical_cast<int>(context_["id_room"])
+            body = page_manager_->get_info_tags(context_["id_room"], std::move(tags));
+        } else {
+            body = page_manager_->get_not_found();
+            context_response["Code"] =  "404 Not Found";
 
         }
     }
+
+    set_header_data(context_response);
+    context_response["Content-Length"] = std::to_string(body.size());
+    context_response["Body"] = body;
+    return HttpResponse::get_response(context_response);
 }
 
 // создаем разные обработики событий взависимости от того
 // есть ли сессия
 void Handler::start_session() {
-    ContextMap ctx; // TODO запись в контекст нужной информации
 
 
     /////// тест для бд ///////
@@ -145,14 +140,11 @@ void Handler::start_session() {
 //        return;
 //    }
 
-    // DBSession session = DBSession::get(context_["session"]);
-
-//    if (check_session(session) == Handler::OK) {
-//        BOOST_LOG_TRIVIAL(debug) << "Start customer session";
+//     DBSession session = DBSession::get(context_["session"]);
 //
-//        DBUser user = DBUser::get(session.get_user());
-//        page_manager_ = std::make_unique<PageCustomer>(user);
-//        activity_manager_ = std::make_unique<ActivityCustomer>(ctx, std::move(user));
+//    if (check_session(session) == Handler::OK) {
+//        std::shared_ptr<DBUser> user = DBUser::get(session.get_user());
+//        set_customer_right(user);
 //    } else {
 //        set_user_right();
 //    }
@@ -175,21 +167,42 @@ Handler::Status Handler::check_session(DBSession& session) {
 }
 
 string Handler::redirect(const string& page) {
-    ContextMap ctx = {{"code",     "302"},
-                      {"location", page}}; // TODO заполнение контекста
+    BOOST_LOG_TRIVIAL(info) << "redirect";
+
+    ContextMap ctx = {{"Code",     "302 Found"},
+                      {"Location", page}}; // TODO заполнение контекста
+
+    set_header_data(ctx);
     return HttpResponse::get_response(ctx);
 }
 
 void Handler::set_user_right() {
-    BOOST_LOG_TRIVIAL(debug) << "Start user session";
+    BOOST_LOG_TRIVIAL(info) << "Start user session";
     page_manager_ = std::make_unique<PageUser>();
     ContextMap ctx = context_;  // TODO подумать что нужно передать в этот контекст
-    activity_manager_ = std::make_unique<ActivityUser>(ctx);
+    activity_manager_ = std::make_unique<ActivityUser>(context_);
+}
+
+void Handler::set_customer_right(std::shared_ptr<DBUser>& user) {
+    BOOST_LOG_TRIVIAL(info) << "Start customer session";
+
+    ContextMap ctx = {}; // TODO заполнить контекст
+    page_manager_ = std::make_unique<PageCustomer>(user);
+    activity_manager_ = std::make_unique<ActivityCustomer>(ctx, std::move(user));
 }
 
 void Handler::set_header_data(ContextMap& context) {
-    context["date"] = to_simple_string(second_clock::local_time());
-    context["server"] = "OurBestServer 0.1";
+    context["Date"] = to_simple_string(second_clock::local_time());
+    context["Server"] = "OurBestServer 0.1";
+    context["Content-Type"] = "text/html; charset=utf-8";
+    if(context_.find("new_session") != context_.end()) {
+        auto time = second_clock::local_time() + LIVE_TIME;
+        context["Set-Cookie"] = "session=" + context_["new_session"] + "; "
+                + "expires=Thu," + to_simple_string(time) + "; "
+                + "HttpOnly; "
+                + "Max - Age = " + std::to_string(LIVE_TIME.total_seconds()) + "; "
+                + "Path =/; ";
+    }
 }
 
 
