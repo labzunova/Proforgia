@@ -2,40 +2,56 @@
 // Created by sergei on 28.11.2020.
 //
 
+#define CRYPTOPP_ENABLE_NAMESPACE_WEAK 1
+
 #include "ActivityUser.h"
 #include <boost/log/trivial.hpp>
+#include <openssl/sha.h>
 
-ActivityManager::Status ActivityUser::signUp() {
+string SHA(string data)
+{
+    typedef unsigned char byte;
+    byte const* pb_data = (byte*) data.data();
+    unsigned int data_len = data.size();
+
+    byte ab_digest[SHA_DIGEST_LENGTH];
+    SHA1(pb_data, data_len, ab_digest);
+
+    return string((char*)ab_digest);
+}
+
+ActivityManager::Status ActivityUser::signUp(string& session) {
     if(!validate_signUp())
         return CLIENT_ERROR;
 
     std::string login = context_["login"];
     std::string email = context_["mail"];
-    BOOST_LOG_TRIVIAL(info) << ("meh1");
-    std::string password = context_["password"]; // TODO кодирование пароля
+    std::string password = SHA(context_["password"]);
     typename DBUser::User user(email, login, password);
-    BOOST_LOG_TRIVIAL(info) << ("meh2");
+    BOOST_LOG_TRIVIAL(debug) << password;
 
-    //int id = DBUser::add(user); // TODO проверка на то прошло ли сохранение
+    ErrorCodes er;
+//    int id = DBUser::add(user, er); // TODO проверка на то прошло ли сохранение, вернуться когда будет бд
 
-  //  string session = create_session(id);
-   // context_["session"] = session;
+    int id = 0; /// временное решение
+
+    session = create_session();
+    save_session(id, session);
     return OK;
 }
 
-ActivityManager::Status ActivityUser::login() {
+ActivityManager::Status ActivityUser::login(string& session) {
     if(!validate_signIn())
         return CLIENT_ERROR;
 
     string login = context_["login"];
-    string password = context_["password"]; // TODO кодирование
+    string password = SHA(context_["password"]);
     ErrorCodes er;
     auto user = DBUser::get(login, er); // TODO проверка на то пришел ли User
     if(user->password != password)
         return CLIENT_ERROR;
 
-    //string session = create_session(user.id);
-    //context_["session"] = session;
+    //session = create_session(user.id);
     return OK;
 }
 
@@ -54,11 +70,24 @@ bool ActivityUser::validate_signUp() {
     return true;
 }
 
+// создание случайных байт для сессии
+string ActivityUser::create_session() {
+    const int size_session = 40;
 
-string ActivityUser::create_session(const int& id) {
-    string session_str; // TODO генерируем стоку сессии
-    //typename DBSession::Session session(id, session_str);
-    //DBSession::add(session);
+    srand( time(0) );
+
+    auto randchar = []() -> char
+    {
+        const char charset[] =
+                "0123456789"
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                "abcdefghijklmnopqrstuvwxyz";
+        const size_t max_index = (sizeof(charset) - 1);
+        return charset[ rand() % max_index ];
+    };
+    std::string str(size_session,0);
+    std::generate_n( str.begin(), size_session, randchar );
+    return str;
 }
 
 bool ActivityUser::validate_signIn() {
@@ -70,4 +99,11 @@ bool ActivityUser::validate_signIn() {
         return false;
 
     return true;
+}
+
+// TODO вернуться когда будет готов интерфейс сессии
+// сохранение в базу данных сессии
+void ActivityUser::save_session(int& id_user, string& str_session) {
+//    typename DBSession::Session session(id, str_session);
+//    DBSession::add(session);
 }

@@ -41,10 +41,10 @@ public:
 private:
     void start_session();
     Status check_session(DBSession& session);
-    static string redirect(const string& page);
+    string redirect(const string& page);
     void set_user_right();
     void set_customer_right(std::shared_ptr<DBUser>& user);
-    static void set_header_data(ContextMap& context);
+    void set_header_data(ContextMap& context);
 
 private:
     const time_duration LIVE_TIME = hours(100);

@@ -38,7 +38,8 @@ std::string Handler::get_response() {
 
     if(context_["method"] == "POST") {
         if(context_["path"] == "signup") {
-            auto code = activity_manager_->signUp();
+            string session;
+            auto code = activity_manager_->signUp(session);
             if(code == ActivityManager::CLIENT_ERROR)
                 body = page_manager_->get_signup_page();
 
@@ -46,12 +47,13 @@ std::string Handler::get_response() {
                 body = page_manager_->get_server_err();
 
             else {
-                // TODO запись сессии
+                context_["new_session"] = session;
                 return redirect("profile");
             }
         }
         else if(context_["path"] == "login") {
-            auto code = activity_manager_->login();
+            string session;
+            auto code = activity_manager_->login(session);
             if(code == ActivityManager::CLIENT_ERROR)
                 body = page_manager_->get_login_page();
 
@@ -59,7 +61,7 @@ std::string Handler::get_response() {
                 body = page_manager_->get_server_err();
 
             else {
-                // TODO запись сессии
+                context_["new_session"] = session;
                 return redirect("profile");
             }
         }
@@ -178,7 +180,7 @@ void Handler::set_user_right() {
     BOOST_LOG_TRIVIAL(info) << "Start user session";
     page_manager_ = std::make_unique<PageUser>();
     ContextMap ctx = context_;  // TODO подумать что нужно передать в этот контекст
-    activity_manager_ = std::make_unique<ActivityUser>(ctx);
+    activity_manager_ = std::make_unique<ActivityUser>(context_);
 }
 
 void Handler::set_customer_right(std::shared_ptr<DBUser>& user) {
@@ -193,6 +195,14 @@ void Handler::set_header_data(ContextMap& context) {
     context["Date"] = to_simple_string(second_clock::local_time());
     context["Server"] = "OurBestServer 0.1";
     context["Content-Type"] = "text/html; charset=utf-8";
+    if(context_.find("new_session") != context_.end()) {
+        auto time = second_clock::local_time() + LIVE_TIME;
+        context["Set-Cookie"] = "session=" + context_["new_session"] + "; "
+                + "expires=Thu," + to_simple_string(time) + "; "
+                + "HttpOnly; "
+                + "Max - Age = " + std::to_string(LIVE_TIME.total_seconds()) + "; "
+                + "Path =/; ";
+    }
 }
 
 

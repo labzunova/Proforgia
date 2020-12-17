@@ -5,6 +5,7 @@
 1. Boost:\
 macos: `brew install boost`\
 ubuntu: `sudo apt-get install -f libboost-all-dev`
+
 2. Aws-sdk-cpp:\
 macos: `brew aws-sdk-cpp`\
 ubuntu:\
@@ -16,4 +17,13 @@ ubuntu:\
 `cd build`\
 `cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_ONLY="s3"`\
 `make`\
+`sudo make install`
+
+3. openssl:\
+ubuntu:\
+`git clone https://github.com/openssl/openssl.git`
+`cd openssl`\
+`./Configure`\
+`make -j4`\
+`make text -j4` (не обязательно)\
 `sudo make install`

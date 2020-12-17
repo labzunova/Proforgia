@@ -18,12 +18,13 @@ public:
     ActivityUser(const ActivityUser&) = delete;
     ActivityUser& operator = (ActivityUser&) = delete;
 
-    Status signUp() override;
+    Status signUp(string& session) override;
 
-    Status login() override;
+    Status login(string& session) override;
 
 private:
     bool validate_signUp();
     bool validate_signIn();
-    string create_session(const int& id);
+    string create_session();
+    void save_session(int& id_user, string& str_session);
 };
