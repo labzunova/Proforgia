@@ -309,7 +309,7 @@ bool PostgreDBWrapper::add_room(const DBRoom::Room &room_info, ErrorCodes &error
         return false;
     }
 
-    string query = "insert into rooms (room_name, room_desciption) values "
+    string query = "insert into rooms (room_name, room_description) values "
                    "('" + room_info.room_name +
                    "', '" + room_info.description + "');";
 
@@ -359,7 +359,7 @@ bool PostgreDBWrapper::edit_room(const int& id, const DBRoom::Room &room_info, E
     }
 
     string s_id = std::to_string(id);
-    string query = "update rooms set room_name='" + room_info.room_name + "', room_desciption='" + room_info.description + "' where id=" + s_id + ";";
+    string query = "update rooms set room_name='" + room_info.room_name + "', room_description='" + room_info.description + "' where id=" + s_id + ";";
 
     auto res_deleter = [](PGresult* r) { PQclear(r);};
     std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
