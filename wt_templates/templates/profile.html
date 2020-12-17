@@ -10,16 +10,16 @@
                 <h4>Choose Rooms</h4>
             </div>
             {% block rooms %}
-                <p><a href="{{ room_src }}">{{ room_name }}</a></p>
+                <p><a href="room/{{ room_src }}">{{ room_name }}</a></p>
             {% endblock %}
         </div>
         <div class="col-6">
             <div class="row">
-                <form class="body-page col-12" method="POST">
+                <form class="body-page col-12" method="POST" action="create">
                     <div class="form-group row">
                         <label for="inputTitle" class="col-sm-3 col-form-label">Title</label>
                         <div class="col-sm-9">
-                            <input class="form-control" id="inputTitle" name="inputTitle" placeholder="dr_pepper">
+                            <input class="form-control" id="inputTitle" name="title" placeholder="dr_pepper">
                         </div>
                     </div>
                     <div class="row">
@@ -29,7 +29,7 @@
                 </form>
             </div>
             <div class="row">
-                <form class="body-page col-12" method="POST">
+                <form class="body-page col-12" method="POST" action="join">
                     <div class="form-group row">
                         <label for="roomID" class="col-sm-3 col-form-label">ROOM ID</label>
                         <div class="col-sm-9">
