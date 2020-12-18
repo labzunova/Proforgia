@@ -9,6 +9,9 @@ int main(int argc, char* argv[]) {
 //    std::string page_value = "login";
 //    Context context(page_value);
 
+    std::string page_value = "not_found";
+    Context context(page_value);
+
 //    std::string page_value = "signup";
 //    Context context(page_value);
 
@@ -45,21 +48,21 @@ int main(int argc, char* argv[]) {
 //    Context context(page_value);
 //    context.setMainContext(user, room, tags, posts);
 
-    std::string page_value = "tag";
-    std::string title = "title";
-    std::string author = "author";
-    std::string text = "text";
-    std::string tag = "tag";
-    std::string url = "url";
-    std::vector<std::string> urls = {"url1", "url2"};
-    Context::Room room(title, url);
-    std::vector<Context::Tag> tags = {Context::Tag(tag, url),
-                                      Context::Tag(tag, url)};
-    std::vector<Context::Post> posts = {Context::Post(title, author, tags, text, urls),
-                                        Context::Post(title, author, tags, text, urls)};
-    Context::Tag currentTag(tag, url);
-    Context context(page_value);
-    context.setTagContext(user, room, tags, posts, currentTag);
+//    std::string page_value = "tag";
+//    std::string title = "title";
+//    std::string author = "author";
+//    std::string text = "text";
+//    std::string tag = "tag";
+//    std::string url = "url";
+//    std::vector<std::string> urls = {"url1", "url2"};
+//    Context::Room room(title, url);
+//    std::vector<Context::Tag> tags = {Context::Tag(tag, url),
+//                                      Context::Tag(tag, url)};
+//    std::vector<Context::Post> posts = {Context::Post(title, author, tags, text, urls),
+//                                        Context::Post(title, author, tags, text, urls)};
+//    Context::Tag currentTag(tag, url);
+//    Context context(page_value);
+//    context.setTagContext(user, room, tags, posts, currentTag);
 
     std::cout << TemplateWrapper(context).getHTML();
     return 0;
