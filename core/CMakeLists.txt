@@ -10,14 +10,10 @@ set(HEADER_FILES
         include/activity/ActivityCustomer.h
         include/activity/ActivityUser.h
         include/HttpResponse.h
-#        include/external_api/View.h
-#        include/entities/entities.h
         )
 
 set(INCLUDE
         include/activity
-#        include/entities
-#        include/external_api
         include/page
         include
         src

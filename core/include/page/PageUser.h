@@ -13,21 +13,21 @@ public:
     PageUser(const PageUser&) = delete;
     PageUser& operator = (PageUser&) = delete;
 
-    string get_profile_page() override;
+    std::string get_profile_page() override;
 
-    string get_room_page(string id) override;
+    std::string get_room_page(std::string id) override;
 
-    string get_favorite_page() override;
+    std::string get_favorite_page() override;
 
-    string get_deadline_page() override;
+    std::string get_deadline_page() override;
 
-    string get_signup_page() override;
+    std::string get_signup_page() override;
 
-    string get_login_page() override;
+    std::string get_login_page() override;
 
-    string get_info_tags(string id_room, std::unique_ptr<std::vector<string>> tags) override;
+    std::string get_info_tags(std::string id_room, std::unique_ptr<std::vector<std::string>> tags) override;
 
-    string get_not_found() override;
+    std::string get_not_found() override;
 
-    string get_server_err() override;
+    std::string get_server_err() override;
 };

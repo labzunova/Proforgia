@@ -7,15 +7,13 @@
 #include <utility>
 #include <boost/lexical_cast.hpp>
 
-/// поработать над ContextMap
-
 PageCustomer::PageCustomer(std::shared_ptr<DBUser>& user) {
     user_ = user;
 }
 
 
-string PageCustomer::get_profile_page() {
-    string page = "profile";
+std::string PageCustomer::get_profile_page() {
+    std::string page = "profile";
     Context context(page);
     Context::User user;
 
@@ -33,7 +31,7 @@ string PageCustomer::get_profile_page() {
     return view.getHTML();
 }
 
-string PageCustomer::get_room_page(string id) {
+std::string PageCustomer::get_room_page(std::string id) {
     string page = "room";
     Context context(page);
     write_user(context);
@@ -46,29 +44,29 @@ string PageCustomer::get_room_page(string id) {
 }
 
 // TODO пока не известно будет ли это в проекте
-string PageCustomer::get_favorite_page() {
+std::string PageCustomer::get_favorite_page() {
     return get_profile_page();
 }
 
 // TODO пока не известно будет ли это в проекте
-string PageCustomer::get_deadline_page() {
+std::string PageCustomer::get_deadline_page() {
     return get_profile_page();
 }
 
-string PageCustomer::get_signup_page() {
+std::string PageCustomer::get_signup_page() {
     return get_profile_page();
 }
 
-string PageCustomer::get_login_page() {
+std::string PageCustomer::get_login_page() {
     return get_profile_page();
 }
 
-string PageCustomer::get_info_tags(string id_room, std::unique_ptr<std::vector<string>> tags) {
+std::string PageCustomer::get_info_tags(std::string id_room, std::unique_ptr<std::vector<std::string>> tags) {
     return "fdfdsgdsfgdsfgdfgdsfgsdfgdfglgiggglkdfsj";
 }
 
-string PageCustomer::get_not_found() {
-    string page = "not_found";
+std::string PageCustomer::get_not_found() {
+    std::string page = "not_found";
     Context context(page);
     TemplateWrapper view(context);
     return view.getHTML();
@@ -84,12 +82,12 @@ void PageCustomer::write_room(Context &ctx, const DBRoom &room) {
     /// Добавление всей информации комнаты
 }
 
-void PageCustomer::write_info_tag(Context &ctx, const DBRoom &room, string tag) {
+void PageCustomer::write_info_tag(Context &ctx, const DBRoom &room, std::string tag) {
 
 }
 
-string PageCustomer::get_server_err() {
-    string page = "500";
+std::string PageCustomer::get_server_err() {
+    std::string page = "500";
     Context context(page);
     TemplateWrapper view(context);
     return view.getHTML();

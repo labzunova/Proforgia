@@ -9,8 +9,6 @@
 #include <string>
 #include "ErrorCodes.h"
 
-using std::string;
-
 class ActivityUser : public ActivityManager {
 public:
     explicit ActivityUser(ContextMap& context);
@@ -18,13 +16,13 @@ public:
     ActivityUser(const ActivityUser&) = delete;
     ActivityUser& operator = (ActivityUser&) = delete;
 
-    Status signUp(string& session) override;
+    Status signUp(std::string& session) override;
 
-    Status login(string& session) override;
+    Status login(std::string& session) override;
 
 private:
     bool validate_signUp();
     bool validate_signIn();
-    string create_session();
-    void save_session(int& id_user, string& str_session);
+    std::string create_session();
+    void save_session(int& id_user, std::string& str_session);
 };

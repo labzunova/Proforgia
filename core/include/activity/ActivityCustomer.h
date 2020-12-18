@@ -9,8 +9,6 @@
 #include <string>
 #include "DBEntities.h"
 
-using std::string;
-
 class ActivityCustomer : public ActivityManager {
 public:
     ActivityCustomer(ContextMap &context, shared_ptr<DBUser> user);

@@ -8,7 +8,7 @@
 #include <boost/lexical_cast.hpp>
 
 ActivityManager::Status ActivityCustomer::exit() {
-    string session = context_["session"];
+    std::string session = context_["session"];
     //DBSession::remove(session);
     return CLIENT_ERROR;
 }

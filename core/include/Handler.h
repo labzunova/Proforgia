@@ -17,8 +17,6 @@
 #include "boost/date_time/local_time/local_time.hpp"
 #include "boost/date_time/posix_time/posix_time.hpp"
 
-using std::string;
-using namespace boost::posix_time;
 
 typedef std::map<std::string, std::string> ContextMap;
 

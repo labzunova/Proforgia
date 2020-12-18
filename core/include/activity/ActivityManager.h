@@ -10,8 +10,6 @@
 #include "DBEntities.h"
 #include "ErrorCodes.h"
 
-using std::string;
-
 typedef std::map<std::string, std::string> ContextMap;
 
 class ActivityManager {

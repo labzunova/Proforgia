@@ -4,7 +4,7 @@
 
 #include "PageUser.h"
 
-string PageUser::get_profile_page() {
+std::string PageUser::get_profile_page() {
 
     // хз как будет в итоговом проекте
     // get_login_page();
@@ -31,45 +31,45 @@ string PageUser::get_profile_page() {
     return get_login_page();
 }
 
-string PageUser::get_room_page(string id) {
+std::string PageUser::get_room_page(std::string id) {
     return get_login_page();
 }
 
-string PageUser::get_favorite_page() {
+std::string PageUser::get_favorite_page() {
     return get_login_page();
 }
 
-string PageUser::get_deadline_page() {
+std::string PageUser::get_deadline_page() {
     return get_login_page();
 }
 
-string PageUser::get_signup_page() {
-    string page = "signup";
+std::string PageUser::get_signup_page() {
+    std::string page = "signup";
     Context context(page);
     TemplateWrapper view(context);
     return view.getHTML();
 }
 
-string PageUser::get_login_page() {
-    string page = "login";
+std::string PageUser::get_login_page() {
+    std::string page = "login";
     Context context(page);
     TemplateWrapper view(context);
     return view.getHTML();
 }
 
-string PageUser::get_info_tags(string id_room, std::unique_ptr<std::vector<string>> tags) {
+std::string PageUser::get_info_tags(std::string id_room, std::unique_ptr<std::vector<std::string>> tags) {
     return get_login_page();
 }
 
-string PageUser::get_not_found() {
-    string page = "not_found";
+std::string PageUser::get_not_found() {
+    std::string page = "not_found";
     Context context(page);
     TemplateWrapper view(context);
     return view.getHTML();
 }
 
-string PageUser::get_server_err() {
-    string page = "500";
+std::string PageUser::get_server_err() {
+    std::string page = "500";
     Context context(page);
     TemplateWrapper view(context);
     return view.getHTML();

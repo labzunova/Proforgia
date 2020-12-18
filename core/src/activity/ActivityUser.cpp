@@ -17,10 +17,10 @@ string SHA(string data)
     byte ab_digest[SHA_DIGEST_LENGTH];
     SHA1(pb_data, data_len, ab_digest);
 
-    return string((char*)ab_digest);
+    return std::string((char*)ab_digest);
 }
 
-ActivityManager::Status ActivityUser::signUp(string& session) {
+ActivityManager::Status ActivityUser::signUp(std::string& session) {
     if(!validate_signUp())
         return CLIENT_ERROR;
 
@@ -31,21 +31,21 @@ ActivityManager::Status ActivityUser::signUp(string& session) {
     BOOST_LOG_TRIVIAL(debug) << password;
 
     ErrorCodes er;
-//    int id = DBUser::add(user, er); // TODO проверка на то прошло ли сохранение, вернуться когда будет бд
+    int id = DBUser::add(user, er); // TODO проверка на то прошло ли сохранение, вернуться когда будет бд
 
-    int id = 0; /// временное решение
+//    int id = 0; /// временное решение
 
     session = create_session();
     save_session(id, session);
     return OK;
 }
 
-ActivityManager::Status ActivityUser::login(string& session) {
+ActivityManager::Status ActivityUser::login(std::string& session) {
     if(!validate_signIn())
         return CLIENT_ERROR;
 
-    string login = context_["login"];
-    string password = SHA(context_["password"]);
+    std::string login = context_["login"];
+    std::string password = SHA(context_["password"]);
     ErrorCodes er;
     auto user = DBUser::get(login, er); // TODO проверка на то пришел ли User
     if(user->password != password)
@@ -103,7 +103,7 @@ bool ActivityUser::validate_signIn() {
 
 // TODO вернуться когда будет готов интерфейс сессии
 // сохранение в базу данных сессии
-void ActivityUser::save_session(int& id_user, string& str_session) {
+void ActivityUser::save_session(int& id_user, std::string& str_session) {
 //    typename DBSession::Session session(id, str_session);
 //    DBSession::add(session);
 }
