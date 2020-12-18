@@ -47,6 +47,7 @@ public:
     shared_ptr<DBTag> get_tag_info( const int& tag_id, ErrorCodes &error ) const override;
     std::optional< std::vector<std::string> > get_post_attachments(int post_id, ErrorCodes &error) const override;
     shared_ptr<DBSession> get_session_info( const int& session_id, ErrorCodes &error ) const override;
+    shared_ptr<DBSession> get_session_info( const string& session_identificator, ErrorCodes &error ) const override;
 
 	bool edit_user( const int& id, const DBUser::User& user_info, ErrorCodes &error ) override;
 	bool edit_room( const int& id, const DBRoom::Room& room_info, ErrorCodes &error ) override;

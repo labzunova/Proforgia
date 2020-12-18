@@ -195,6 +195,10 @@ bool DataManager::add_session(const DBSession::Session &session_info, ErrorCodes
     return database->add_session(session_info, error);
 }
 
+shared_ptr<DBSession> DataManager::get_session_info(const string &session_identificator, ErrorCodes &error) const {
+    return database->get_session_info(session_identificator, error);
+}
+
 
 
 

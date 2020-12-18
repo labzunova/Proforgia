@@ -161,6 +161,10 @@ const string &DBTag::getName() const {
     return name;
 }
 
+shared_ptr<DBSession> DBSession::get(string _session_identificator, ErrorCodes &error) {
+    return DataManager::getInstance().get_session_info(_session_identificator, error);
+}
+
 int DBTag::getRoomId() const {
     return room_id;
 }

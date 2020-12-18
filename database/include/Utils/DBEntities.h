@@ -246,6 +246,7 @@ struct DBSession : public DBEntity {
     DBSession(int &id, const local_date_time &creationDate, const string &sessionId, int userId);
 
 	static shared_ptr<DBSession> get(int _id, ErrorCodes &error);
+    static shared_ptr<DBSession> get(string _session_identificator, ErrorCodes &error);
 	static bool add(Session _session, ErrorCodes &error);
 	static bool remove(int id, ErrorCodes &error);
 	bool update(ErrorCodes &error) override; // поля сессии менять нельзя, всегда вернет false
