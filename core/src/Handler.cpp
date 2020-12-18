@@ -25,7 +25,7 @@ std::string Handler::get_response() {
 //    return HttpResponse::get_response(ctx);
     /////////////////////////
 
-    BOOST_LOG_TRIVIAL(debug) << "Session Length: "std::to_string(context_["session"].size());
+    BOOST_LOG_TRIVIAL(debug) << "Session Length: " + std::to_string(context_["session"].size());
 
     start_session();
 
@@ -136,19 +136,19 @@ void Handler::start_session() {
 //    activity_manager_ = std::make_unique<ActivityCustomer>(ctx, std::move(user));
 
     /// вернуться когда будет готов интерфейс сессии
-//    if(context_.find("session") == context_.end()) {
-//        set_user_right();
-//        return;
-//    }
+    if(context_.find("session") == context_.end()) {
+        set_user_right();
+        return;
+    }
 
-//     DBSession session = DBSession::get(context_["session"]);
-//
-//    if (check_session(session) == Handler::OK) {
-//        std::shared_ptr<DBUser> user = DBUser::get(session.get_user());
-//        set_customer_right(user);
-//    } else {
-//        set_user_right();
-//    }
+    // DBSession session = DBSession::get(context_["session"]); /////// через 5 минут исправят
+
+    if (check_session(session) == Handler::OK) {
+        std::shared_ptr<DBUser> user = DBUser::get(session.get_user());
+        set_customer_right(user);
+    } else {
+        set_user_right();
+    }
 }
 
 
@@ -158,13 +158,13 @@ Handler::Status Handler::check_session(DBSession& session) {
 
     return OK;  /// временное решение
 
-    // date start_time = session.date_of_creation;
-//    ptime today = second_clock::local_time(); // TODO подумать над временем часового пояса
-//    if(today > ptime(start_time, LIVE_TIME))
-//         // TODO удаление ссесии
-//        return Rotten;
-//    else
-//        return OK;
+    auto start_time = session.getCreationDate();
+    local_date_time today = second_clock::local_time(); // TODO подумать над временем часового пояса
+    if(today > start_time + LIVE_TIME)
+         // TODO удаление ссесии
+        return Rotten;
+    else
+        return OK;
 }
 
 string Handler::redirect(const string& page) {
