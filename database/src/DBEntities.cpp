@@ -59,42 +59,23 @@ bool DBPost::update_tags(vector<string> new_tags, ErrorCodes &error) {
     return DataManager::getInstance().add_tags_to_post(new_tags, id, room_id, error);
 }
 
-string gen_random(const int len) {
-
-    string tmp_s;
-    static const char alphanum[] =
-            "0123456789"
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            "abcdefghijklmnopqrstuvwxyz";
-
-    srand( (unsigned) time(nullptr) * getpid());
-
-    tmp_s.reserve(len);
-
-    for (int i = 0; i < len; ++i)
-        tmp_s += alphanum[rand() % (sizeof(alphanum) - 1)];
-
-
-    return tmp_s;
+std::optional< std::pair<string, string> > DBPost::get_upload_link(int post_id, ErrorCodes &error) {
+    return DataManager::getInstance().get_file_upload_link(post_id, error);
 }
 
-string DBPost::get_upload_link(int post_id, ErrorCodes &error) {
-    // пока имя файла в ссылке генерируется рандомно, как вариант можно заменять в процессе
-    string filename = gen_random(10);
-    string storage_file_path = POSTS_TABLE_NAME + "/" + std::to_string(post_id) + "/" + filename;
-
-    return DataManager::getInstance().get_file_upload_link(storage_file_path, error);
-}
-
-bool DBPost::add_file_to_db(string filename, ErrorCodes &error) {
+bool DBPost::add_file_to_db(string client_name, string storage_name, int post_id, ErrorCodes &error) {
     // добавить запись о файле в БД
-
+    return DataManager::getInstance().add_file(client_name, storage_name, post_id, error);
 }
 
-bool DBPost::remove_file(string filename, ErrorCodes &error) {
-    DataManager::getInstance().remove_file_from_storage(filename, error);
-    // TODO: remove from db
-    assert(false);
+// TODO: добавлять путь posts/<post_id> уже на моей реализации, чтобы в параметрах достаточно было указать только название файла и айди поста
+bool DBPost::remove_file_from_st(string storage_filename, ErrorCodes &error) {
+    return DataManager::getInstance().remove_file_from_storage(storage_filename, error);
+}
+
+// TODO: добавлять путь posts/<post_id> уже на моей реализации, чтобы в параметрах достаточно было указать только название файла и айди поста
+bool DBPost::remove_file_from_db(string client_filename, string storage_filename, ErrorCodes &error) {
+    return DataManager::getInstance().remove_file_from_database(client_filename, storage_filename, error);
 }
 
 shared_ptr<DBRoom> DBPost::get_room(ErrorCodes &error) {
@@ -113,13 +94,13 @@ std::optional< std::vector<std::string> > DBPost::get_attachments(ErrorCodes &er
     return DataManager::getInstance().get_post_attachments(id, error);
 }
 
-// Это не надо, сережа реализует у себя!
-std::vector<DBTag> get_associated_tags(std::vector<std::string>& _tags, ErrorCodes &error) {
-	// get all posts, that contain all tags in _tags
-	// get all tags, from every post that was found
-	// sort tags by popularity (via unordered map?)
-	// return tags in sorted order
-}
+//// Это не надо, сережа реализует у себя!
+//std::vector<DBTag> get_associated_tags(std::vector<std::string>& _tags, ErrorCodes &error) {
+//	// get all posts, that contain all tags in _tags
+//	// get all tags, from every post that was found
+//	// sort tags by popularity (via unordered map?)
+//	// return tags in sorted order
+//}
 
 DBEntity::DBEntity(int& _id) : id(_id) {}
 

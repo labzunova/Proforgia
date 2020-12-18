@@ -199,11 +199,15 @@ struct DBPost : public DBEntity {
 
     static std::optional< vector<DBPost> > get(std::vector<std::string> _tags, int room_id, ErrorCodes &error);
 
-    // TODO: !!! допродумать работу с файлами на клиенте
-    // TODO: и дописать до рабочего состояния методы по работе с файлами поста с учетом работы формы
-    static string get_upload_link(int post_id, ErrorCodes &error); // !!! чтобы отдать ссылку нужно знать название файла ИНАЧЕ название будет генерится автоматом
-    static bool add_file_to_db(string filename, ErrorCodes &error); // filename - имя файла, с которым он загрузился в Хранилище
-    static bool remove_file(string filename, ErrorCodes &error); // filename - имя файла, с которым он загрузился в Хранилище
+    // чтобы отдать ссылку нужно знать название файла (сейчас название генерится рандомно формата "posts/<post_id>/RaNdOmHhhNnN")
+    // возвращает pair<"ссылку", "само с которым оно загрузиться в хралище">
+    static std::optional< std::pair<string, string> > get_upload_link(int post_id, ErrorCodes &error);
+
+    // добавление записи о файле в БД
+    // client_name - название файла для клиента; storage_name - название файла, с которым он был загружен в хранилище вида "posts/<post_id>/random_name"
+    static bool add_file_to_db(string client_name, string storage_name, int post_id, ErrorCodes &error);
+    static bool remove_file_from_db(string client_filename, string storage_filename, ErrorCodes &error);
+    static bool remove_file_from_st(string storage_filename, ErrorCodes &error); // storage_filename - имя файла, с которым он загрузился в Хранилище
 
     // !!! полностью заменяет текущие тэги этого поста на тэги в new_tags
     bool update_tags(vector<string> new_tags, ErrorCodes &error); // для добавления/обновления списка тэгов у поста

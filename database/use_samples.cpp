@@ -1,13 +1,25 @@
 #include <iostream>
-#include "database/include/Utils/DBEntities.h"
+#include "include/Utils/DBEntities.h"
 using std::cout;
 using std::endl;
 
 // примеры использования методов интерфейса
-// рассматривать не как целостный код а как отдельные примеры (тут не примерное использование, иногда забивал и просто для базовой проверки методов делал)
+// рассматривать не как целостный код, а как отдельные примеры (тут не примерное использование, иногда забивал и просто для базовой проверки методов делал)
 
 int main() {
     ErrorCodes error;
+
+    //// WORK WITH FILES
+
+    auto res = DBPost::get_upload_link(2, error);
+    cout << res->first << endl << res->second;
+
+    DBPost::add_file_to_db("sample_client_name", res->second, 2, error);
+
+    DBPost::remove_file_from_st("posts/2/EusvETavRc", error);
+    DBPost::remove_file_from_db("sample_client_name", "posts/2/EusvETavRc", error);
+
+    //// END WORK WITH FILES
 
     auto res = DBUser::add(DBUser::User("cool_nickname_2", "basket.ivan@mail.ru", "xxx"), error);
     if (!res) {
@@ -248,6 +260,9 @@ int main() {
     cout << session->getSessionIdentificator() << endl;
     cout << session->getCreationDate();
     DBSession::remove(4, error);
+
+
+
 
     return 0;
 }

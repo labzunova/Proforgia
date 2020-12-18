@@ -13,6 +13,6 @@ public:
 
 public:
 	virtual std::string get_file_link( const std::string& filename, ErrorCodes &error ) const = 0;
-	virtual std::string get_file_upload_link( const std::string& filename, ErrorCodes &error ) const = 0;
+	virtual std::optional< std::pair<std::string, std::string> > get_file_upload_link(int post_id, ErrorCodes &error ) const = 0;
     virtual bool remove_file_from_storage( const std::string& filename, ErrorCodes &error ) const = 0;
 };

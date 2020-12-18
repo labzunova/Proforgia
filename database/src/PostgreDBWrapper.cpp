@@ -809,7 +809,7 @@ bool PostgreDBWrapper::add_tags_to_post(vector<std::string> &_tags, const int &p
     return true;
 }
 
-bool PostgreDBWrapper::add_file(const string &filename, int post_id, ErrorCodes &error) {
+bool PostgreDBWrapper::add_file(const string &client_name, const string &storage_name, int post_id, ErrorCodes &error) {
     std::shared_ptr<PGconn> connection;
     try {
         connection = get_connection();
@@ -820,9 +820,33 @@ bool PostgreDBWrapper::add_file(const string &filename, int post_id, ErrorCodes 
         return false;
     }
 
-    string query = "insert into files (post_id, filename) values "
+    string query = "insert into files (post_id, filename, filename_storage) values "
                    "(" + std::to_string(post_id) +
-                   "', '" + filename + "');";
+                   ", '" + client_name +
+                   "', '" + storage_name + "');";
+
+    auto res_deleter = [](PGresult* r) { PQclear(r);};
+    std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
+    if (PQresultStatus(result.get()) != PGRES_COMMAND_OK) {
+        error = ErrorCodes::UNKNOWN_DB_ERROR;
+        return false;
+    }
+
+    return true;
+}
+
+bool PostgreDBWrapper::remove_file(const std::string& client_name, const std::string& storage_filename, ErrorCodes &error) {
+    std::shared_ptr<PGconn> connection;
+    try {
+        connection = get_connection();
+    }
+    catch(std::exception &exc) {
+        error = ErrorCodes::DB_CONNECTION_ERROR;
+        std::cout << exc.what();
+        return false;
+    }
+
+    string query = "delete from files where filename ='" + client_name + "' and filename_storage = '" + storage_filename + "';";
 
     auto res_deleter = [](PGresult* r) { PQclear(r);};
     std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);

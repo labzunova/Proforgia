@@ -132,16 +132,20 @@ std::string DataManager::get_file_link(const std::string &filename, ErrorCodes &
     return storage->get_file_link(filename, error);
 }
 
-std::string DataManager::get_file_upload_link(const std::string &filename, ErrorCodes &error) const {
-    return storage->get_file_upload_link(filename, error);
+std::optional< std::pair<std::string, std::string> > DataManager::get_file_upload_link(int post_id, ErrorCodes &error) const {
+    return storage->get_file_upload_link(post_id, error);
 }
 
 bool DataManager::remove_file_from_storage(const std::string &filename, ErrorCodes &error) const {
     return storage->remove_file_from_storage(filename, error);
 }
 
-bool DataManager::add_file(const string& filename, int post_id, ErrorCodes &error) const {
-    return database->add_file(filename, post_id, error);
+bool DataManager::remove_file_from_database(const std::string& client_name, const std::string& storage_filename, ErrorCodes &error) {
+    return database->remove_file(client_name, storage_filename, error);
+}
+
+bool DataManager::add_file(const string& client_name, const string& storage_name, int post_id, ErrorCodes &error) const {
+    return database->add_file(client_name, storage_name, post_id, error);
 }
 
 shared_ptr<DBTag> DataManager::get_tag_info(const int &tag_id, ErrorCodes &error) const {

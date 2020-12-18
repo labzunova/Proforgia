@@ -22,7 +22,7 @@ public:
 	bool add_user( const DBUser::User& user_info, ErrorCodes &error ) override;
 	bool add_room( const DBRoom::Room& room_info, ErrorCodes &error ) override;
 	bool add_post( const DBPost::Post& post_info, ErrorCodes &error ) override;
-    bool add_file(const string &filename, int post_id, ErrorCodes &error) override;
+    bool add_file(const string &client_name, const string &storage_name, int post_id, ErrorCodes &error) override;
     bool add_user_to_room( const int& room_id, const int& user_id, Rights user_rights, ErrorCodes &error ) override;
     bool add_tags_to_post( std::vector<std::string>& _tags, const int& post_id, const int& room_id, ErrorCodes &error) override;
     bool add_session( const DBSession::Session& session_info, ErrorCodes &error ) override;
@@ -32,6 +32,7 @@ public:
 	bool remove_post( const int& post_id, ErrorCodes &error ) override;
 	bool remove_user_from_room( const int& room_id, const int& user_id, ErrorCodes &error ) override;
 	bool remove_session( const int& session_id, ErrorCodes &error ) override;
+    bool remove_file(const std::string& client_name, const std::string& storage_filename, ErrorCodes &error) override;
 
     shared_ptr<DBUser> get_user_info( const int& user_id, ErrorCodes &error ) const override;
     shared_ptr<DBUser> get_user_info( const string& nickname, ErrorCodes &error ) const override;
