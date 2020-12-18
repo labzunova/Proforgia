@@ -55,6 +55,7 @@ public:
     std::optional< std::vector<std::string> > get_post_attachments(int post_id, ErrorCodes &error) const;
     shared_ptr<DBTag> get_tag_info( const int& tag_id, ErrorCodes &error ) const;
     shared_ptr<DBSession> get_session_info( const int& session_id, ErrorCodes &error ) const;
+    shared_ptr<DBSession> get_session_info( const string& session_identificator, ErrorCodes &error ) const;
 
 	std::string get_file_link( const std::string& filename, ErrorCodes &error ) const;
     std::optional< std::pair<std::string, std::string> > get_file_upload_link(int post_id, ErrorCodes &error ) const;
