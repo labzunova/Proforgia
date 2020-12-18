@@ -1,6 +1,8 @@
 #include "../include/Utils/DBEntities.h"
 
 #include <utility>
+#include <ctime>
+#include <unistd.h>
 #include "../include/DataManager.h"
 
 
@@ -32,14 +34,6 @@ const string &DBUser::getPassword() const {
     return password;
 }
 
-
-
-
-// TODO: дописать псевдокод и сделать рабочий метод
-std::vector<std::string> DBPost::get_attachments(ErrorCodes &error) {
-
-}
-
 std::optional< vector<DBPost> > DBPost::get(std::vector<std::string> _tags, int room_id, ErrorCodes &error) {
 	// get all posts, that contain all tags in _tags
     return DataManager::getInstance().get_posts_by_tags(_tags, room_id, error);
@@ -65,37 +59,48 @@ bool DBPost::update_tags(vector<string> new_tags, ErrorCodes &error) {
     return DataManager::getInstance().add_tags_to_post(new_tags, id, room_id, error);
 }
 
-string DBPost::get_upload_link(ErrorCodes &error) {
-
+std::optional< std::pair<string, string> > DBPost::get_upload_link(int post_id, ErrorCodes &error) {
+    return DataManager::getInstance().get_file_upload_link(post_id, error);
 }
 
-bool DBPost::add_file(string filename, ErrorCodes &error) {
-
+bool DBPost::add_file_to_db(string client_name, string storage_name, int post_id, ErrorCodes &error) {
+    // добавить запись о файле в БД
+    return DataManager::getInstance().add_file(client_name, storage_name, post_id, error);
 }
 
-bool DBPost::remove_file(string filename, ErrorCodes &error) {
-
+// TODO: добавлять путь posts/<post_id> уже на моей реализации, чтобы в параметрах достаточно было указать только название файла и айди поста
+bool DBPost::remove_file_from_st(string storage_filename, ErrorCodes &error) {
+    return DataManager::getInstance().remove_file_from_storage(storage_filename, error);
 }
 
-DBRoom DBPost::get_room(ErrorCodes &error) {
-
+// TODO: добавлять путь posts/<post_id> уже на моей реализации, чтобы в параметрах достаточно было указать только название файла и айди поста
+bool DBPost::remove_file_from_db(string client_filename, string storage_filename, ErrorCodes &error) {
+    return DataManager::getInstance().remove_file_from_database(client_filename, storage_filename, error);
 }
 
-DBUser DBPost::get_author(ErrorCodes &error) {
-
+shared_ptr<DBRoom> DBPost::get_room(ErrorCodes &error) {
+    return DBRoom::get(room_id, error);
 }
 
-std::vector<DBTag> DBPost::get_tags(ErrorCodes &error) {
-
+shared_ptr<DBUser> DBPost::get_author(ErrorCodes &error) {
+    return DBUser::get(user_id, error);
 }
 
-// Это не надо, сережа реализует у себя!
-std::vector<DBTag> get_associated_tags(std::vector<std::string>& _tags, ErrorCodes &error) {
-	// get all posts, that contain all tags in _tags
-	// get all tags, from every post that was found
-	// sort tags by popularity (via unordered map?)
-	// return tags in sorted order
+std::optional< std::vector<DBTag> > DBPost::get_tags(ErrorCodes &error) {
+    return DataManager::getInstance().get_post_tags(id, error);
 }
+
+std::optional< std::vector<std::string> > DBPost::get_attachments(ErrorCodes &error) {
+    return DataManager::getInstance().get_post_attachments(id, error);
+}
+
+//// Это не надо, сережа реализует у себя!
+//std::vector<DBTag> get_associated_tags(std::vector<std::string>& _tags, ErrorCodes &error) {
+//	// get all posts, that contain all tags in _tags
+//	// get all tags, from every post that was found
+//	// sort tags by popularity (via unordered map?)
+//	// return tags in sorted order
+//}
 
 DBEntity::DBEntity(int& _id) : id(_id) {}
 
@@ -148,5 +153,54 @@ bool DBTag::update(ErrorCodes &error) {
     return false;
 }
 
+shared_ptr<DBTag> DBTag::get(int _id, ErrorCodes &error) {
+    return DataManager::getInstance().get_tag_info(_id, error);
+}
+
+const string &DBTag::getName() const {
+    return name;
+}
+
+int DBTag::getRoomId() const {
+    return room_id;
+}
+
 DBPost::Post::Post(int roomId, int userId, const string &title, const string &text) : room_id(roomId), user_id(userId),
                                                                                       title(title), text(text) {}
+
+DBSession::Session::Session(const string sessionId, int userId) : session_identificator(sessionId), user_id(userId) {}
+
+DBSession::DBSession(int &id, const local_date_time &creationDate, const string &sessionId, int userId)
+        : DBEntity(id), creation_date(creationDate), session_identificator(sessionId), user_id(userId) {}
+
+shared_ptr<DBSession> DBSession::get(int _id, ErrorCodes &error) {
+    return DataManager::getInstance().get_session_info(_id, error);
+}
+
+bool DBSession::remove(int id, ErrorCodes &error) {
+    return DataManager::getInstance().remove_session(id, error);
+}
+
+bool DBSession::add(DBSession::Session _session, ErrorCodes &error) {
+    return DataManager::getInstance().add_session(_session, error);
+}
+
+bool DBSession::update(ErrorCodes &error) {
+    return false;
+}
+
+shared_ptr<DBUser> DBSession::get_user(ErrorCodes &error) {
+    return DBUser::get(user_id, error);
+}
+
+const local_date_time &DBSession::getCreationDate() const {
+    return creation_date;
+}
+
+const string &DBSession::getSessionIdentificator() const {
+    return session_identificator;
+}
+
+int DBSession::getUserId() const {
+    return user_id;
+}

@@ -14,10 +14,14 @@
 #include <aws/s3/model/GetObjectRequest.h>
 #include <aws/s3/model/DeleteObjectRequest.h>
 
-#define DEFAULT_BUCKET "my-test-bucket-proforgia"
+// #define DEFAULT_BUCKET "my-test-bucket-proforgia"
+#define DEFAULT_BUCKET "proforgia-project-bucket"
 #define DEFAULT_REGION "eu-central-1"
 #define DEFAULT_TO_CLIENT_PATH "/Users/Ivan/Proforgia-files/files-to-client/"
 #define DEFAULT_FROM_CLIENT_PATH "/Users/Ivan/Proforgia-files/files-from-client/"
+#define POSTS_FILES_FOLDER_NAME "posts/"
+
+// TODO: add boost log
 
 bool put_object(const Aws::String& bucketName,
                 const Aws::String& objectName,
@@ -50,20 +54,39 @@ std::string AmazonS3StorageWrapper::get_file_link(const std::string &filename, E
 
         Aws::S3::S3Client s3_client(config);
         // TODO: consider POST http method
-        url = s3_client.GeneratePresignedUrl((Aws::String)this->bucket_name, (Aws::String)filename, Aws::Http::HttpMethod::HTTP_GET, 2000);
-        std::cout << "Get file URL for " << filename << ":" << std::endl << url << std::endl;
+        const static int ONE_WEEK_IN_SECONDS = 604000;
+        url = s3_client.GeneratePresignedUrl((Aws::String)this->bucket_name, (Aws::String)filename, Aws::Http::HttpMethod::HTTP_GET, ONE_WEEK_IN_SECONDS);
+        // std::cout << "Get file URL for " << filename << ":" << std::endl << url << std::endl;
     }
 
     Aws::ShutdownAPI(options);
     return (std::string)url; // !
 }
 
-// TODO: implement folder for every entity with files (probably for every post)
-// TODO: test method with private release bucket
-std::string AmazonS3StorageWrapper::get_file_upload_link(const std::string &filename, ErrorCodes &error) const {
+string gen_random(const int len) {
+
+    string tmp_s;
+    static const char alphanum[] =
+            "0123456789"
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            "abcdefghijklmnopqrstuvwxyz";
+
+    srand( (unsigned) time(nullptr) * getpid());
+
+    tmp_s.reserve(len);
+
+    for (int i = 0; i < len; ++i)
+        tmp_s += alphanum[rand() % (sizeof(alphanum) - 1)];
+
+
+    return tmp_s;
+}
+
+std::optional< std::pair<std::string, std::string> > AmazonS3StorageWrapper::get_file_upload_link(int post_id, ErrorCodes &error) const {
     Aws::SDKOptions options;
     Aws::InitAPI(options);
     Aws::String url;
+    std::string storage_file_path;
     {
         Aws::Client::ClientConfiguration config;
 
@@ -73,13 +96,16 @@ std::string AmazonS3StorageWrapper::get_file_upload_link(const std::string &file
         }
 
         Aws::S3::S3Client s3_client(config);
-        // TODO: consider POST http method
-        url = s3_client.GeneratePresignedUrl((Aws::String)this->bucket_name, (Aws::String)filename, Aws::Http::HttpMethod::HTTP_PUT, 2000);
-        std::cout << "Upload URL for " << filename << ":" << std::endl << url << std::endl;
+        // пока имя файла в ссылке генерируется рандомно, так как ссылка генерируется до попадания на клиент
+        string filename = gen_random(10);
+        storage_file_path = POSTS_TABLE_NAME + "/" + std::to_string(post_id) + "/" + filename;
+        const static int ONE_WEEK_IN_SECONDS = 604000;
+        url = s3_client.GeneratePresignedUrl((Aws::String)this->bucket_name, (Aws::String)storage_file_path, Aws::Http::HttpMethod::HTTP_PUT, ONE_WEEK_IN_SECONDS);
+        // std::cout << "Upload URL for " << filename << ":" << std::endl << url << std::endl;
     }
 
     Aws::ShutdownAPI(options);
-    return (std::string) url;
+    return std::make_pair((std::string) url, storage_file_path);
 }
 
 // pre-declaration
@@ -92,7 +118,7 @@ bool AmazonS3StorageWrapper::remove_file_from_storage(const std::string &filenam
     {
         if (DeleteObject((Aws::String) filename, (Aws::String) this->bucket_name, (Aws::String) this->region))
         {
-            std::cout << "Deleted object " << filename << " from " << this->bucket_name << "." << std::endl;
+            // std::cout << "Deleted object " << filename << " from " << this->bucket_name << "." << std::endl;
         } else {
             error = ErrorCodes::UNKNOWN_STORAGE_ERROR;
             ShutdownAPI(options);

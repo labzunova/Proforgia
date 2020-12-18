@@ -2,6 +2,7 @@
 #define PROFORGIA_DBENTITIES_H
 
 #include <string>
+#include <utility>
 #include <vector>
 #include <optional>
 #include <iostream>
@@ -24,18 +25,8 @@ using std::pair;
 
 /*
  ЗАДАЧИ ПО САМОЙ БАЗЕ ДАННЫХ:
- TODO: поле password у юзер должно хранить хэш (скорее всего это будет число, уточнить у сережи)
- TODO: сессия должна хранить строковый идентификатор сессии (скорее всего строка фикс. размера, уточнить)
- TODO: сделать имеил уникальным
- TODO: исправить typo room_desciption на room_description
- TODO: сделать поля user_id и room_id not null в таблице posts
- TODO: сделать поле room_id not null в таблице tags
+
  */
-
-
-// TODO: ДОБАВИТЬ ENTITY DBFILE
-// TODO: ДОБАВИТЬ ДАТЫ почти ко всем энтити!!!!
-
 
 // при неудаче методов, возвращающих bool, вернется false
 // при неудаче get-методов, возвращающих умный указатель на какое-либо DBEntity, вернется nullptr
@@ -45,12 +36,16 @@ using std::pair;
 struct DBEntity {
 	virtual bool update(ErrorCodes &error) = 0; // аналог save() в API UML
 
-    int get_id() const;
+    [[nodiscard]] int get_id() const;
 
 protected:
     int id;
-    DBEntity(int& _id);
-    DBEntity() {};
+//<<<<<<< HEAD
+//    DBEntity(int& _id);
+//    DBEntity() {};
+//=======
+    explicit DBEntity(int& _id);
+//>>>>>>> database
 };
 
 
@@ -58,10 +53,10 @@ class DBRoom;
 
 struct DBUser : public DBEntity {
 	struct User {
-		User( string _nick_name, string _email, string _password) :
-			nick_name(_nick_name), 
-			email(_email),
-			password(_password) {}
+        User( string _nick_name, string _email, string _password) :
+			nick_name(std::move(_nick_name)),
+			email(std::move(_email)),
+			password(std::move(_password)) {}
 
 		std::string nick_name;
 		std::string email;
@@ -111,6 +106,8 @@ public:
 
     bool update(ErrorCodes &error) override; // поля тэга менять нельзя, всегда вернет false
 
+    static shared_ptr<DBTag> get(int _id, ErrorCodes &error);
+
     struct Tag {
         Tag(string name, int roomId);
 
@@ -124,6 +121,10 @@ public:
         std::cout << "name: " << this->name << std::endl;
         std::cout << "room id: " << this->room_id << std::endl;
     }
+
+    const string &getName() const;
+
+    int getRoomId() const;
 
 private:
 	// size_t use_count; // счетчик количества упоминаний тэга для более эффективной сортировки тэгов по популярности
@@ -178,7 +179,7 @@ private:
     date create_date;
 };
 
-
+const static string POSTS_TABLE_NAME = "posts";
 struct DBPost : public DBEntity {
 	struct Post {
         Post(int roomId, int userId, const string &title, const string &text);
@@ -194,9 +195,6 @@ struct DBPost : public DBEntity {
             DBEntity(id), room_id(_room_id), user_id(_user_id), title(_title), text(_text), publication_date(_ldt)
 	{}
 
-	int room_id;
-	int user_id; // post author
-
 	std::string title;
 	std::string text;
 
@@ -207,18 +205,25 @@ struct DBPost : public DBEntity {
 
     static std::optional< vector<DBPost> > get(std::vector<std::string> _tags, int room_id, ErrorCodes &error);
 
-    string get_upload_link(ErrorCodes &error); // !!! чтобы отдать ссылку нужно знать название файла ИНАЧЕ название будет генерится автоматом
-    bool add_file(string filename, ErrorCodes &error); // filename - имя файла, с которым он загрузился в Хранилище
-    bool remove_file(string filename, ErrorCodes &error); // filename - имя файла, с которым он загрузился в Хранилище
+    // чтобы отдать ссылку нужно знать название файла (сейчас название генерится рандомно формата "posts/<post_id>/RaNdOmHhhNnN")
+    // возвращает pair<"ссылку", "само с которым оно загрузиться в хралище">
+    static std::optional< std::pair<string, string> > get_upload_link(int post_id, ErrorCodes &error);
+
+    // добавление записи о файле в БД
+    // client_name - название файла для клиента; storage_name - название файла, с которым он был загружен в хранилище вида "posts/<post_id>/random_name"
+    static bool add_file_to_db(string client_name, string storage_name, int post_id, ErrorCodes &error);
+    static bool remove_file_from_db(string client_filename, string storage_filename, ErrorCodes &error);
+    static bool remove_file_from_st(string storage_filename, ErrorCodes &error); // storage_filename - имя файла, с которым он загрузился в Хранилище
 
     // !!! полностью заменяет текущие тэги этого поста на тэги в new_tags
     bool update_tags(vector<string> new_tags, ErrorCodes &error); // для добавления/обновления списка тэгов у поста
 
 	// методы получения связанных полей 
-	DBRoom get_room(ErrorCodes &error);
-	DBUser get_author(ErrorCodes &error);
-	vector<DBTag> get_tags(ErrorCodes &error);
-	vector<std::string> get_attachments(ErrorCodes &error); // list of links to storage locations of files
+    shared_ptr<DBRoom> get_room(ErrorCodes &error);
+    shared_ptr<DBUser> get_author(ErrorCodes &error);
+    std::optional< vector<DBTag> > get_tags(ErrorCodes &error);
+    std::optional< vector<std::string> > get_attachments(ErrorCodes &error); // list of links to storage locations of files
+
 
     void print() {
         std::cout << "Post info:" << std::endl;
@@ -229,28 +234,39 @@ struct DBPost : public DBEntity {
         std::cout << "title: " << this->title << std::endl;
         std::cout << "text: " << this->text << std::endl;
     }
+
 private:
+    int room_id;
+    int user_id; // post author
     local_date_time publication_date;
 };
 
 struct DBSession : public DBEntity {
 	struct Session {
-	    Session( std::string& _user_id ) : user_id(_user_id) {}
+        Session(const string sessionId, int userId);
 
-	    std::string user_id;
+        string session_identificator;
+	    int user_id;
 	};
 
-	DBSession(int &id, std::string &_user_id) : DBEntity(id), user_id(_user_id) {}
+    DBSession(int &id, const local_date_time &creationDate, const string &sessionId, int userId);
 
-	std::string user_id;
-
-	static DBSession get(std::string& _id, ErrorCodes &error);
-	static std::string add(Session _session, ErrorCodes &error); // return id in DB on success, а при неудаче, вернет строку специального вида
-	static bool remove(std::string& id, ErrorCodes &error);
-	bool update(ErrorCodes &error) override;
+	static shared_ptr<DBSession> get(int _id, ErrorCodes &error);
+	static bool add(Session _session, ErrorCodes &error);
+	static bool remove(int id, ErrorCodes &error);
+	bool update(ErrorCodes &error) override; // поля сессии менять нельзя, всегда вернет false
 
 	// методы получения связанных полей 
-	DBUser get_user(ErrorCodes &error);
+    shared_ptr<DBUser> get_user(ErrorCodes &error);
+
+    // getters
+    const local_date_time &getCreationDate() const;
+    const string &getSessionIdentificator() const;
+    int getUserId() const;
+private:
+    local_date_time creation_date;
+    string session_identificator;
+    int user_id;
 };
 
 #endif // PROFORGIA_DBENTITIES_H
