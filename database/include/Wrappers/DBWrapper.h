@@ -43,6 +43,7 @@ public:
     virtual std::optional< std::vector<std::string> > get_post_attachments(int post_id, ErrorCodes &error) const = 0;
     virtual shared_ptr<DBTag> get_tag_info( const int& tag_id, ErrorCodes &error ) const = 0;
 	virtual shared_ptr<DBSession> get_session_info( const int& session_id, ErrorCodes &error ) const = 0;
+	virtual shared_ptr<DBSession> get_session_info( const string& session_identificator, ErrorCodes &error ) const = 0;
 
 	virtual bool edit_user( const int& id, const DBUser::User& user_info, ErrorCodes &error ) = 0;
 	virtual bool edit_room( const int& id, const DBRoom::Room& room_info, ErrorCodes &error ) = 0;

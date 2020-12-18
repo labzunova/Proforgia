@@ -5,7 +5,7 @@ CREATE TABLE users (
 	UNIQUE (email),
 	email varchar(50) NOT NULL,
 	create_time timestamp with time zone NOT NULL DEFAULT current_timestamp,
-	password varchar(50) NOT NULL
+	password varchar(200) NOT NULL
 );
 
 CREATE TABLE rooms (
