@@ -7,6 +7,7 @@ default-cmake-build-debug/
 database/aws-sdk/install/
 cmake-build-debug/
 
+database/aws-sdk-cpp
 openssl/
 
 .DS_Store
