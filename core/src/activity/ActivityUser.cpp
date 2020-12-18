@@ -26,14 +26,19 @@ ActivityManager::Status ActivityUser::signUp(std::string& session) {
 
     std::string login = context_["login"];
     std::string email = context_["mail"];
-    std::string password = SHA(context_["password"]);
-    typename DBUser::User user(email, login, password);
+    context_["password"] = "xxxx";
+    BOOST_LOG_TRIVIAL(debug) << std::to_string(context_["password"].size());
+//    std::string password = SHA(context_["password"]);
+    std::string password = context_["password"]; // временное
+    typename DBUser::User user(login, email, password);
     BOOST_LOG_TRIVIAL(debug) << password;
 
     ErrorCodes er;
-    int id = DBUser::add(user, er); // TODO проверка на то прошло ли сохранение, вернуться когда будет бд
+    bool ex = DBUser::add(user, er); // TODO проверка на то прошло ли сохранение, вернуться когда будет бд
 
-//    int id = 0; /// временное решение
+    assert(ex == true);
+
+    int id = 0; /// временное решение
 
     session = create_session();
     save_session(id, session);

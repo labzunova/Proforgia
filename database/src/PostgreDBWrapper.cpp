@@ -162,8 +162,11 @@ bool PostgreDBWrapper::add_user(const DBUser::User &user_info, ErrorCodes &error
             "', '" + user_info.password + "');";
 
     auto res_deleter = [](PGresult* r) { PQclear(r);};
+    std::cout << query.c_str() << std::endl;
     std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
-    if (PQresultStatus(result.get()) != PGRES_COMMAND_OK) {
+    auto val = PQresultStatus(result.get());
+    std::cout << PQresStatus(val) << std::endl;
+    if (val != PGRES_COMMAND_OK) {
         error = ErrorCodes::UNKNOWN_DB_ERROR;
         return false;
     }

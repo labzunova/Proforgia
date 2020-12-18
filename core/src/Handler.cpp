@@ -25,6 +25,7 @@ std::string Handler::get_response() {
 //    return HttpResponse::get_response(ctx);
     /////////////////////////
 
+    BOOST_LOG_TRIVIAL(debug) << "Session Length: "std::to_string(context_["session"].size());
 
     start_session();
 
