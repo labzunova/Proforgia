@@ -61,6 +61,7 @@ const unordered_map<string, string> Parser::parse_body()
     string request_ = request;
     unordered_map<string, string> data;
     string body = request_.erase( 0, request_.find( "\r\n\r\n" ) + 4 ); // стираем все что до body
+    body = body.substr( 0 , body.find( '\000' ) );
     string key, value;
     while ( body.length() != 0 )
     {

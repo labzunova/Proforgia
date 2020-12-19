@@ -84,12 +84,15 @@ void Request_handler::fill_GET_login()
 {
     to_put_in_loop.emplace( "method", "GET" );
     to_put_in_loop.emplace( "path", path );
+    to_put_in_loop.emplace( "session", get_cookie("session" ) );
+
 }
 
 void Request_handler::fill_GET_signup()
 {
     to_put_in_loop.emplace( "method", "GET" );
     to_put_in_loop.emplace( "path", path );
+    to_put_in_loop.emplace( "session", get_cookie("session" ) );
 }
 
 void Request_handler::fill_GET_profile()
@@ -127,6 +130,7 @@ void Request_handler::fill_POST_login()
     to_put_in_loop.emplace( "path", path );
     to_put_in_loop.emplace( "login", get_data( "login" ) );
     to_put_in_loop.emplace( "password", get_data( "password" ) );
+    to_put_in_loop.emplace( "session", get_cookie("session" ) );
 }
 
 void Request_handler::fill_POST_signup()
@@ -136,6 +140,7 @@ void Request_handler::fill_POST_signup()
     to_put_in_loop.emplace( "login", get_data( "login" ) ) ;
     to_put_in_loop.emplace( "mail", get_data( "mail" ) ) ;
     to_put_in_loop.emplace( "password", get_data( "password" ) );
+    to_put_in_loop.emplace( "session", get_cookie("session" ) );
 }
 
 void Request_handler::fill_POST_room()
