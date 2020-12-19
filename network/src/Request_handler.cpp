@@ -47,6 +47,8 @@ void Request_handler::create_map()
             fill_GET_profile();
         else if ( path.find("room" ) != -1 ) // тут может быть, к примеру, rooms/first
             fill_GET_room(); // случай, когда нужно получить какую-то комнату или комнату с выведенными по тегу данными
+        else if ( path == "exit" )
+            fill_GET_exit();
     }
     else
     {
@@ -107,6 +109,14 @@ void Request_handler::fill_GET_room()
     to_put_in_loop.emplace( "session", get_cookie("session" ) );
 }
 
+void Request_handler::fill_GET_exit()
+{
+    to_put_in_loop.emplace( "method", "GET" );
+    to_put_in_loop.emplace( "path", path );
+    to_put_in_loop.emplace( "session", get_cookie("session" ) );
+
+}
+
 void Request_handler::fill_POST_login()
 {
     to_put_in_loop.emplace( "method","POST" );
@@ -161,6 +171,5 @@ void Request_handler::fill_POST_delete_room() // TODO ?????????
     to_put_in_loop.emplace( "session", get_cookie("session" ) );
 }
 
-// TODO exit
 // TODO remove room title
 
