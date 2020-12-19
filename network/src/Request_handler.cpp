@@ -47,6 +47,8 @@ void Request_handler::create_map()
             fill_GET_profile();
         else if ( path.find("room" ) != -1 ) // тут может быть, к примеру, rooms/first
             fill_GET_room(); // случай, когда нужно получить какую-то комнату или комнату с выведенными по тегу данными
+        else if ( path == "exit" )
+            fill_GET_exit();
     }
     else
     {
@@ -62,6 +64,14 @@ void Request_handler::create_map()
         if ( path.find( "room" ) != -1 ) // добавить файл с указанным тегом и вернуть ту же главную страницу
         {
             fill_POST_room();
+        }
+        if ( path == "create" ) // создать новую комнату
+        {
+            fill_POST_create_room();
+        }
+        if ( path == "join" ) // вступить в комнату
+        {
+            fill_POST_join_room();
         }
     }
 }
@@ -99,6 +109,14 @@ void Request_handler::fill_GET_room()
     to_put_in_loop.emplace( "session", get_cookie("session" ) );
 }
 
+void Request_handler::fill_GET_exit()
+{
+    to_put_in_loop.emplace( "method", "GET" );
+    to_put_in_loop.emplace( "path", path );
+    to_put_in_loop.emplace( "session", get_cookie("session" ) );
+
+}
+
 void Request_handler::fill_POST_login()
 {
     to_put_in_loop.emplace( "method","POST" );
@@ -129,8 +147,29 @@ void Request_handler::fill_POST_room()
     to_put_in_loop.emplace( "fileurl", get_data( "fileurl" ) );
 }
 
-// TODO create room title
-// TODO join room roomID
-// TODO exit
+void Request_handler::fill_POST_create_room()
+{
+    to_put_in_loop.emplace( "method","POST" );
+    to_put_in_loop.emplace( "path", "create" );
+    to_put_in_loop.emplace( "title", get_data( "title" ) );
+    to_put_in_loop.emplace( "session", get_cookie("session" ) );
+}
+
+void Request_handler::fill_POST_join_room()
+{
+    to_put_in_loop.emplace( "method","POST" );
+    to_put_in_loop.emplace( "path", "join" );
+    to_put_in_loop.emplace( "roomID", get_data( "roomID" ) );
+    to_put_in_loop.emplace( "session", get_cookie("session" ) );
+}
+
+void Request_handler::fill_POST_delete_room() // TODO ?????????
+{
+    to_put_in_loop.emplace( "method","POST" );
+    to_put_in_loop.emplace( "path", "remove" );
+    to_put_in_loop.emplace( "roomID", get_data( "title" ) );
+    to_put_in_loop.emplace( "session", get_cookie("session" ) );
+}
+
 // TODO remove room title
 

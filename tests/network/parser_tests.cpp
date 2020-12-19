@@ -57,6 +57,17 @@ const static string POST_request_addpost = "POST /rooms/room1 HTTP/1.1\r\n"
                                            "Cookie: session=dfsd54h4telngdfjgod5\r\n\r\n"
                                            "title=first&text=hello!&fileurl=s3url&tag=math";
 
+const static string POST_create_room = "POST /create HTTP/1.1\r\n"
+                                       "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
+                                       "Host: www.example.com\r\n"
+                                       "Content-Type: application/x-www-form-urlencoded\r\n"
+                                       "Content-Length: length\r\n"
+                                       "Accept-Language: ru-ru\r\n"
+                                       "Accept-Encoding: gzip, deflate\r\n"
+                                       "Connection: Keep-Alive\r\n"
+                                       "Cookie: session=dfsd54h4telngdfjgod5\r\n\r\n"
+                                       "title=newroomtojoin";
+
 const static string GET_request_room = "GET /rooms/room1 HTTP/1.1\r\n"
                                    "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
                                    "Host: www.example.com\r\n"
@@ -222,6 +233,20 @@ TEST( full_parse_tests, POST_addpost ) // запрос на добавление
     ASSERT_EQ( "hello!", data["text"] );
     ASSERT_EQ( "math", data["tag"] );
     ASSERT_EQ( "s3url", data["fileurl"] );
+    unordered_map<string, string> cookies = parser.parse_cookies();
+    ASSERT_EQ( "dfsd54h4telngdfjgod5", cookies["session"] );
+}
+
+
+TEST( full_parse_tests, POST_createroom ) // запрос на создание комнаты
+{
+    Parser parser( POST_create_room );
+    string method = parser.parse_method();
+    ASSERT_EQ( method, "POST" );
+    string path = parser.parse_path();
+    ASSERT_EQ( "create", path );
+    unordered_map<string, string> data = parser.parse_body();
+    ASSERT_EQ( "newroomtojoin", data["title"] );
     unordered_map<string, string> cookies = parser.parse_cookies();
     ASSERT_EQ( "dfsd54h4telngdfjgod5", cookies["session"] );
 }
