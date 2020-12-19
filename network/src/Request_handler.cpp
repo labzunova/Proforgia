@@ -153,7 +153,7 @@ void Request_handler::fill_POST_join_room()
     to_put_in_loop.emplace( "session", get_cookie("session" ) );
 }
 
-void Request_handler::fill_POST_delete_room()
+void Request_handler::fill_POST_delete_room() // TODO ?????????
 {
     to_put_in_loop.emplace( "method","POST" );
     to_put_in_loop.emplace( "path", "remove" );
