@@ -68,7 +68,7 @@ const static string POST_create_room = "POST /create HTTP/1.1\r\n"
                                        "Cookie: session=dfsd54h4telngdfjgod5\r\n\r\n"
                                        "title=newroomtojoin";
 
-const static string GET_request_room = "GET /rooms/room1 HTTP/1.1\r\n"
+const static string GET_request_room = "GET /room/room1 HTTP/1.1\r\n"
                                    "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
                                    "Host: www.example.com\r\n"
                                    "Accept-Language: ru-ru\r\n"
@@ -171,7 +171,7 @@ TEST( full_parse_tests, GET_room ) // запрос на получение ко�
     string method = parser.parse_method();
     ASSERT_EQ( method, "GET" );
     string path = parser.parse_path();
-    ASSERT_EQ( "rooms/room1", path );
+    ASSERT_EQ( "room/room1", path );
     std::pair<string, string> room = parser.parse_room_properties( path );
     ASSERT_EQ( "room1", room.first );
     ASSERT_EQ( "", room.second );
