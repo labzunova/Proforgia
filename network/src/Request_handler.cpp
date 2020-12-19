@@ -63,6 +63,14 @@ void Request_handler::create_map()
         {
             fill_POST_room();
         }
+        if ( path == "create" ) // создать новую комнату
+        {
+            fill_POST_create_room();
+        }
+        if ( path == "join" ) // вступить в комнату
+        {
+            fill_POST_join_room();
+        }
     }
 }
 
@@ -129,8 +137,30 @@ void Request_handler::fill_POST_room()
     to_put_in_loop.emplace( "fileurl", get_data( "fileurl" ) );
 }
 
-// TODO create room title
-// TODO join room roomID
+void Request_handler::fill_POST_create_room()
+{
+    to_put_in_loop.emplace( "method","POST" );
+    to_put_in_loop.emplace( "path", "create" );
+    to_put_in_loop.emplace( "title", get_data( "title" ) );
+    to_put_in_loop.emplace( "session", get_cookie("session" ) );
+}
+
+void Request_handler::fill_POST_join_room()
+{
+    to_put_in_loop.emplace( "method","POST" );
+    to_put_in_loop.emplace( "path", "join" );
+    to_put_in_loop.emplace( "roomID", get_data( "roomID" ) );
+    to_put_in_loop.emplace( "session", get_cookie("session" ) );
+}
+
+void Request_handler::fill_POST_delete_room()
+{
+    to_put_in_loop.emplace( "method","POST" );
+    to_put_in_loop.emplace( "path", "remove" );
+    to_put_in_loop.emplace( "roomID", get_data( "title" ) );
+    to_put_in_loop.emplace( "session", get_cookie("session" ) );
+}
+
 // TODO exit
 // TODO remove room title
 
