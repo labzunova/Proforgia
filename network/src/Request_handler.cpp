@@ -8,12 +8,16 @@ Request_handler::Request_handler( const string &request )
     path = parser.parse_path();
     if( method == "POST" )
         data = parser.parse_body();
-    if( path.find( "room" ) != 0 ) // если это запрос на какую-то комнату: выяснить, какую
+    if( path.find( "room" ) != -1 ) // если это запрос на какую-то комнату: выяснить, какую
     {
         std::pair<string, string> properties = parser.parse_room_properties( path );
         room = properties.first;
+        path = "room";
         if ( properties.second != "" )
+        {
+            path = "roomtag";
             tag = properties.second;
+        }
     }
     cookies = parser.parse_cookies();
     create_map();
