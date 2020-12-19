@@ -54,8 +54,6 @@ ActivityManager::Status ActivityCustomer::create_room() {
 //    DBRoom::add_user()  // TODO добавление пользвателя в room
     //int id_room = room.add(room); // TODO проверка на ошибку добавления
     // TODO возможно выделение админа как то отдельно в комнате
-    //DBRoom::add_user(id_room, user_.id); // TODO проверка на ошибку добавления
-    //DBUser::add_room(user_.id, id_room); // TODO проверка прошло ли сохранение
 
     return OK;
 }

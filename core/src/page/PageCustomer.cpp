@@ -40,7 +40,7 @@ std::string PageCustomer::get_profile_page() {
 
 // TODO обработака ErrorCodes
 std::string PageCustomer::get_room_page(std::string id) {
-    string page = "room";
+    string page = "main";
     Context context(page);
 
     // запись user в context
@@ -127,7 +127,7 @@ std::string PageCustomer::get_login_page() {
 }
 
 std::string PageCustomer::get_info_tags(std::string id, std::unique_ptr<std::vector<std::string>> tags) {
-    string page = "roomtag";
+    string page = "tag";
     Context context(page);
 
     // запись user в context

@@ -40,16 +40,16 @@ void Connection::handle_read( const Connection::error_code &e, std::size_t bytes
 {
     /*boost::asio::async_write(socket_, boost::asio::buffer(buffer_), // это тут было для тестирования эхо-сервера, пусть пока побудет
                              boost::bind(&Connection::handle_write, shared_from_this(),boost::asio::placeholders::error));*/
-   // string request_( std::begin( buffer_ ), std::end( buffer_ ) );
+    string request_( std::begin( buffer_ ), std::end( buffer_ ) );
 
-    string request_( "GET /room/room1 HTTP/1.1\r\n"
-                    "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
-                    "Host: www.example.com\r\n"
-                    "Accept-Language: ru-ru\r\n"
-                    "Accept-Encoding: gzip, deflate\r\n"
-                    "Connection: Keep-Alive\r\n"
-                    "Cookie: session=12345\r\n\r\n"
-    );
+//    string request_( "GET /room/room1 HTTP/1.1\r\n"
+//                    "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
+//                    "Host: www.example.com\r\n"
+//                    "Accept-Language: ru-ru\r\n"
+//                    "Accept-Encoding: gzip, deflate\r\n"
+//                    "Connection: Keep-Alive\r\n"
+//                    "Cookie: session=12345\r\n\r\n"
+//    );
     Request_handler request( request_ ); // внутри реквеста вызывается парсер и записывает в поля реквеста готовые значения
     std::map<string, string> to_put_in_loop = request.get_map();  // эта мапа передается в воркеры для обработки апи
 
