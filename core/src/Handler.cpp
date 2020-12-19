@@ -49,7 +49,7 @@ std::string Handler::get_response() {
 
             else {
                 context_["new_session"] = session;
-                return redirect("profile");
+                return redirect("/profile");
             }
         }
         else if(context_["path"] == "login") {
@@ -63,7 +63,31 @@ std::string Handler::get_response() {
 
             else {
                 context_["new_session"] = session;
-                return redirect("profile");
+                return redirect("/profile");
+            }
+        }
+        else if(context_["path"] == "create") {
+            auto code = activity_manager_->create_room();
+            if(code == ActivityManager::CLIENT_ERROR)
+                body = page_manager_->get_profile_page();
+
+            else if(code == ActivityManager::SERVER_ERROR)
+                body = page_manager_->get_server_err();
+
+            else {
+                return redirect("/profile");
+            }
+        }
+        else if(context_["path"] == "join") {
+            auto code = activity_manager_->add_room();
+            if(code == ActivityManager::CLIENT_ERROR)
+                body = page_manager_->get_profile_page();
+
+            else if(code == ActivityManager::SERVER_ERROR)
+                body = page_manager_->get_server_err();
+
+            else {
+                return redirect("/profile");
             }
         }
         else if(context_["path"] == "room") {
@@ -91,6 +115,9 @@ std::string Handler::get_response() {
 
         } else if(context_["path"] == "room") {
             body = page_manager_->get_room_page(context_["room"]);
+
+            if (body.empty())
+                return redirect("/profile");
 
         } else if(context_["path"] == "roomtag") {
             // TODO запись id комнаты в context_
@@ -195,7 +222,7 @@ void Handler::set_user_right() {
 void Handler::set_customer_right(std::shared_ptr<DBUser>& user) {
     BOOST_LOG_TRIVIAL(info) << "Start customer session";
 
-    ContextMap ctx = {}; // TODO заполнить контекст
+    ContextMap ctx = context_; // TODO заполнить контекст
     page_manager_ = std::make_unique<PageCustomer>(user);
     activity_manager_ = std::make_unique<ActivityCustomer>(ctx, std::move(user));
 }

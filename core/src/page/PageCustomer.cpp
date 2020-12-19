@@ -49,11 +49,25 @@ std::string PageCustomer::get_room_page(std::string id) {
     user.username = user_->nick_name;
     user.avatarUrl = "/34534534";  // TODO берем из юзера эту информацию, когда будет в бд это
 
-    int id_room = boost::lexical_cast<int>(id);
+    int id_room = 0;
+    try {
+        id_room = boost::lexical_cast<int>(id);
+    }
+    catch (boost::bad_lexical_cast) {
+        return "";
+    }
     ErrorCodes er;
 
     // запись room в context
     auto db_room = DBRoom::get(id_room, er);
+
+    // TODO другой обработчик
+    if (!db_room) {
+        if (er == DB_ENTITY_NOT_FOUND)
+            return "";
+        else
+            return "";
+    }
     Context::Room room;
     room.title = db_room->room_name;
     room.url = std::to_string(db_room->get_id());
