@@ -42,12 +42,10 @@ std::string PageCustomer::get_profile_page() {
 std::string PageCustomer::get_room_page(std::string id) {
     string page = "room";
     Context context(page);
-//    write_user(context);
 
     // запись user в context
     Context::User user;
-    user.username = user_->nick_name;
-    user.avatarUrl = "/34534534";  // TODO берем из юзера эту информацию, когда будет в бд это
+    write_user(user);
 
     int id_room = 0;
     try {
@@ -69,8 +67,7 @@ std::string PageCustomer::get_room_page(std::string id) {
             return "";
     }
     Context::Room room;
-    room.title = db_room->room_name;
-    room.url = std::to_string(db_room->get_id());
+    write_room(room, db_room);
 
     // запись tags в context
     auto db_tags = db_room->get_tags(er);
@@ -80,19 +77,7 @@ std::string PageCustomer::get_room_page(std::string id) {
     // запись posts в context
     auto db_posts = db_room->get_posts(er);
     std::vector<Context::Post> posts;
-    for (int i = 0; i < db_posts->size(); ++i) {
-        auto db_post = db_posts.value()[i];
-        Context::Post post;
-        post.title = db_post.title;
-        auto db_tags_post = db_post.get_tags(er).value();
-        PageCustomer::set_tags(db_tags_post, post.tags);
-        post.text = db_post.text;
-        post.author = db_post.get_author(er)->nick_name;
-        // TODO fileUrls
-        posts.push_back(std::move(post));
-    }
-
-//    write_room(context, *DBRoom::get(id_room, er));
+    PageCustomer::set_posts(db_posts.value(), posts);
 
     context.setMainContext(user, room, tags, posts);
     TemplateWrapper view(context);
@@ -105,6 +90,21 @@ void PageCustomer::set_tags(std::vector<DBTag>& input, std::vector<Context::Tag>
         tag.tag = db_tag.getName();
         tag.url = std::to_string(db_tag.get_id());
         output.push_back(std::move(tag));
+    }
+}
+
+void PageCustomer::set_posts(std::vector<DBPost>& input, std::vector<Context::Post>& output) {
+    for (auto& db_post : input) {
+        ErrorCodes er;
+
+        Context::Post post;
+        post.title = db_post.title;
+        auto db_tags = db_post.get_tags(er).value(); // TODO обработать ошибку
+        PageCustomer::set_tags(db_tags, post.tags);
+        post.text = db_post.text;
+        post.author = db_post.get_author(er)->nick_name;
+        // TODO fileUrls
+        output.push_back(std::move(post));
     }
 }
 
@@ -126,8 +126,62 @@ std::string PageCustomer::get_login_page() {
     return get_profile_page();
 }
 
-std::string PageCustomer::get_info_tags(std::string id_room, std::unique_ptr<std::vector<std::string>> tags) {
-    return "fdfdsgdsfgdsfgdfgdsfgsdfgdfglgiggglkdfsj";
+std::string PageCustomer::get_info_tags(std::string id, std::unique_ptr<std::vector<std::string>> tags) {
+    string page = "roomtag";
+    Context context(page);
+
+    // запись user в context
+    Context::User user;
+    write_user(user);
+
+    int id_room = 0;
+    try {
+        id_room = boost::lexical_cast<int>(id);
+    }
+    catch (boost::bad_lexical_cast) {
+        return "";
+    }
+    ErrorCodes er;
+
+    // запись room в context
+    auto db_room = DBRoom::get(id_room, er);
+
+    // TODO другой обработчик
+    if (!db_room) {
+        if (er == DB_ENTITY_NOT_FOUND)
+            return "";
+        else
+            return "";
+    }
+    Context::Room room;
+    write_room(room, db_room);
+
+    // запись tags в context
+    auto db_tags = db_room->get_tags(er);
+    std::vector<Context::Tag> new_tags;
+    PageCustomer::set_tags(db_tags.value(), new_tags);
+
+    // запись posts в context
+    auto db_posts = DBPost::get(*tags, id_room, er);
+    std::vector<Context::Post> posts;
+    PageCustomer::set_posts(db_posts.value(), posts);
+
+    int id_tag = 0;
+    try {
+        id_tag = boost::lexical_cast<int>((*tags)[0]);
+    }
+    catch (boost::bad_lexical_cast) {
+        return "";
+    }
+
+    shared_ptr<DBTag> tag_cur_db = DBTag::get(id_tag, er);
+    Context::Tag tag_cur;
+    tag_cur.tag = tag_cur_db->getName();
+    tag_cur.url = std::to_string(tag_cur_db->get_id());
+
+    context.setTagContext(user, room, new_tags, posts, tag_cur);
+    TemplateWrapper view(context);
+    return view.getHTML();
 }
 
 std::string PageCustomer::get_not_found() {
@@ -137,14 +191,14 @@ std::string PageCustomer::get_not_found() {
     return view.getHTML();
 }
 
-void PageCustomer::write_user(Context &ctx) {
-    ctx.user.username = user_->nick_name;
-    ctx.user.avatarUrl = "/34534534";  // TODO берем из юзера эту информацию, когда будет в бд это
+void PageCustomer::write_user(Context::User &user) {
+    user.username = user_->nick_name;
+    user.avatarUrl = "/34534534";  // TODO берем из юзера эту информацию, когда будет в бд это
 }
 
-void PageCustomer::write_room(Context &ctx, const DBRoom &room) {
-//    ctx["room_name"] = room.room_name;
-    /// Добавление всей информации комнаты
+void PageCustomer::write_room(Context::Room &room, const std::shared_ptr<DBRoom> &db_room) {
+    room.title = db_room->room_name;
+    room.url = std::to_string(db_room->get_id());
 }
 
 void PageCustomer::write_info_tag(Context &ctx, const DBRoom &room, std::string tag) {

@@ -45,7 +45,7 @@ std::string Handler::get_response() {
                 body = page_manager_->get_signup_page();
 
             else if(code == ActivityManager::SERVER_ERROR)
-                body = page_manager_->get_server_err();
+                body = page_manager_->get_server_err(); //// лучше редиректом
 
             else {
                 context_["new_session"] = session;
@@ -99,7 +99,7 @@ std::string Handler::get_response() {
                 return page_manager_->get_server_err();
 
             else
-                return redirect("ROOM/" + context_["id_room"]); // TODO не понятно в каком формате отдавать ссылку
+                return redirect("/room/" + context_["id_room"]);
         }
 
     }
@@ -125,7 +125,7 @@ std::string Handler::get_response() {
             tags->push_back(context_["tag"]);
 
             // boost::lexical_cast<int>(context_["id_room"])
-            body = page_manager_->get_info_tags(context_["id_room"], std::move(tags));
+            body = page_manager_->get_info_tags(context_["roomID"], std::move(tags));
         } else {
             body = page_manager_->get_not_found();
             context_response["Code"] =  "404 Not Found";
@@ -188,8 +188,6 @@ void Handler::start_session() {
 // проверяем пришедшую сессию, не протухла ли
 Handler::Status Handler::check_session(std::shared_ptr<DBSession>& session) {
 
-    // return OK;  /// временное решение
-
     auto start_time = session->getCreationDate();
     // TODO поставить правильное время
     string posix_tz_def("PST-5PDT01:00:00,M4.1.0/02:00:00,M10.1.0/02:00:00");
@@ -206,7 +204,7 @@ string Handler::redirect(const string& page) {
     BOOST_LOG_TRIVIAL(info) << "redirect";
 
     ContextMap ctx = {{"Code",     "302 Found"},
-                      {"Location", page}}; // TODO заполнение контекста
+                      {"Location", page}};
 
     set_header_data(ctx);
     return HttpResponse::get_response(ctx);

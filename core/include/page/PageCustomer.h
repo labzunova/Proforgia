@@ -38,11 +38,12 @@ public:
     std::string get_server_err() override;
 
 private:
-    void write_user(Context& ctx);
-    void write_room(Context& ctx, const DBRoom& room);
+    void write_user(Context::User &user);
+    void write_room(Context::Room &room, const std::shared_ptr<DBRoom> &db_room);
     void write_info_tag(Context& ctx, const DBRoom& room, std::string tag);
 
     static void set_tags(std::vector<DBTag>& input, std::vector<Context::Tag>& output);
+    static void set_posts(std::vector<DBPost>& input, std::vector<Context::Post>& output);
 
 private:
     std::shared_ptr<DBUser> user_;
