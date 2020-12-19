@@ -26,22 +26,25 @@ ActivityManager::Status ActivityUser::signUp(std::string& session) {
 
     std::string login = context_["login"];
     std::string email = context_["mail"];
+
+    /// временное решение
     context_["password"] = "xxxx";
     BOOST_LOG_TRIVIAL(debug) << std::to_string(context_["password"].size());
-//    std::string password = SHA(context_["password"]);
+//    std::string password = SHA(context_["password"]);  // TODO сделать чтобы работало корректно
     std::string password = context_["password"]; // временное
     typename DBUser::User user(login, email, password);
-    BOOST_LOG_TRIVIAL(debug) << password;
+    BOOST_LOG_TRIVIAL(debug) << "Password: " + password;
 
     ErrorCodes er;
-    bool ex = DBUser::add(user, er); // TODO проверка на то прошло ли сохранение, вернуться когда будет бд
+    bool ex = DBUser::add(user, er);
 
-    assert(ex == true);
+    assert(ex == true);  /// временно, надо будет поменять на неблокирующие проверки
 
-    int id = 0; /// временное решение
+    auto db_user = DBUser::get(login, er); // TODO проверка ошибок
+    int id_user = db_user->get_id(); // TODO спросить у вани как получить id
 
     session = create_session();
-    save_session(id, session);
+    save_session(id_user, session);
     return OK;
 }
 
@@ -50,19 +53,27 @@ ActivityManager::Status ActivityUser::login(std::string& session) {
         return CLIENT_ERROR;
 
     std::string login = context_["login"];
-    std::string password = SHA(context_["password"]);
+
+    /// временное решение
+    context_["password"] = "xxxx";
+    std::string password = context_["password"];
+//    std::string password = SHA(context_["password"]);
     ErrorCodes er;
     auto user = DBUser::get(login, er); // TODO проверка на то пришел ли User
     if(user->password != password)
         return CLIENT_ERROR;
 
-    //session = create_session(user.id);
+    int id_user = user->get_id();
+
+    session = create_session();
+    save_session(id_user, session);
     return OK;
 }
 
 ActivityUser::ActivityUser(ContextMap &context) : ActivityManager(context) {
 }
 
+// валидация при регистрации
 bool ActivityUser::validate_signUp() {
     // TODO добавить еще разные проверки
     auto end = context_.end();
@@ -75,9 +86,9 @@ bool ActivityUser::validate_signUp() {
     return true;
 }
 
-// создание случайных байт для сессии
+// создание случайных символов для сессии
 string ActivityUser::create_session() {
-    const int size_session = 40;
+    const int size_session = 40; // длина строки сессии
 
     srand( time(0) );
 
@@ -95,6 +106,7 @@ string ActivityUser::create_session() {
     return str;
 }
 
+// валидация при входе
 bool ActivityUser::validate_signIn() {
     // TODO добавить еще разные проверки
     auto end = context_.end();
@@ -106,9 +118,10 @@ bool ActivityUser::validate_signIn() {
     return true;
 }
 
-// TODO вернуться когда будет готов интерфейс сессии
 // сохранение в базу данных сессии
 void ActivityUser::save_session(int& id_user, std::string& str_session) {
-//    typename DBSession::Session session(id, str_session);
-//    DBSession::add(session);
+    typename DBSession::Session session(str_session, id_user);
+
+    ErrorCodes er; // TODO проверка ошибок
+    DBSession::add(session, er);
 }

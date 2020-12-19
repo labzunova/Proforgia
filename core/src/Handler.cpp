@@ -128,7 +128,7 @@ void Handler::start_session() {
 
 
     /// временное решение
-    set_user_right();
+//    set_user_right();
 
     /// записать user тоже временное решение
 //    std::shared_ptr<DBUser> user = std::make_shared<DBUser>();
@@ -136,15 +136,21 @@ void Handler::start_session() {
 //    activity_manager_ = std::make_unique<ActivityCustomer>(ctx, std::move(user));
 
     /// вернуться когда будет готов интерфейс сессии
-    if(context_.find("session") == context_.end()) {
+    if(context_.find("session") == context_.end() || context_["session"].empty()) {
         set_user_right();
         return;
     }
 
-    // DBSession session = DBSession::get(context_["session"]); /////// через 5 минут исправят
+    ErrorCodes er;
+    auto session = DBSession::get(context_["session"], er);
+
+    if (!session) {
+        set_user_right();
+        return;
+    }
 
     if (check_session(session) == Handler::OK) {
-        std::shared_ptr<DBUser> user = DBUser::get(session.get_user());
+        std::shared_ptr<DBUser> user = session->get_user(er);
         set_customer_right(user);
     } else {
         set_user_right();
@@ -152,14 +158,16 @@ void Handler::start_session() {
 }
 
 
-/// вернуться сюда, когда ваня доделает интерфейс сессии
 // проверяем пришедшую сессию, не протухла ли
-Handler::Status Handler::check_session(DBSession& session) {
+Handler::Status Handler::check_session(std::shared_ptr<DBSession>& session) {
 
-    return OK;  /// временное решение
+    // return OK;  /// временное решение
 
-    auto start_time = session.getCreationDate();
-    local_date_time today = second_clock::local_time(); // TODO подумать над временем часового пояса
+    auto start_time = session->getCreationDate();
+    // TODO поставить правильное время
+    string posix_tz_def("PST-5PDT01:00:00,M4.1.0/02:00:00,M10.1.0/02:00:00");
+    local_date_time today(second_clock::local_time(),
+                                time_zone_ptr(new posix_time_zone(posix_tz_def)));
     if(today > start_time + LIVE_TIME)
          // TODO удаление ссесии
         return Rotten;

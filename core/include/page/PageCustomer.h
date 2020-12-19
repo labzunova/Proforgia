@@ -42,6 +42,8 @@ private:
     void write_room(Context& ctx, const DBRoom& room);
     void write_info_tag(Context& ctx, const DBRoom& room, std::string tag);
 
+    static void set_tags(std::vector<DBTag>& input, std::vector<Context::Tag>& output);
+
 private:
     std::shared_ptr<DBUser> user_;
 };
