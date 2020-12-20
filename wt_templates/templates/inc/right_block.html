@@ -1,8 +1,18 @@
-
-<h2 class="best-members">Tags</h2>
-<ul class="list-unstyled">
-    {% block right_block.tags %}
-        <a href="{{ tag.url }}"><li>{{ tag }}</li></a>
-    {% endblock %}
-</ul>
+<div style="text-align: center; margin-bottom: 64px">
+    <form method="get" action="{{ room_src }}/add">
+        <button type="submit" class="btn btn-outline-dark btn-lg">Add post</button>
+    </form>
+</div>
+<div class="card">
+    <div class="card-body row">
+        <form method="get" action="profile">
+            <button type="submit" class="btn btn-outline-dark">Choose another room</button>
+        </form>
+    </div>
+    <div class="card-body row">
+        <form method="get" action="exit">
+            <button type="submit" class="btn btn-outline-danger">Leave this room</button>
+        </form>
+    </div>
+</div>
 
