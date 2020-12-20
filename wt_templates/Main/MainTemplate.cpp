@@ -32,10 +32,10 @@ std::string& MainTemplate::getHTML() {
         block_posts[i].set("post.author", context.posts[i].author);
         block_posts[i].set("post.text", context.posts[i].text);
         auto& block_files = block_posts[i].block("post.files");
-        block_files.repeat(context.posts[i].fileUrls.size());
-        for (int j = 0; j < context.posts[i].fileUrls.size(); j++) {
-            block_files[j].set("file.url", context.posts[i].fileUrls[j]);
-            block_files[j].set("file.name", context.posts[i].fileUrls[j]);
+        block_files.repeat(context.posts[i].files.size());
+        for (int j = 0; j < context.posts[i].files.size(); j++) {
+            block_files[j].set("file.url", context.posts[i].files[j].url);
+            block_files[j].set("file.name", context.posts[i].files[j].filename);
         }
 
         auto& block_tags = block_posts[i].block("post.tags");

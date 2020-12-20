@@ -1,4 +1,4 @@
-<form>
+<form method="get" action="add/">
     <button type="submit" class="btn btn-primary btn-dark">Add post</button>
 </form>
 <h2 class="best-members">Tags</h2>
@@ -7,3 +7,7 @@
         <a href="{{ tag.url }}"><li>{{ tag }}</li></a>
     {% endblock %}
 </ul>
+
+<form method="get" action="exit/">
+    <button type="submit" class="btn btn-outline-danger">Exit this room</button>
+</form>

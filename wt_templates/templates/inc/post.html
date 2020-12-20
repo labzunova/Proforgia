@@ -6,12 +6,13 @@
             </div>
             <div class="row">
                 {{ post.text }}
-                {% block post.files %}
+            </div>
+            {% block post.files %}
                 <div class="row">
                     <a href="{{ file.url }}">{{ file.name }}</a>
                 </div>
-                {% endblock %}
-            </div>
+            {% endblock %}
+
             <div class="row">
                 {% block post.tags %}
                     <div class="col tag">

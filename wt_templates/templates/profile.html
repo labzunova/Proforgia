@@ -11,8 +11,13 @@
             </div>
             {% block rooms %}
                 <p><a href="room/{{ room_src }}">{{ room_name }}</a></p>
+                {% block remove_room %}
+                    <p><a href="delete_room/{{ room_src }}">Remove {{ room_name }}</a></p>
+                {% endblock %}
             {% endblock %}
         </div>
+
+
         <div class="col-6">
             <div class="row">
                 <form class="body-page col-12" method="POST" action="create">

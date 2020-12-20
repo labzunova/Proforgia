@@ -13,8 +13,9 @@ struct Context {
     struct Room {
         std::string title;
         std::string url;
+        bool isAdmin;
 
-        Room(std::string& title_, std::string& url_) : title(title_), url(url_) {}
+        Room(std::string& title_, std::string& url_, bool& isAdmin_) : title(title_), url(url_), isAdmin(isAdmin_)  {}
 
         Room() {}
     };
@@ -28,19 +29,28 @@ struct Context {
         Tag() {}
     };
 
+    struct File {
+        std::string filename;
+        std::string url;
+
+        File(std::string& filename_, std::string& url_) : filename(filename_), url(url_) {}
+
+        File() {}
+    };
+
     struct Post {
         std::string title;
         std::string author;
         std::vector<Tag> tags;
         std::string text;
-        std::vector<std::string> fileUrls;
+        std::vector<File> files;
 
         Post(std::string& title_,
              std::string& author_,
              std::vector<Tag>& tags_,
              std::string& text_,
-             std::vector<std::string>& fileUrls_) : title(title_), author(author_), tags(tags_), text(text_),
-                                                    fileUrls(fileUrls_) {}
+             std::vector<File>& files_) : title(title_), author(author_), tags(tags_), text(text_),
+                                                    files(files_) {}
 
         Post() {}
     };

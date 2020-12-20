@@ -21,6 +21,12 @@ std::string& ProfileTemplate::getHTML() {
     for (int i = 0; i < context.rooms.size(); i++) {
         roomsBlock[i].set("room_name", context.rooms[i].title);
         roomsBlock[i].set("room_src", context.rooms[i].url);
+        if (!context.rooms[i].isAdmin) {
+            roomsBlock[i].block("remove_room").disable();
+        } else {
+            roomsBlock[i].block("remove_room").set("room_name", context.rooms[i].title);
+            roomsBlock[i].block("remove_room").set("room_src", context.rooms[i].url);
+        }
     }
 
     std::stringstream os;
