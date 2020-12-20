@@ -12,17 +12,22 @@ PageCustomer::PageCustomer(std::shared_ptr<DBUser>& user) {
 }
 
 
-std::string PageCustomer::get_profile_page() {
+PageManager::Status PageCustomer::get_profile_page(std::string& body) {
     std::string page = "profile";
     Context context(page);
 
     // запись user в context
     Context::User user;
-    user.username = user_->nick_name;
-    user.avatarUrl = "/34534534";  // TODO берем из юзера эту информацию, когда будет в бд это
+    write_user(user);
 
+    // берем все комнаты из бд
     ErrorCodes er;
     auto db_rooms = user_->get_rooms(er);
+    if (!db_rooms) {
+        return SERVER_ERROR;
+    }
+
+    // room bd -> room context
     vector<Context::Room> rooms;
     for (int i = 0; i < db_rooms->size(); ++i) {
         auto db_room = db_rooms.value()[i].first;
@@ -35,11 +40,12 @@ std::string PageCustomer::get_profile_page() {
     context.setProfileContext(user, rooms);
 
     TemplateWrapper view(context);
-    return view.getHTML();
+    body = view.getHTML();
+    return OK;
 }
 
 // TODO обработака ErrorCodes
-std::string PageCustomer::get_room_page(std::string id) {
+PageManager::Status PageCustomer::get_room_page(std::string& body, std::string id) {
     string page = "main";
     Context context(page);
 
@@ -52,37 +58,44 @@ std::string PageCustomer::get_room_page(std::string id) {
         id_room = boost::lexical_cast<int>(id);
     }
     catch (boost::bad_lexical_cast) {
-        return "";
+        return CLIENT_ERROR_VALID;
     }
     ErrorCodes er;
 
     // запись room в context
     auto db_room = DBRoom::get(id_room, er);
-
-    // TODO другой обработчик
     if (!db_room) {
         if (er == DB_ENTITY_NOT_FOUND)
-            return "";
+            return CLIENT_ERROR_VALID;
         else
-            return "";
+            return SERVER_ERROR;
     }
+
     Context::Room room;
     write_room(room, db_room);
 
     // запись tags в context
     auto db_tags = db_room->get_tags(er);
+    if (!db_tags)
+        return SERVER_ERROR;
+
     std::vector<Context::Tag> tags;
     PageCustomer::set_tags(db_tags.value(), tags);
 
     // запись posts в context
     auto db_posts = db_room->get_posts(er);
+    if (!db_posts)
+        return SERVER_ERROR;
+
     std::vector<Context::Post> posts;
     PageCustomer::set_posts(db_posts.value(), posts);
 
     context.setMainContext(user, room, tags, posts);
     TemplateWrapper view(context);
-    return view.getHTML();
+    body = view.getHTML();
+    return OK;
 }
+
 
 void PageCustomer::set_tags(std::vector<DBTag>& input, std::vector<Context::Tag>& output) {
     for (const auto& db_tag : input) {
@@ -109,24 +122,24 @@ void PageCustomer::set_posts(std::vector<DBPost>& input, std::vector<Context::Po
 }
 
 // TODO пока не известно будет ли это в проекте
-std::string PageCustomer::get_favorite_page() {
-    return get_profile_page();
+PageManager::Status PageCustomer::get_favorite_page(std::string& body) {
+    return CLIENT_ERROR_VALID;
 }
 
 // TODO пока не известно будет ли это в проекте
-std::string PageCustomer::get_deadline_page() {
-    return get_profile_page();
+PageManager::Status PageCustomer::get_deadline_page(std::string& body) {
+    return CLIENT_ERROR_VALID;
 }
 
-std::string PageCustomer::get_signup_page() {
-    return get_profile_page();
+PageManager::Status PageCustomer::get_signup_page(std::string& body) {
+    return CLIENT_ERROR_RIGHT;
 }
 
-std::string PageCustomer::get_login_page() {
-    return get_profile_page();
+PageManager::Status PageCustomer::get_login_page(std::string& body) {
+    return CLIENT_ERROR_RIGHT;
 }
 
-std::string PageCustomer::get_info_tags(std::string id, std::unique_ptr<std::vector<std::string>> tags) {
+PageManager::Status PageCustomer::get_info_tags(std::string& body, std::string id, std::unique_ptr<std::vector<std::string>> tags) {
     string page = "tag";
     Context context(page);
 
@@ -139,30 +152,35 @@ std::string PageCustomer::get_info_tags(std::string id, std::unique_ptr<std::vec
         id_room = boost::lexical_cast<int>(id);
     }
     catch (boost::bad_lexical_cast) {
-        return "";
+        return CLIENT_ERROR_VALID;
     }
     ErrorCodes er;
 
     // запись room в context
     auto db_room = DBRoom::get(id_room, er);
-
-    // TODO другой обработчик
     if (!db_room) {
         if (er == DB_ENTITY_NOT_FOUND)
-            return "";
+            return CLIENT_ERROR_VALID;
         else
-            return "";
+            return SERVER_ERROR;
     }
+
     Context::Room room;
     write_room(room, db_room);
 
     // запись tags в context
     auto db_tags = db_room->get_tags(er);
+    if (!db_tags)
+        return SERVER_ERROR;
+
     std::vector<Context::Tag> new_tags;
     PageCustomer::set_tags(db_tags.value(), new_tags);
 
     // запись posts в context
     auto db_posts = DBPost::get(*tags, id_room, er);
+    if (!db_posts)
+        return SERVER_ERROR;
+
     std::vector<Context::Post> posts;
     PageCustomer::set_posts(db_posts.value(), posts);
 
@@ -171,24 +189,33 @@ std::string PageCustomer::get_info_tags(std::string id, std::unique_ptr<std::vec
         id_tag = boost::lexical_cast<int>((*tags)[0]);
     }
     catch (boost::bad_lexical_cast) {
-        return "";
+        return CLIENT_ERROR_VALID;
     }
 
     shared_ptr<DBTag> tag_cur_db = DBTag::get(id_tag, er);
+    if (!tag_cur_db) {
+        if (er == DB_ENTITY_NOT_FOUND)
+            return CLIENT_ERROR_VALID;
+        else
+            return SERVER_ERROR;
+    }
+
     Context::Tag tag_cur;
     tag_cur.tag = tag_cur_db->getName();
     tag_cur.url = std::to_string(tag_cur_db->get_id());
 
     context.setTagContext(user, room, new_tags, posts, tag_cur);
     TemplateWrapper view(context);
-    return view.getHTML();
+    body = view.getHTML();
+    return OK;
 }
 
-std::string PageCustomer::get_not_found() {
+PageManager::Status PageCustomer::get_not_found(std::string& body) {
     std::string page = "not_found";
     Context context(page);
     TemplateWrapper view(context);
-    return view.getHTML();
+    body = view.getHTML();
+    return OK;
 }
 
 void PageCustomer::write_user(Context::User &user) {
@@ -205,9 +232,10 @@ void PageCustomer::write_info_tag(Context &ctx, const DBRoom &room, std::string 
 
 }
 
-std::string PageCustomer::get_server_err() {
+PageManager::Status PageCustomer::get_server_err(std::string& body) {
     std::string page = "500";
     Context context(page);
     TemplateWrapper view(context);
-    return view.getHTML();
+    body = view.getHTML();
+    return OK;
 }

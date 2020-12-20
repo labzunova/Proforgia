@@ -19,8 +19,10 @@
 #define BASE_LOGGED_BLOCK_AVATAR "avatar_res"
 
 #define BASE_RIGHT_BLOCK "right_block.tags"
+#define BASE_RIGHT_BLOCK_ROOM "room_src"
 #define BASE_RIGHT_BLOCK_TAG_NAME "tag"
 #define BASE_RIGHT_BLOCK_TAG_SRC "tag.url"
+
 
 using namespace NL::Template;
 
