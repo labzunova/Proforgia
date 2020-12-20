@@ -46,7 +46,7 @@ const static string POST_request_signup = "POST /signup HTTP/1.1\r\n"
                                           "Connection: Keep-Alive\r\n\r\n"
                                           "login=name&mail=name@gmail.com&password=12345";
 
-const static string POST_request_addpost = "POST /rooms/room1 HTTP/1.1\r\n"
+const static string POST_request_addpost = "POST /room/room1 HTTP/1.1\r\n"
                                            "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
                                            "Host: www.example.com\r\n"
                                            "Content-Type: application/x-www-form-urlencoded\r\n"
@@ -246,7 +246,7 @@ TEST( full_parse_tests, POST_addpost ) // запрос на добавление
     string method = parser.parse_method();
     ASSERT_EQ( method, "POST" );
     string path = parser.parse_path();
-    ASSERT_EQ( "rooms/room1", path );
+    ASSERT_EQ( "room/room1", path );
     string room = parser.parse_room_properties( path ).first;
     ASSERT_EQ( "room1", room );
     unordered_map<string, string> data = parser.parse_body();
