@@ -17,10 +17,11 @@ Request_handler::Request_handler( const string &request )
     {
         room = path.erase( 0, path.find('/') + 1 );
         room = room.substr( room.find('/') + 1 );
-        room = room.substr( 0, room.size() - 1 );
+        if ( method == "GET" )
+            room = room.substr( 0, room.size() - 1 ); // из-за знака ? в конце пути
         path = "add";
     }
-    else if( path.find( "exit" ) )
+    else if( path.find( "exit" ) != -1 )
     {
         room = path.erase( 0, path.find('/') + 1 );
         room = room.substr( room.find('/') + 1 );
@@ -90,7 +91,7 @@ void Request_handler::create_map()
         {
             fill_POST_signup();
         }
-        if ( path.find( "room" ) != -1 ) // добавить файл с указанным тегом и вернуть ту же главную страницу
+        if ( path == "add" ) // добавить файл с указанным тегом и вернуть ту же главную страницу
         {
             fill_POST_room();
         }
