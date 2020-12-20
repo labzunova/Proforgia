@@ -4,9 +4,9 @@
             {% include ../wt_templates/templates/static/css/right_block.css %}
         </style>
 
-        <main role="main" class="d-flex justify-content-center container">
-            <div class="row container d-flex justify-content-between">
-                <div class="col-8">
+        <main role="main" class="d-flex justify-content-center container-fluid" >
+            <div class="row container-fluid d-flex justify-content-between" style="margin: 64px">
+                <div class="col-6">
                     <div class="row">
                         <h4>{{ main_title }}</h4>
                     </div>
@@ -17,24 +17,30 @@
                     </div>
                 </div>
 
-                <div class="col-2">
+                <div class="col-3">
                         {% include ../wt_templates/templates/inc/right_block.html %}
                 </div>
 
-                <div class="col-2">
+                <div class="col-3">
+                    <div style="text-align: center; margin-bottom: 64px">
+                        <form method="get" action="add/">
+                            <button type="submit" class="btn btn-outline-dark btn-lg">Add post</button>
+                        </form>
+                    </div>
                     <div class="card">
                         <div class="card-body row">
-                            <form method="get" action="profile/">
-                                <button type="submit" class="btn btn-primary btn-dark">Choose another room</button>
+                            <form method="get" action="profile">
+                                <button type="submit" class="btn btn-outline-dark">Choose another room</button>
                             </form>
                         </div>
                         <div class="card-body row">
-                            <form method="get" action="exit/">
+                            <form method="get" action="exit">
                                 <button type="submit" class="btn btn-outline-danger">Leave this room</button>
                             </form>
                         </div>
                     </div>
                 </div>
+
             </div>
         </main>
     </body>
