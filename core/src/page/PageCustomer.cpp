@@ -70,7 +70,6 @@ PageManager::Status PageCustomer::get_room_page(std::string& body, std::string i
         else
             return SERVER_ERROR;
     }
-
     Context::Room room;
     write_room(room, db_room);
 
@@ -121,6 +120,49 @@ void PageCustomer::set_posts(std::vector<DBPost>& input, std::vector<Context::Po
     }
 }
 
+PageManager::Status PageCustomer::get_add_content_page(std::string& body, std::string id) {
+    std::string page = "add";
+    Context context(page);
+
+    // запись user в context
+    Context::User user;
+    write_user(user);
+
+    int id_room = 0;
+    try {
+        id_room = boost::lexical_cast<int>(id);
+    }
+    catch (boost::bad_lexical_cast) {
+        return CLIENT_ERROR_VALID;
+    }
+    ErrorCodes er;
+
+    // запись room в context
+    auto db_room = DBRoom::get(id_room, er);
+    if (!db_room) {
+        if (er == DB_ENTITY_NOT_FOUND)
+            return CLIENT_ERROR_VALID;
+        else
+            return SERVER_ERROR;
+    }
+    Context::Room room;
+    write_room(room, db_room);
+
+    // запись tags в context
+    auto db_tags = db_room->get_tags(er);
+    if (!db_tags)
+        return SERVER_ERROR;
+
+    std::vector<Context::Tag> tags;
+    PageCustomer::set_tags(db_tags.value(), tags);
+
+    context.setAddContext(user, room, tags);
+
+    TemplateWrapper view(context);
+    body = view.getHTML();
+    return OK;
+}
+
 // TODO пока не известно будет ли это в проекте
 PageManager::Status PageCustomer::get_favorite_page(std::string& body) {
     return CLIENT_ERROR_VALID;
@@ -129,14 +171,6 @@ PageManager::Status PageCustomer::get_favorite_page(std::string& body) {
 // TODO пока не известно будет ли это в проекте
 PageManager::Status PageCustomer::get_deadline_page(std::string& body) {
     return CLIENT_ERROR_VALID;
-}
-
-PageManager::Status PageCustomer::get_signup_page(std::string& body) {
-    return CLIENT_ERROR_RIGHT;
-}
-
-PageManager::Status PageCustomer::get_login_page(std::string& body) {
-    return CLIENT_ERROR_RIGHT;
 }
 
 PageManager::Status PageCustomer::get_info_tags(std::string& body, std::string id, std::unique_ptr<std::vector<std::string>> tags) {
@@ -226,10 +260,6 @@ void PageCustomer::write_user(Context::User &user) {
 void PageCustomer::write_room(Context::Room &room, const std::shared_ptr<DBRoom> &db_room) {
     room.title = db_room->room_name;
     room.url = std::to_string(db_room->get_id());
-}
-
-void PageCustomer::write_info_tag(Context &ctx, const DBRoom &room, std::string tag) {
-
 }
 
 PageManager::Status PageCustomer::get_server_err(std::string& body) {

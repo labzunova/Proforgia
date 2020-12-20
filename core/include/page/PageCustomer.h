@@ -23,13 +23,11 @@ public:
 
     Status get_room_page(std::string& body, std::string id) override;
 
+    Status get_add_content_page(std::string& body, std::string id_room) override;
+
     Status get_favorite_page(std::string& body) override;
 
     Status get_deadline_page(std::string& body) override;
-
-    Status get_signup_page(std::string& body) override;
-
-    Status get_login_page(std::string& body) override;
 
     Status get_info_tags(std::string& body, std::string id_room, std::unique_ptr<std::vector<std::string>> tags) override;
 
@@ -40,7 +38,6 @@ public:
 private:
     void write_user(Context::User &user);
     void write_room(Context::Room &room, const std::shared_ptr<DBRoom> &db_room);
-    void write_info_tag(Context& ctx, const DBRoom& room, std::string tag);
 
     static void set_tags(std::vector<DBTag>& input, std::vector<Context::Tag>& output);
     static void set_posts(std::vector<DBPost>& input, std::vector<Context::Post>& output);

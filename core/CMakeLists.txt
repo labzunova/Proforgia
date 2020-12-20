@@ -22,6 +22,7 @@ set(INCLUDE
 set(SOURCE_FILES
         src/Worker.cpp
         src/Handler.cpp
+        src/page/PageManager.cpp
         src/page/PageCustomer.cpp
         src/page/PageUser.cpp
         src/activity/ActivityManager.cpp

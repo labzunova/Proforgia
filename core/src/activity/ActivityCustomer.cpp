@@ -19,7 +19,6 @@ ActivityManager::Status ActivityCustomer::exit() {
 }
 
 ActivityManager::Status ActivityCustomer::add_room() {
-    context_["roomID"] = "1"; //// заглушка
     if(context_.find("roomID") == context_.end())
         return CLIENT_ERROR;
     int id_room = boost::lexical_cast<int>(context_["roomID"]); /// возможно какой то другой индификатор который вводит пользователь
@@ -45,7 +44,6 @@ ActivityManager::Status ActivityCustomer::add_content() {
 }
 
 ActivityManager::Status ActivityCustomer::create_room() {
-    context_["title"] = "room1"; //// заглушка
     if(context_.find("title") == context_.end())
         return CLIENT_ERROR;
 
