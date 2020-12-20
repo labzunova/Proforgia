@@ -5,7 +5,7 @@ int main()
 {
     ErrorCodes error;
 
-    (*DBSession::get("dddsd", error)).get_user(error)->print();
+    (*DBSession::get("problematic", error)).get_user(error)->print();
 
     return 0;
 }
