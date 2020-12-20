@@ -18,10 +18,45 @@ ActivityManager::Status ActivityCustomer::exit() {
     return CLIENT_ERROR;
 }
 
+ActivityManager::Status ActivityCustomer::exit_room() {
+    if(context_.find("roomID") == context_.end())
+        return CLIENT_ERROR;
+
+    int id_room = 0;
+    try {
+        id_room = boost::lexical_cast<int>(context_["roomId"]);
+    }
+    catch (boost::bad_lexical_cast) {
+        return CLIENT_ERROR;
+    }
+
+    ErrorCodes er;
+    auto room = DBRoom::get(id_room, er);
+    if (!room) {
+        if (er == DB_ENTITY_NOT_FOUND)
+            return CLIENT_ERROR;
+        else
+            return SERVER_ERROR;
+    }
+
+    DBRoom::remove_user(id_room, user_->get_id(), er);
+//    if (er)   // TODO другая проверка на er
+//        return SERVER_ERROR;
+
+    return OK;
+}
+
 ActivityManager::Status ActivityCustomer::add_room() {
     if(context_.find("roomID") == context_.end())
         return CLIENT_ERROR;
-    int id_room = boost::lexical_cast<int>(context_["roomID"]); /// возможно какой то другой индификатор который вводит пользователь
+
+    int id_room = 0;
+    try {
+        id_room = boost::lexical_cast<int>(context_["roomID"]); /// возможно какой то другой индификатор который вводит пользователь
+    }
+    catch (boost::bad_lexical_cast) {
+        return CLIENT_ERROR;
+    }
     ErrorCodes er;
     auto room = DBRoom::get(id_room, er); // TODO проверка существует ли комната
     if (!room) {
@@ -46,12 +81,16 @@ ActivityManager::Status ActivityCustomer::add_content() {
 
     typename DBPost::Post post(id_room, user_->get_id(), context_["title"], context_["text"]);
 
-    // добавление в бд
+    // добавление в бд поста
     ErrorCodes er;
     bool valid = DBPost::add(post, er);
     if (!valid) {
         return SERVER_ERROR;
     }
+
+    // добавление tag в бд
+//    typename DBTag::Tag tag(context_["tag"], id_room);
+//    valid = DBTag::
 
     return OK;
 }
@@ -102,4 +141,5 @@ ActivityManager::Status ActivityCustomer::add_deadline() {
 ActivityCustomer::ActivityCustomer(ContextMap &context, shared_ptr<DBUser> user)
         : ActivityManager(context)
         , user_(user) {}
+
 

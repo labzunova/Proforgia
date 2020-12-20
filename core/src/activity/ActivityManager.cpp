@@ -39,3 +39,7 @@ ActivityManager::Status ActivityManager::add_favorite() {
 ActivityManager::Status ActivityManager::add_deadline() {
     return ActivityManager::CLIENT_ERROR;
 }
+
+ActivityManager::Status ActivityManager::exit_room() {
+    return ActivityManager::CLIENT_ERROR;
+}

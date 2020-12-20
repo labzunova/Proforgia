@@ -21,6 +21,8 @@ public:
 
     Status add_room() override;
 
+    Status exit_room() override;
+
     Status add_content() override;
 
     Status create_room() override;

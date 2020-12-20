@@ -74,7 +74,10 @@ struct Context {
         user = user_;
         currentRoom = currentRoom_;
         tags = tags_;
+//        urlfile = urlfile_;
     }
+
+    std::string urlfile;
 
     std::vector<Post> posts;
 
