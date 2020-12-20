@@ -3,7 +3,7 @@
     {% include ../wt_templates/templates/static/css/profile.css %}
 </style>
 
-<main role="main" class="d-flex justify-content-center container">
+<main role="main" class="d-flex justify-content-center container-fluid">
     <div class="row container d-flex justify-content-between">
         <div class="col-5">
             <div class="name-page col-12">
@@ -11,7 +11,7 @@
             </div>
             <hr>
             {% block rooms %}
-            <div class="card">
+            <div class="card" style="margin-top: 16px">
                 <div class="card-body row">
                 <p><a style="font-size: 20px" href="room/{{ room_src }}">{{ room_name }}</a></p>
                 {% block remove_room %}

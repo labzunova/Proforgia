@@ -4,8 +4,8 @@
     {% include ../wt_templates/templates/static/css/add_post.css %}
 </style>
 
-<main role="main" class="d-flex justify-content-center container">
-    <div class="row container d-flex justify-content-between">
+<main role="main" class="d-flex justify-content-center container-fluid" >
+    <div class="row container-fluid d-flex justify-content-between" style="margin: 64px">
         <div class="col-6">
             <div>
                 <form method="post" action="{{ add_post.room }}">
@@ -46,7 +46,8 @@
                 </form>
             </div>
         </div>
-        <div class="col-3">
+
+        <div class="col-3" style="border-right: 1px solid #ccc;">
             <h2 class="best-members">Tags</h2>
             <ul class="list-unstyled">
                 {% block right_block.tags %}
@@ -58,6 +59,7 @@
             {% include ../wt_templates/templates/inc/right_block.html %}
         </div>
     </div>
+
 </main>
 <footer class="d-flex container justify-content-center">
 

@@ -155,7 +155,7 @@ void Request_handler::fill_GET_exit()
     to_put_in_loop.emplace( "method", "GET" );
 //    to_put_in_loop.emplace( "path", path );
     path.erase( 0, path.find('/') + 1 );
-    to_put_in_loop.emplace( "roomID", path.substr( 0, path.size() - 1 ) ); // из-за ? в конце пути
+    to_put_in_loop.emplace( "roomID", room ); // из-за ? в конце пути
     to_put_in_loop.emplace( "path", "exit" );
     to_put_in_loop.emplace( "session", get_cookie("session" ) );
 }
@@ -201,6 +201,7 @@ void Request_handler::fill_POST_room()
     to_put_in_loop.emplace( "path", "add" );
     to_put_in_loop.emplace( "room", room );
     to_put_in_loop.emplace( "session", get_cookie("session" ) );
+    to_put_in_loop.emplace( "id_post", get_cookie("id_post" ) );
     to_put_in_loop.emplace("title", get_data( "title" ) );
     to_put_in_loop.emplace( "tag", get_data(  "tag" ) );
     to_put_in_loop.emplace( "text", get_data( "text" ) ); // text и fileurl не обязательно будут
