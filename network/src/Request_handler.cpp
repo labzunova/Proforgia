@@ -13,6 +13,13 @@ Request_handler::Request_handler( const string &request )
         room = parser.parse_room_to_delete( path );
         path = "delete_room";
     }
+    else if( path.find( "room/add/" ) != -1)
+    {
+        room = path.erase( 0, path.find('/') + 1 );
+        room = room.substr( room.find('/') + 1 );
+        room = room.substr( 0, room.size() - 1 );
+        path = "add";
+    }
     else if( path.find( "room" ) != -1 ) // если это запрос на какую-то комнату: выяснить, какую
     {
         std::pair<string, string> properties = parser.parse_room_properties( path );
@@ -56,6 +63,8 @@ void Request_handler::create_map()
             fill_GET_profile();
         else if ( path.find( "delete_room" ) != -1 )
             fill_GET_delete_room();
+        else if ( path == "add" )
+            fill_GET_room_adding();
         else if ( path.find("room" ) != -1 ) // тут может быть, к примеру, rooms/first
             fill_GET_room(); // случай, когда нужно получить какую-то комнату или комнату с выведенными по тегу данными
         else if ( path == "exit" )
@@ -122,6 +131,14 @@ void Request_handler::fill_GET_room()
     }
     else
         to_put_in_loop["path"] = "room";
+    to_put_in_loop.emplace( "session", get_cookie("session" ) );
+}
+
+void Request_handler::fill_GET_room_adding()
+{
+    to_put_in_loop.emplace( "method", "GET" );
+    to_put_in_loop.emplace( "room", room );
+    to_put_in_loop.emplace( "path", "add" );
     to_put_in_loop.emplace( "session", get_cookie("session" ) );
 }
 
