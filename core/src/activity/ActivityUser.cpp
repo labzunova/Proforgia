@@ -2,8 +2,6 @@
 // Created by sergei on 28.11.2020.
 //
 
-#define CRYPTOPP_ENABLE_NAMESPACE_WEAK 1
-
 #include "ActivityUser.h"
 #include <boost/log/trivial.hpp>
 #include <openssl/sha.h>
@@ -20,7 +18,7 @@ string SHA(string data)
 
     std::string hash_pas = std::string((char*)ab_digest);
     for (int i = 0; i < SHA_DIGEST_LENGTH - 1; ++i)
-        hash_pas[i] = abs(hash_pas[i]) % 25 + 97;
+        hash_pas[i] = abs(hash_pas[i]) % 93 + 33;
 
     return hash_pas;
 }
@@ -32,19 +30,23 @@ ActivityManager::Status ActivityUser::signUp(std::string& session) {
     std::string login = context_["login"];
     std::string email = context_["mail"];
 
+    ErrorCodes er;
+    if (DBUser::get(login, er))
+        return CLIENT_ERROR;
+
+
     BOOST_LOG_TRIVIAL(debug) << std::to_string(context_["password"].size());
-    std::string password = SHA(context_["password"]);  // TODO сделать чтобы работало корректно
-//    std::string password = context_["password"]; // временное
+    std::string password = SHA(context_["password"]);
     typename DBUser::User user(login, email, password);
     BOOST_LOG_TRIVIAL(debug) << "Password: " + password;
 
-    ErrorCodes er;
     bool ex = DBUser::add(user, er);
 
-    assert(ex == true);  /// временно, надо будет поменять на неблокирующие проверки
+    if (!ex)
+        return SERVER_ERROR;
 
-    auto db_user = DBUser::get(login, er); // TODO проверка ошибок
-    int id_user = db_user->get_id(); // TODO спросить у вани как получить id
+    auto db_user = DBUser::get(login, er);
+    int id_user = db_user->get_id(); // TODO как то по другому получить id
 
     session = create_session();
     save_session(id_user, session);
@@ -57,10 +59,9 @@ ActivityManager::Status ActivityUser::login(std::string& session) {
 
     std::string login = context_["login"];
 
-//    std::string password = context_["password"];
     std::string password = SHA(context_["password"]);
     ErrorCodes er;
-    auto user = DBUser::get(login, er); // TODO проверка на то пришел ли User
+    auto user = DBUser::get(login, er);
     if (!user) {
         if (er == DB_ENTITY_NOT_FOUND)
             return CLIENT_ERROR;
@@ -82,12 +83,18 @@ ActivityUser::ActivityUser(ContextMap &context) : ActivityManager(context) {
 
 // валидация при регистрации
 bool ActivityUser::validate_signUp() {
-    // TODO добавить еще разные проверки
     auto end = context_.end();
     if((context_.find("login") == end) ||
         (context_.find("password") == end) ||
         (context_.find("mail") == end))
 
+        return false;
+
+    if(context_["password"].size() < 4) // проверка на длину пароля
+        return false;
+
+    auto mail = context_["mail"];
+    if(mail.find('@') == std::string::npos)
         return false;
 
     return true;
@@ -115,7 +122,6 @@ string ActivityUser::create_session() {
 
 // валидация при входе
 bool ActivityUser::validate_signIn() {
-    // TODO добавить еще разные проверки
     auto end = context_.end();
     if((context_.find("login") == end) ||
        (context_.find("password") == end))
@@ -129,6 +135,6 @@ bool ActivityUser::validate_signIn() {
 void ActivityUser::save_session(int& id_user, std::string& str_session) {
     typename DBSession::Session session(str_session, id_user);
 
-    ErrorCodes er; // TODO проверка ошибок
+    ErrorCodes er;
     DBSession::add(session, er);
 }

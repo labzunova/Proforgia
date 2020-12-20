@@ -93,8 +93,8 @@ std::string Handler::get_response() {
 
     }
     else {
-//        if (context_["path"].empty())
-//            return redirect("/profile");
+        if (context_["path"].empty())
+            return redirect("/profile");
 
         if(context_["path"] == "profile") {
             auto status = page_manager_->get_profile_page(body);
