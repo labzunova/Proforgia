@@ -49,9 +49,12 @@ std::shared_ptr<PGconn> PostgreDBWrapper::get_connection() const {
 // TODO: переделать, чтобы работала для всех форматов с зоной через нахождение подстроки +/- например
 // !!! работает только для формата "2020-12-08 22:39:52.074377+03" (дефолтный формат timestamp with timezone в Postgres)
 // для остальных форматов в БД буст будет кидать эксепшен,
-// поэтому хранить только автоматически созданный timestamp или строго в это формате
+// поэтому хранить только автоматически созданный timestamp или строго в этом формате или мне надо написать нормальную функцию парсировки временной зоны :)
 local_date_time parse_timestamp_to_local_date_time(string& str) {
-    ptime pt(boost::posix_time::time_from_string(str));
+    string ptime_str = str;
+    for (int i = 3; i > 0; i--)
+        ptime_str.pop_back();
+    ptime pt(boost::posix_time::time_from_string(ptime_str));
     string timezone_str;
     for (int i = 2; i > 0; i--)
         timezone_str.push_back(str[str.size() - i]);
