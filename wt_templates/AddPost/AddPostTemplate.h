@@ -5,6 +5,7 @@
 #include "BaseTemplate.h"
 
 #define ADD_POST_WAY "../wt_templates/templates/add_post.html"
+#define ADD_POST_ROOM "add_post.room"
 
 class AddPostTemplate : public BaseTemplate {
 public:

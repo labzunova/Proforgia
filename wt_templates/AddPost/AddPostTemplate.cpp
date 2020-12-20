@@ -17,6 +17,8 @@ std::string & AddPostTemplate::getHTML() {
     //---------------right  block--------------------
     setRightBlock(temp);
 
+    temp.set(ADD_POST_ROOM, context.currentRoom.url);
+
     std::stringstream os;
     temp.render(os);
     addPostHTML = os.str();
