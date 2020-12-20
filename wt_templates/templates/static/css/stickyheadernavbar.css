@@ -3,6 +3,26 @@ main > .container {
   padding: 100px 12px 0;
 }
 
+*{
+  font-family: "Helvetica";
+}
+
+.navbar-default {
+  color: #cbeef2;
+  background-color: #cbeef2;
+  border-color: #4FC3F7;
+}
+
+.profile_box{
+  color: #212121;
+  text-align: center;
+}
+
+.navbar-brand{
+  font-size: 32px;
+  color: #212121;
+}
+
 .name-page {
   margin-bottom: 32px;
 }

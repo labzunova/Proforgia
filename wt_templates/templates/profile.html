@@ -7,7 +7,7 @@
     <div class="row container d-flex justify-content-between">
         <div class="col-6">
             <div class="name-page col-12">
-                <h4>Choose Rooms</h4>
+                <h3>Choose from your rooms</h3>
             </div>
             {% block rooms %}
                 <p><a href="room/{{ room_src }}">{{ room_name }}</a></p>
@@ -16,6 +16,7 @@
         <div class="col-6">
             <div class="row">
                 <form class="body-page col-12" method="POST" action="create">
+                    <h3>Create new room</h3>
                     <div class="form-group row">
                         <label for="inputTitle" class="col-sm-3 col-form-label">Title</label>
                         <div class="col-sm-9">
@@ -28,7 +29,9 @@
                     </div>
                 </form>
             </div>
-            <div class="row">
+            <hr>
+            <div class="row" style="margin-top: 36px">
+                <h3>Join an existing room</h3>
                 <form class="body-page col-12" method="POST" action="join">
                     <div class="form-group row">
                         <label for="roomID" class="col-sm-3 col-form-label">ROOM ID</label>
