@@ -79,16 +79,27 @@ std::string Handler::get_response() {
                 return redirect("/profile");
             }
         }
-        else if(context_["path"] == "room") {
+//        else if(context_["path"] == "room") {
+//            auto code = activity_manager_->add_content();
+//            if(code == ActivityManager::CLIENT_ERROR)
+//                page_manager_->get_room_page(body, context_["id_room"]);
+//
+//            else if(code == ActivityManager::SERVER_ERROR)
+//                page_manager_->get_server_err(body);
+//
+//            else
+//                return redirect("/room/" + context_["id_room"]);
+//        }
+        else if(context_["path"] == "add") {
             auto code = activity_manager_->add_content();
             if(code == ActivityManager::CLIENT_ERROR)
-                page_manager_->get_room_page(body, context_["id_room"]);
+                page_manager_->get_add_content_page(body, context_["room"]);
 
             else if(code == ActivityManager::SERVER_ERROR)
                 page_manager_->get_server_err(body);
 
             else
-                return redirect("/room/" + context_["id_room"]);
+                return redirect("/room/" + context_["room"]);
         }
 
     }
@@ -96,7 +107,7 @@ std::string Handler::get_response() {
         if (context_["path"].empty())
             return redirect("/profile");
 
-        if(context_["path"] == "profile") {
+        else if(context_["path"] == "profile") {
             auto status = page_manager_->get_profile_page(body);
             if (status == PageManager::CLIENT_ERROR_RIGHT)
                 return redirect("/login");

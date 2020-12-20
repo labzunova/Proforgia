@@ -94,7 +94,7 @@ bool ActivityUser::validate_signUp() {
         return false;
 
     auto mail = context_["mail"];
-    if(mail.find('@') == std::string::npos)
+    if(mail.find('%') == std::string::npos)
         return false;
 
     return true;

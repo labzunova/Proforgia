@@ -40,7 +40,20 @@ ActivityManager::Status ActivityCustomer::add_room() {
 
 // TODO пока не понятно в каком виде придут данные
 ActivityManager::Status ActivityCustomer::add_content() {
-    return CLIENT_ERROR;
+    // TODO подумать надо ли проверять что существует данная комнта (наверное да)
+
+    int id_room = boost::lexical_cast<int>(context_["room"]);
+
+    typename DBPost::Post post(id_room, user_->get_id(), context_["title"], context_["text"]);
+
+    // добавление в бд
+    ErrorCodes er;
+    bool valid = DBPost::add(post, er);
+    if (!valid) {
+        return SERVER_ERROR;
+    }
+
+    return OK;
 }
 
 ActivityManager::Status ActivityCustomer::create_room() {
