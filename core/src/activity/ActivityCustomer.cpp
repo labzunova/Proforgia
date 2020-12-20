@@ -24,7 +24,7 @@ ActivityManager::Status ActivityCustomer::exit_room() {
 
     int id_room = 0;
     try {
-        id_room = boost::lexical_cast<int>(context_["roomId"]);
+        id_room = boost::lexical_cast<int>(context_["roomID"]);
     }
     catch (boost::bad_lexical_cast) {
         return CLIENT_ERROR;
