@@ -17,7 +17,7 @@ const string Parser::parse_path()
     return path;
 }
 
-const std::pair<string, string> Parser::parse_room_properties(string& path )
+const std::pair<string, string> Parser::parse_room_properties( string& path )
 {
     string room,
            tag;
@@ -74,4 +74,10 @@ const unordered_map<string, string> Parser::parse_body()
         body.erase( 0, endpos + 1 );
     }
     return data;
+}
+
+const string Parser::parse_room_to_delete( string& path )
+{
+    path.erase(0, path.find('/') + 1);
+    return path;
 }

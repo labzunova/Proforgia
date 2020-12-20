@@ -76,6 +76,14 @@ const static string GET_request_room = "GET /room/room1 HTTP/1.1\r\n"
                                    "Connection: Keep-Alive\r\n"
                                    "Cookie: session=12345\r\n\r\n";
 
+const static string GET_request_delete_room = "GET /delete_room/room1 HTTP/1.1\r\n"
+                                       "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
+                                       "Host: www.example.com\r\n"
+                                       "Accept-Language: ru-ru\r\n"
+                                       "Accept-Encoding: gzip, deflate\r\n"
+                                       "Connection: Keep-Alive\r\n"
+                                       "Cookie: session=12345\r\n\r\n";
+
 const static string GET_request2 = "GET /room/room1/math HTTP/1.1\r\n"
                                    "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
                                    "Host: www.example.com\r\n"
@@ -191,6 +199,19 @@ TEST( full_parse_tests, GET_room_tag ) // запрос на получение �
     ASSERT_EQ( "math", room.second );
     unordered_map<string, string> cookies = parser.parse_cookies();
     ASSERT_EQ( "sessionforroom", cookies["session"] );
+}
+
+TEST( full_parse_tests, GET_delete_room ) // запрос на получение конкретной комнаты
+{
+    Parser parser( GET_request_delete_room );
+    string method = parser.parse_method();
+    ASSERT_EQ( method, "GET" );
+    string path = parser.parse_path();
+    ASSERT_EQ( "delete_room/room1", path );
+    string room = parser.parse_room_to_delete( path );
+    ASSERT_EQ( "room1", room );
+    unordered_map<string, string> cookies = parser.parse_cookies();
+    ASSERT_EQ( "12345", cookies["session"] );
 }
 
 

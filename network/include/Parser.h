@@ -48,6 +48,7 @@ public:
     const unordered_map<string, string> parse_body();
     const string parse_method();
     const string parse_path(); // все пути в нашем приложении - или одно слово, или rooms/some_room или rooms/some_room/tag
+    const string parse_room_to_delete( string& path );
     const std::pair<string, string> parse_room_properties(string& path );
 
 private:

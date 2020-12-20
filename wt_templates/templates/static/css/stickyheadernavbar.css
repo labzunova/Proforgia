@@ -3,13 +3,13 @@ main > .container {
   padding: 100px 12px 0;
 }
 
-*{
-  font-family: "Helvetica";
+* {
+  font-family: 'Montserrat', sans-serif;
 }
 
 .navbar-default {
-  color: #cbeef2;
-  background-color: #cbeef2;
+  color: #aec4c7;
+  background-color: #aec4c7;
   border-color: #4FC3F7;
 }
 

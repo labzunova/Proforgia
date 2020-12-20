@@ -8,7 +8,12 @@ Request_handler::Request_handler( const string &request )
     path = parser.parse_path();
     if( method == "POST" )
         data = parser.parse_body();
-    if( path.find( "room" ) != -1 ) // если это запрос на какую-то комнату: выяснить, какую
+    if( path =="delete_room" )
+    {
+        room = parser.parse_room_to_delete( path );
+        path = "delete_room";
+    }
+    else if( path.find( "room" ) != -1 ) // если это запрос на какую-то комнату: выяснить, какую
     {
         std::pair<string, string> properties = parser.parse_room_properties( path );
         room = properties.first;
@@ -49,10 +54,14 @@ void Request_handler::create_map()
             fill_GET_signup();
         else if ( path == "profile" )// получить список комнат пользователя
             fill_GET_profile();
+        else if ( path.find( "delete_room" ) != -1 )
+            fill_GET_delete_room();
         else if ( path.find("room" ) != -1 ) // тут может быть, к примеру, rooms/first
             fill_GET_room(); // случай, когда нужно получить какую-то комнату или комнату с выведенными по тегу данными
         else if ( path == "exit" )
             fill_GET_exit();
+        else if ( path == "logout")
+            fill_GET_logout();
     }
     else
     {
@@ -121,7 +130,21 @@ void Request_handler::fill_GET_exit()
     to_put_in_loop.emplace( "method", "GET" );
     to_put_in_loop.emplace( "path", path );
     to_put_in_loop.emplace( "session", get_cookie("session" ) );
+}
 
+void Request_handler::fill_GET_logout()
+{
+    to_put_in_loop.emplace( "method", "GET" );
+    to_put_in_loop.emplace( "path", path );
+    to_put_in_loop.emplace( "session", get_cookie("session" ) );
+}
+
+void Request_handler::fill_GET_delete_room()
+{
+    to_put_in_loop.emplace( "method","GET" );
+    to_put_in_loop.emplace( "path", "delete_room" );
+    to_put_in_loop.emplace( "roomID", room );
+    to_put_in_loop.emplace( "session", get_cookie("session" ) );
 }
 
 void Request_handler::fill_POST_login()
@@ -171,14 +194,3 @@ void Request_handler::fill_POST_join_room()
     to_put_in_loop.emplace( "roomID", get_data( "roomID" ) );
     to_put_in_loop.emplace( "session", get_cookie("session" ) );
 }
-
-void Request_handler::fill_POST_delete_room() // TODO ?????????
-{
-    to_put_in_loop.emplace( "method","POST" );
-    to_put_in_loop.emplace( "path", "remove" );
-    to_put_in_loop.emplace( "roomID", get_data( "title" ) );
-    to_put_in_loop.emplace( "session", get_cookie("session" ) );
-}
-
-// TODO remove room title
-
