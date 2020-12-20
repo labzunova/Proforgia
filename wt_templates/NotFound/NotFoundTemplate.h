@@ -4,6 +4,8 @@
 
 #include <BaseTemplate.h>
 
+#define NOTFOUND_WAY "../wt_templates/templates/not_found.html"
+
 class NotFoundTemplate : public BaseTemplate {
 public:
     explicit NotFoundTemplate(Context& context);

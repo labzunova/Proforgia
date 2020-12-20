@@ -8,7 +8,7 @@ std::string & NotFoundTemplate::getHTML() {
     LoaderFile loader;
     Template temp(loader);
 
-    temp.load("../wt_templates/templates/not_found.html");
+    temp.load(NOTFOUND_WAY);
 
     offLoggedNavBar(temp);
 

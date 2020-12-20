@@ -6,9 +6,9 @@ using namespace NL::Template;
 
 MainTemplate::MainTemplate(Context& context) : BaseTemplate(context) {
     auto page = context.page;
-    if (page == "main")
-        setTitle("Last posts");
-    else if (page == "tag")
+    if (page == MAIN_PAGE)
+        setTitle(MAIN_DEFAULT_TITLE);
+    else if (page == TAG_PAGE)
         setTitle(context.currentTag.tag);
 }
 
@@ -16,34 +16,34 @@ std::string& MainTemplate::getHTML() {
     LoaderFile loader;
     Template temp(loader);
 
-    temp.load("../wt_templates/templates/main.html");
+    temp.load(MAIN_WAY);
 
     //---------------logged block--------------------
     setLoggedNavBar(temp);
 
     //---------------title  block--------------------
-    temp.set("main_title", title);
+    temp.set(MAIN_TITLE, title);
 
     //---------------posts  block--------------------
-    auto& block_posts = temp.block("posts_block");
+    auto& block_posts = temp.block(MAIN_POSTS_BLOCK);
     block_posts.repeat(context.posts.size());
     for (int i = 0; i < context.posts.size(); i++) {
-        block_posts[i].set("post.title", context.posts[i].title);
-        block_posts[i].set("post.author", context.posts[i].author);
-        block_posts[i].set("post.text", context.posts[i].text);
-        auto& block_files = block_posts[i].block("post.files");
+        block_posts[i].set(MAIN_POSTS_BLOCK_TITLE, context.posts[i].title);
+        block_posts[i].set(MAIN_POSTS_BLOCK_AUTHOR, context.posts[i].author);
+        block_posts[i].set(MAIN_POSTS_BLOCK_TEXT, context.posts[i].text);
+        auto& block_files = block_posts[i].block(MAIN_POSTS_BLOCK_FILES_BLOCK);
         block_files.repeat(context.posts[i].files.size());
         for (int j = 0; j < context.posts[i].files.size(); j++) {
-            block_files[j].set("file.url", context.posts[i].files[j].url);
-            block_files[j].set("file.name", context.posts[i].files[j].filename);
+            block_files[j].set(MAIN_POSTS_BLOCK_FILES_BLOCK_SRC, context.posts[i].files[j].url);
+            block_files[j].set(MAIN_POSTS_BLOCK_FILES_BLOCK_NAME, context.posts[i].files[j].filename);
         }
 
-        auto& block_tags = block_posts[i].block("post.tags");
+        auto& block_tags = block_posts[i].block(MAIN_POSTS_BLOCK_TAGS_BLOCK);
         block_tags.repeat(context.posts[i].tags.size());
         for (int j = 0; j < context.posts[i].tags.size(); j++) {
-            block_tags[j].set("tag", context.posts[i].tags[j].tag);
-            block_tags[j].set("tag.url", context.posts[i].tags[j].url);
-            block_tags[j].set("room.url", context.currentRoom.url);
+            block_tags[j].set(MAIN_POSTS_BLOCK_TAGS_BLOCK_NAME, context.posts[i].tags[j].tag);
+            block_tags[j].set(MAIN_POSTS_BLOCK_TAGS_BLOCK_SRC, context.posts[i].tags[j].url);
+            block_tags[j].set(MAIN_POSTS_BLOCK_TAGS_BLOCK_ROOM, context.currentRoom.url);
         }
     }
 

@@ -34,25 +34,7 @@ int main(int argc, char* argv[]) {
 //    Context context(page_value);
 //    context.setAddContext(user, room, tags);
 
-    std::string page_value = "main";
-    std::string title = "title";
-    std::string author = "author";
-    std::string text = "text";
-    std::string tag = "tag";
-    std::string url = "url";
-    std::string filename = "filename";
-    std::vector<Context::File> urls = {Context::File(filename, url),
-                                       Context::File(filename, url),
-                                       Context::File(filename, url)};
-    Context::Room room(title, url, isAdmin);
-    std::vector<Context::Tag> tags = {Context::Tag(tag, url),
-                                      Context::Tag(tag, url)};
-    std::vector<Context::Post> posts = {Context::Post(title, author, tags, text, urls),
-                                        Context::Post(title, author, tags, text, urls)};
-    Context context(page_value);
-    context.setMainContext(user, room, tags, posts);
-
-//    std::string page_value = "tag";
+//    std::string page_value = "main";
 //    std::string title = "title";
 //    std::string author = "author";
 //    std::string text = "text";
@@ -69,9 +51,25 @@ int main(int argc, char* argv[]) {
 //                                        Context::Post(title, author, tags, text, urls)};
 //    Context context(page_value);
 //    context.setMainContext(user, room, tags, posts);
-//    Context::Tag currentTag(tag, url);
-//    Context context(page_value);
-//    context.setTagContext(user, room, tags, posts, currentTag);
+
+    std::string page_value = "tag";
+    std::string title = "title";
+    std::string author = "author";
+    std::string text = "text";
+    std::string tag = "tag";
+    std::string url = "url";
+    std::string filename = "filename";
+    std::vector<Context::File> urls = {Context::File(filename, url),
+                                       Context::File(filename, url),
+                                       Context::File(filename, url)};
+    Context::Room room(title, url, isAdmin);
+    std::vector<Context::Tag> tags = {Context::Tag(tag, url),
+                                      Context::Tag(tag, url)};
+    std::vector<Context::Post> posts = {Context::Post(title, author, tags, text, urls),
+                                        Context::Post(title, author, tags, text, urls)};
+    Context::Tag currentTag(tag, url);
+    Context context(page_value);
+    context.setTagContext(user, room, tags, posts, currentTag);
 
     std::cout << TemplateWrapper(context).getHTML();
     return 0;

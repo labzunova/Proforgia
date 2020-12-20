@@ -4,6 +4,8 @@
 #include "NLTemplate.h"
 #include "BaseTemplate.h"
 
+#define ADD_POST_WAY "../wt_templates/templates/add_post.html"
+
 class AddPostTemplate : public BaseTemplate {
 public:
     explicit AddPostTemplate(Context& context);

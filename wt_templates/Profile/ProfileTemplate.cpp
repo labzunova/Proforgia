@@ -10,22 +10,22 @@ std::string& ProfileTemplate::getHTML() {
     LoaderFile loader;
     Template temp(loader);
 
-    temp.load("../wt_templates/templates/profile.html");
+    temp.load(PROFILE_WAY);
 
     //---------------logged block--------------------
     setLoggedNavBar(temp);
 
     //---------------rooms block--------------------
-    auto& roomsBlock = temp.block("rooms" );
+    auto& roomsBlock = temp.block(PROFILE_ROOMS_BLOCK);
     roomsBlock.repeat(context.rooms.size() );
     for (int i = 0; i < context.rooms.size(); i++) {
-        roomsBlock[i].set("room_name", context.rooms[i].title);
-        roomsBlock[i].set("room_src", context.rooms[i].url);
+        roomsBlock[i].set(PROFILE_ROOMS_BLOCK_NAME, context.rooms[i].title);
+        roomsBlock[i].set(PROFILE_ROOMS_BLOCK_SRC, context.rooms[i].url);
         if (!context.rooms[i].isAdmin) {
-            roomsBlock[i].block("remove_room").disable();
+            roomsBlock[i].block(PROFILE_ROOMS_BLOCK_REMOVE_BLOCK).disable();
         } else {
-            roomsBlock[i].block("remove_room").set("room_name", context.rooms[i].title);
-            roomsBlock[i].block("remove_room").set("room_src", context.rooms[i].url);
+            roomsBlock[i].block(PROFILE_ROOMS_BLOCK_REMOVE_BLOCK).set(PROFILE_ROOMS_BLOCK_REMOVE_BLOCK_NAME, context.rooms[i].title);
+            roomsBlock[i].block(PROFILE_ROOMS_BLOCK_REMOVE_BLOCK).set(PROFILE_ROOMS_BLOCK_REMOVE_BLOCK_SRC, context.rooms[i].url);
         }
     }
 
