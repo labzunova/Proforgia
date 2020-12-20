@@ -42,10 +42,10 @@ std::string Handler::get_response() {
             string session;
             auto code = activity_manager_->signUp(session);
             if(code == ActivityManager::CLIENT_ERROR)
-                body = page_manager_->get_signup_page();
+                page_manager_->get_signup_page(body);
 
             else if(code == ActivityManager::SERVER_ERROR)
-                body = page_manager_->get_server_err(); //// лучше редиректом
+                page_manager_->get_server_err(body); //// лучше редиректом
 
             else {
                 context_["new_session"] = session;
@@ -56,10 +56,10 @@ std::string Handler::get_response() {
             string session;
             auto code = activity_manager_->login(session);
             if(code == ActivityManager::CLIENT_ERROR)
-                body = page_manager_->get_login_page();
+                page_manager_->get_login_page(body);
 
             else if(code == ActivityManager::SERVER_ERROR)
-                body = page_manager_->get_server_err();
+                page_manager_->get_server_err(body);
 
             else {
                 context_["new_session"] = session;
@@ -69,10 +69,10 @@ std::string Handler::get_response() {
         else if(context_["path"] == "create") {
             auto code = activity_manager_->create_room();
             if(code == ActivityManager::CLIENT_ERROR)
-                body = page_manager_->get_profile_page();
+                page_manager_->get_profile_page(body);
 
             else if(code == ActivityManager::SERVER_ERROR)
-                body = page_manager_->get_server_err();
+                page_manager_->get_server_err(body);
 
             else {
                 return redirect("/profile");
@@ -81,10 +81,10 @@ std::string Handler::get_response() {
         else if(context_["path"] == "join") {
             auto code = activity_manager_->add_room();
             if(code == ActivityManager::CLIENT_ERROR)
-                body = page_manager_->get_profile_page();
+                page_manager_->get_profile_page(body);
 
             else if(code == ActivityManager::SERVER_ERROR)
-                body = page_manager_->get_server_err();
+                page_manager_->get_server_err(body);
 
             else {
                 return redirect("/profile");
@@ -93,10 +93,10 @@ std::string Handler::get_response() {
         else if(context_["path"] == "room") {
             auto code = activity_manager_->add_content();
             if(code == ActivityManager::CLIENT_ERROR)
-                return page_manager_->get_room_page(context_["id_room"]);
+                page_manager_->get_room_page(body, context_["id_room"]);
 
             else if(code == ActivityManager::SERVER_ERROR)
-                return page_manager_->get_server_err();
+                page_manager_->get_server_err(body);
 
             else
                 return redirect("/room/" + context_["id_room"]);
@@ -105,18 +105,34 @@ std::string Handler::get_response() {
     }
     else {
         if(context_["path"] == "profile") {
-            body = page_manager_->get_profile_page();
+            auto status = page_manager_->get_profile_page(body);
+            if (status == PageManager::CLIENT_ERROR_RIGHT)
+                return redirect("/login");
+            else if (status == PageManager::SERVER_ERROR)
+                page_manager_->get_server_err(body);
 
         } else if(context_["path"] == "login") {
-            body = page_manager_->get_login_page();
+            auto status = page_manager_->get_login_page(body);
+            if (status == PageManager::CLIENT_ERROR_RIGHT)
+                return redirect("/profile");
+            else if (status == PageManager::SERVER_ERROR)
+                page_manager_->get_server_err(body);
 
         } else if(context_["path"] == "signup") {
-            body = page_manager_->get_signup_page();
+            auto status = page_manager_->get_signup_page(body);
+            if (status == PageManager::CLIENT_ERROR_RIGHT)
+                return redirect("/profile");
+            else if (status == PageManager::SERVER_ERROR)
+                page_manager_->get_server_err(body);
 
         } else if(context_["path"] == "room") {
-            body = page_manager_->get_room_page(context_["room"]);
+            auto status = page_manager_->get_room_page(body, context_["room"]);
 
-            if (body.empty())
+            if (status == PageManager::CLIENT_ERROR_RIGHT)
+                return redirect("/login");
+            else if (status == PageManager::SERVER_ERROR)
+                page_manager_->get_server_err(body);
+            else if (status == PageManager::CLIENT_ERROR_VALID)
                 return redirect("/profile");
 
         } else if(context_["path"] == "roomtag") {
@@ -125,9 +141,23 @@ std::string Handler::get_response() {
             tags->push_back(context_["tag"]);
 
             // boost::lexical_cast<int>(context_["id_room"])
-            body = page_manager_->get_info_tags(context_["roomID"], std::move(tags));
+            auto status = page_manager_->get_info_tags(body, context_["roomID"], std::move(tags));
+
+            if (status == PageManager::CLIENT_ERROR_RIGHT)
+                return redirect("/login");
+            else if (status == PageManager::SERVER_ERROR)
+                page_manager_->get_server_err(body);
+            else if (status == PageManager::CLIENT_ERROR_VALID)
+                return redirect("/profile");
+
+        } else if (context_["path"] == "logout") { // выход
+            activity_manager_->exit();
+
+            context_["new_session"] = "";
+            return redirect("/login");
+
         } else {
-            body = page_manager_->get_not_found();
+            auto status = page_manager_->get_not_found(body);
             context_response["Code"] =  "404 Not Found";
 
         }

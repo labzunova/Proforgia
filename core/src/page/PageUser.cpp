@@ -4,7 +4,7 @@
 
 #include "PageUser.h"
 
-std::string PageUser::get_profile_page() {
+PageManager::Status PageUser::get_profile_page(std::string& body) {
 
     // хз как будет в итоговом проекте
     // get_login_page();
@@ -27,50 +27,54 @@ std::string PageUser::get_profile_page() {
 //    Context context(page_value);
 //    context.setTagContext(user, room, tags, posts, currentTag);
 
-    //
-    return get_login_page();
+
+    return CLIENT_ERROR_RIGHT;
 }
 
-std::string PageUser::get_room_page(std::string id) {
-    return get_login_page();
+PageManager::Status PageUser::get_room_page(std::string& body,std::string id) {
+    return CLIENT_ERROR_RIGHT;
 }
 
-std::string PageUser::get_favorite_page() {
-    return get_login_page();
+PageManager::Status PageUser::get_favorite_page(std::string& body) {
+    return CLIENT_ERROR_RIGHT;
 }
 
-std::string PageUser::get_deadline_page() {
-    return get_login_page();
+PageManager::Status PageUser::get_deadline_page(std::string& body) {
+    return CLIENT_ERROR_RIGHT;
 }
 
-std::string PageUser::get_signup_page() {
+PageManager::Status PageUser::get_signup_page(std::string& body) {
     std::string page = "signup";
     Context context(page);
     TemplateWrapper view(context);
-    return view.getHTML();
+    body = view.getHTML();
+    return OK;
 }
 
-std::string PageUser::get_login_page() {
+PageManager::Status PageUser::get_login_page(std::string& body) {
     std::string page = "login";
     Context context(page);
     TemplateWrapper view(context);
-    return view.getHTML();
+    body = view.getHTML();
+    return OK;
 }
 
-std::string PageUser::get_info_tags(std::string id_room, std::unique_ptr<std::vector<std::string>> tags) {
-    return get_login_page();
+PageManager::Status PageUser::get_info_tags(std::string& body, std::string id_room, std::unique_ptr<std::vector<std::string>> tags) {
+    return CLIENT_ERROR_RIGHT;
 }
 
-std::string PageUser::get_not_found() {
+PageManager::Status PageUser::get_not_found(std::string& body) {
     std::string page = "not_found";
     Context context(page);
     TemplateWrapper view(context);
-    return view.getHTML();
+    body = view.getHTML();
+    return OK;
 }
 
-std::string PageUser::get_server_err() {
+PageManager::Status PageUser::get_server_err(std::string& body) {
     std::string page = "500";
     Context context(page);
     TemplateWrapper view(context);
-    return view.getHTML();
+    body = view.getHTML();
+    return OK;
 }
