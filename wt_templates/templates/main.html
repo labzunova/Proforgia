@@ -6,7 +6,7 @@
 
         <main role="main" class="d-flex justify-content-center container">
             <div class="row container d-flex justify-content-between">
-                <div class="col-9">
+                <div class="col-8">
                     <div class="row">
                         <h4>{{ main_title }}</h4>
                     </div>
@@ -16,8 +16,24 @@
                         {% endblock %}
                     </div>
                 </div>
-                <div class="col-3">
-                    {% include ../wt_templates/templates/inc/right_block.html %}
+
+                <div class="col-2">
+                        {% include ../wt_templates/templates/inc/right_block.html %}
+                </div>
+
+                <div class="col-2">
+                    <div class="card">
+                        <div class="card-body row">
+                            <form method="get" action="profile/">
+                                <button type="submit" class="btn btn-primary btn-dark">Choose another room</button>
+                            </form>
+                        </div>
+                        <div class="card-body row">
+                            <form method="get" action="exit/">
+                                <button type="submit" class="btn btn-outline-danger">Leave this room</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
