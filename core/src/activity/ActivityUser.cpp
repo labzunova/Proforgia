@@ -27,8 +27,6 @@ ActivityManager::Status ActivityUser::signUp(std::string& session) {
     std::string login = context_["login"];
     std::string email = context_["mail"];
 
-    /// временное решение
-    context_["password"] = "xxxx";
     BOOST_LOG_TRIVIAL(debug) << std::to_string(context_["password"].size());
 //    std::string password = SHA(context_["password"]);  // TODO сделать чтобы работало корректно
     std::string password = context_["password"]; // временное
@@ -54,8 +52,6 @@ ActivityManager::Status ActivityUser::login(std::string& session) {
 
     std::string login = context_["login"];
 
-    /// временное решение
-    context_["password"] = "xxxx";
     std::string password = context_["password"];
 //    std::string password = SHA(context_["password"]);
     ErrorCodes er;

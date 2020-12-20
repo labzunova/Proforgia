@@ -9,7 +9,12 @@
 
 ActivityManager::Status ActivityCustomer::exit() {
     std::string session = context_["session"];
-    //DBSession::remove(session);
+
+    ErrorCodes er;
+    auto session_db = DBSession::get(session, er);
+    if (session_db)
+        DBSession::remove(session_db->get_id(), er); // TODO поросить ваню сделать удаление сессии по индифекатору
+
     return CLIENT_ERROR;
 }
 

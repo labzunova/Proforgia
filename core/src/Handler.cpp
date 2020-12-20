@@ -149,6 +149,13 @@ std::string Handler::get_response() {
                 page_manager_->get_server_err(body);
             else if (status == PageManager::CLIENT_ERROR_VALID)
                 return redirect("/profile");
+
+        } else if (context_["path"] == "logout") { // выход
+            activity_manager_->exit();
+
+            context_["new_session"] = "";
+            return redirect("/login");
+
         } else {
             auto status = page_manager_->get_not_found(body);
             context_response["Code"] =  "404 Not Found";
