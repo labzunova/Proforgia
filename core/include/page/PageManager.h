@@ -13,6 +13,14 @@
 #include <map>
 
 class PageManager {
+public:
+    enum Status {
+        OK,
+        SERVER_ERROR,
+        CLIENT_ERROR_RIGHT,
+        CLIENT_ERROR_VALID,
+    };
+
 protected:
     explicit PageManager() = default;
 
@@ -23,13 +31,13 @@ private:
 public:
     virtual ~PageManager() = default;
 
-    virtual std::string get_profile_page() = 0;
-    virtual std::string get_room_page(std::string id_room) = 0;
-    virtual std::string get_favorite_page() = 0;
-    virtual std::string get_deadline_page() = 0;
-    virtual std::string get_signup_page() = 0;
-    virtual std::string get_login_page() = 0;
-    virtual std::string get_info_tags(std::string id_room, std::unique_ptr<std::vector<std::string>> tags) = 0;
-    virtual std::string get_not_found() = 0;
-    virtual std::string get_server_err() = 0;
+    virtual Status get_profile_page(std::string& body) = 0;
+    virtual Status get_room_page(std::string& body, std::string id_room) = 0;
+    virtual Status get_favorite_page(std::string& body) = 0;
+    virtual Status get_deadline_page(std::string& body) = 0;
+    virtual Status get_signup_page(std::string& body) = 0;
+    virtual Status get_login_page(std::string& body) = 0;
+    virtual Status get_info_tags(std::string& body, std::string id_room, std::unique_ptr<std::vector<std::string>> tags) = 0;
+    virtual Status get_not_found(std::string& body) = 0;
+    virtual Status get_server_err(std::string& body) = 0;
 };
