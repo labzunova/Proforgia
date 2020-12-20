@@ -19,11 +19,13 @@ void BaseTemplate::setLoggedNavBar(Template& temp) const {
 }
 
 void BaseTemplate::setRightBlock(Template& temp) {
+    temp.set(BASE_RIGHT_BLOCK_ROOM, context.currentRoom.url);
     auto& blockRight = temp.block(BASE_RIGHT_BLOCK);
     blockRight.repeat(context.tags.size());
     for (int i = 0; i < context.tags.size(); i++) {
         blockRight[i].set(BASE_RIGHT_BLOCK_TAG_NAME, context.tags[i].tag);
         blockRight[i].set(BASE_RIGHT_BLOCK_TAG_SRC, context.tags[i].url);
+        blockRight[i].set(BASE_RIGHT_BLOCK_ROOM, context.currentRoom.url);
     }
 }
 
