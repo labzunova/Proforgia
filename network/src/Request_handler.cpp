@@ -65,10 +65,10 @@ void Request_handler::create_map()
             fill_GET_delete_room();
         else if ( path == "add" )
             fill_GET_room_adding();
+        else if ( path.find( "exit" ) != -1 )
+            fill_GET_exit();
         else if ( path.find("room" ) != -1 ) // тут может быть, к примеру, rooms/first
             fill_GET_room(); // случай, когда нужно получить какую-то комнату или комнату с выведенными по тегу данными
-        else if ( path == "exit" )
-            fill_GET_exit();
         else if ( path == "logout")
             fill_GET_logout();
     }
@@ -145,7 +145,10 @@ void Request_handler::fill_GET_room_adding()
 void Request_handler::fill_GET_exit()
 {
     to_put_in_loop.emplace( "method", "GET" );
-    to_put_in_loop.emplace( "path", path );
+//    to_put_in_loop.emplace( "path", path );
+    path.erase( 0, path.find('/') + 1 );
+    to_put_in_loop.emplace( "roomID", path.substr( 0, path.size() - 1 ) ); // из-за ? в конце пути
+    to_put_in_loop.emplace( "path", "exit" );
     to_put_in_loop.emplace( "session", get_cookie("session" ) );
 }
 
