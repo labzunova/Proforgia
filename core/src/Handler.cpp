@@ -152,11 +152,16 @@ std::string Handler::get_response() {
             else if (status == PageManager::CLIENT_ERROR_VALID)
                 return redirect("/profile");
 
-        } else if (context_["path"] == "logout") { // выход
+        } else if (context_["path"] == "logout") { // выход аккаунта
             activity_manager_->exit();
 
             context_["new_session"] = "";
             return redirect("/login");
+
+        } else if (context_["path"] == "exit") { // выход из комнаты
+            activity_manager_->exit_room();
+
+            return redirect("/profile");
 
         } else if (context_["path"] == "add") {
             auto status = page_manager_->get_add_content_page(body, context_["room"]);
