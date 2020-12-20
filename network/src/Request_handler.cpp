@@ -20,6 +20,13 @@ Request_handler::Request_handler( const string &request )
         room = room.substr( 0, room.size() - 1 );
         path = "add";
     }
+    else if( path.find( "exit" ) )
+    {
+        room = path.erase( 0, path.find('/') + 1 );
+        room = room.substr( room.find('/') + 1 );
+        room = room.substr( 0, room.size() - 1 );
+        path = "exit";
+    }
     else if( path.find( "room" ) != -1 ) // если это запрос на какую-то комнату: выяснить, какую
     {
         std::pair<string, string> properties = parser.parse_room_properties( path );
