@@ -13,17 +13,6 @@
 using namespace boost::gregorian;
 
 std::string Handler::get_response() {
-
-    /////// для теста шаблонизатора ///////
-//    page_manager_ = std::make_unique<PageUser>();
-//    ContextMap ctx = {{"code", "200"}};
-//    std::string body = page_manager_->get_login_page();
-//    ctx["body"] = body;
-//    ctx["date"] = to_iso_string(second_clock::local_time());
-//    ctx["server"] = "SERVER";
-//    ctx["content-length"] = body.size();
-//    return HttpResponse::get_response(ctx);
-    /////////////////////////
     
     BOOST_LOG_TRIVIAL(debug) << "Session Length: " + std::to_string(context_["session"].size());
 
@@ -104,6 +93,9 @@ std::string Handler::get_response() {
 
     }
     else {
+//        if (context_["path"].empty())
+//            return redirect("/profile");
+
         if(context_["path"] == "profile") {
             auto status = page_manager_->get_profile_page(body);
             if (status == PageManager::CLIENT_ERROR_RIGHT)
@@ -136,7 +128,6 @@ std::string Handler::get_response() {
                 return redirect("/profile");
 
         } else if(context_["path"] == "roomtag") {
-            // TODO запись id комнаты в context_
             auto tags = std::make_unique<std::vector<std::string>>();
             tags->push_back(context_["tag"]);
 
@@ -156,6 +147,16 @@ std::string Handler::get_response() {
             context_["new_session"] = "";
             return redirect("/login");
 
+        } else if (context_["path"] == "add") {
+            auto status = page_manager_->get_add_content_page(body, context_["room"]);
+
+            if (status == PageManager::CLIENT_ERROR_RIGHT)
+                return redirect("/login");
+            else if (status == PageManager::SERVER_ERROR)
+                page_manager_->get_server_err(body);
+            else if (status == PageManager::CLIENT_ERROR_VALID)
+                return redirect("/room/" + context_["roomID"]);
+
         } else {
             auto status = page_manager_->get_not_found(body);
             context_response["Code"] =  "404 Not Found";
@@ -173,26 +174,6 @@ std::string Handler::get_response() {
 // есть ли сессия
 void Handler::start_session() {
 
-
-    /////// тест для бд ///////
-//    ErrorCodes er;
-//    auto user = DBUser::get(1, er);
-//    page_manager_ = std::make_unique<PageCustomer>(user);
-//    activity_manager_ = std::make_unique<ActivityCustomer>(ctx, user);
-//    return;
-    //////////////////////////
-
-
-
-    /// временное решение
-//    set_user_right();
-
-    /// записать user тоже временное решение
-//    std::shared_ptr<DBUser> user = std::make_shared<DBUser>();
-//    page_manager_ = std::make_unique<PageCustomer>(user);
-//    activity_manager_ = std::make_unique<ActivityCustomer>(ctx, std::move(user));
-
-    /// вернуться когда будет готов интерфейс сессии
     if(context_.find("session") == context_.end() || context_["session"].empty()) {
         set_user_right();
         return;
@@ -223,9 +204,11 @@ Handler::Status Handler::check_session(std::shared_ptr<DBSession>& session) {
     string posix_tz_def("PST-5PDT01:00:00,M4.1.0/02:00:00,M10.1.0/02:00:00");
     local_date_time today(second_clock::local_time(),
                                 time_zone_ptr(new posix_time_zone(posix_tz_def)));
-    if(today > start_time + LIVE_TIME)
-         // TODO удаление ссесии
+    if(today > start_time + LIVE_TIME) {
+        ErrorCodes er;
+        DBSession::remove(session->get_id(), er);
         return Rotten;
+    }
     else
         return OK;
 }

@@ -16,8 +16,13 @@ string SHA(string data)
 
     byte ab_digest[SHA_DIGEST_LENGTH];
     SHA1(pb_data, data_len, ab_digest);
+    ab_digest[SHA_DIGEST_LENGTH - 1] = 0;
 
-    return std::string((char*)ab_digest);
+    std::string hash_pas = std::string((char*)ab_digest);
+    for (int i = 0; i < SHA_DIGEST_LENGTH - 1; ++i)
+        hash_pas[i] = abs(hash_pas[i]) % 25 + 97;
+
+    return hash_pas;
 }
 
 ActivityManager::Status ActivityUser::signUp(std::string& session) {
@@ -28,8 +33,8 @@ ActivityManager::Status ActivityUser::signUp(std::string& session) {
     std::string email = context_["mail"];
 
     BOOST_LOG_TRIVIAL(debug) << std::to_string(context_["password"].size());
-//    std::string password = SHA(context_["password"]);  // TODO сделать чтобы работало корректно
-    std::string password = context_["password"]; // временное
+    std::string password = SHA(context_["password"]);  // TODO сделать чтобы работало корректно
+//    std::string password = context_["password"]; // временное
     typename DBUser::User user(login, email, password);
     BOOST_LOG_TRIVIAL(debug) << "Password: " + password;
 
@@ -52,10 +57,16 @@ ActivityManager::Status ActivityUser::login(std::string& session) {
 
     std::string login = context_["login"];
 
-    std::string password = context_["password"];
-//    std::string password = SHA(context_["password"]);
+//    std::string password = context_["password"];
+    std::string password = SHA(context_["password"]);
     ErrorCodes er;
     auto user = DBUser::get(login, er); // TODO проверка на то пришел ли User
+    if (!user) {
+        if (er == DB_ENTITY_NOT_FOUND)
+            return CLIENT_ERROR;
+        else
+            return SERVER_ERROR;
+    }
     if(user->password != password)
         return CLIENT_ERROR;
 

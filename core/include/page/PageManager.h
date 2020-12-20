@@ -31,13 +31,14 @@ private:
 public:
     virtual ~PageManager() = default;
 
-    virtual Status get_profile_page(std::string& body) = 0;
-    virtual Status get_room_page(std::string& body, std::string id_room) = 0;
-    virtual Status get_favorite_page(std::string& body) = 0;
-    virtual Status get_deadline_page(std::string& body) = 0;
-    virtual Status get_signup_page(std::string& body) = 0;
-    virtual Status get_login_page(std::string& body) = 0;
-    virtual Status get_info_tags(std::string& body, std::string id_room, std::unique_ptr<std::vector<std::string>> tags) = 0;
-    virtual Status get_not_found(std::string& body) = 0;
-    virtual Status get_server_err(std::string& body) = 0;
+    virtual Status get_profile_page(std::string& body);
+    virtual Status get_room_page(std::string& body, std::string id_room);
+    virtual Status get_add_content_page(std::string& body, std::string id_room);
+    virtual Status get_favorite_page(std::string& body);
+    virtual Status get_deadline_page(std::string& body);
+    virtual Status get_signup_page(std::string& body);
+    virtual Status get_login_page(std::string& body);
+    virtual Status get_info_tags(std::string& body, std::string id_room, std::unique_ptr<std::vector<std::string>> tags);
+    virtual Status get_not_found(std::string& body);
+    virtual Status get_server_err(std::string& body);
 };
