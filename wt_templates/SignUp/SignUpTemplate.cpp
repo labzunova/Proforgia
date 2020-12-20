@@ -9,7 +9,7 @@ SignUpTemplate::SignUpTemplate(Context& context) : BaseTemplate(context) {
 std::string& SignUpTemplate::getHTML() {
     LoaderFile loader;
     Template temp(loader);
-    temp.load("../wt_templates/templates/signup.html");
+    temp.load(SIGNUP_WAY);
 
     offLoggedNavBar(temp);
 

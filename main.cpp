@@ -36,6 +36,5 @@ int main( int argc, char* argv[] ) {
         // Server server( argv[0], argv[1], queue );
         server.start_server();
     }
-
     return 0;
 }

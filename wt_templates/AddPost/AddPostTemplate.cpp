@@ -9,7 +9,7 @@ AddPostTemplate::AddPostTemplate(Context& context) : BaseTemplate(context) {
 std::string & AddPostTemplate::getHTML() {
     LoaderFile loader;
     Template temp(loader);
-    temp.load("../wt_templates/templates/add_post.html");
+    temp.load(ADD_POST_WAY);
 
     //---------------logged block--------------------
     setRightBlock(temp);

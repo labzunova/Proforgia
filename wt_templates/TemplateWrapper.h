@@ -8,6 +8,7 @@
 #include "Profile/ProfileTemplate.h"
 #include "Main/MainTemplate.h"
 #include "AddPost/AddPostTemplate.h"
+#include "NotFound/NotFoundTemplate.h"
 
 class TemplateWrapper {
 public:
