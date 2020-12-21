@@ -70,14 +70,19 @@ struct Context {
     Room currentRoom;
     std::vector<Tag> tags;
 
-    void setAddContext(User& user_, Room& currentRoom_, std::vector<Tag>& tags_, std::string& urlfile_) {
+    void setAddContext(User& user_, Room& currentRoom_, std::vector<Tag>& tags_, std::string& urlUploadFile_,
+                       std::string& urlSaveFile_, std::string filenameDB_) {
         user = user_;
         currentRoom = currentRoom_;
         tags = tags_;
-        urlfile = urlfile_;
+        urlUploadFile = urlUploadFile_;
+        urlSaveFile = urlSaveFile_;
+        filenameDB = filenameDB_;
     }
 
-    std::string urlfile;
+    std::string urlUploadFile; // ссылка на загрузку на амазон
+    std::string urlSaveFile; // ссылка на скачивание файла
+    std::string filenameDB; // имя в БД
 
     std::vector<Post> posts;
 

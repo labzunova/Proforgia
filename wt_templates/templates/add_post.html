@@ -8,7 +8,8 @@
     <div class="row container-fluid d-flex justify-content-between" style="margin: 64px">
         <div class="col-6">
             <div>
-                <form method="post" enctype="multipart/form-data" action="{{ add_post.room }}/add" data-url="{{ add_post.file_url }}">
+                <form id="theForm" method="post" enctype="multipart/form-data" data-serverurl="{{ add_post.room }}/add"
+                      data-url="{{ add_post.file_upload_url }}">
                     <h1 class="h3 mb-3 font-weight-normal">New post</h1>
                     <div class="form-group row" style="margin-top: 16px;">
                         <label for="title" class="col-sm-3 col-form-label">Title</label>
@@ -34,7 +35,8 @@
                             <input id="theFile" type="file" name="uploadInput">
                         </div>
                     </div>
-                    <input type="hidden" name="files" value="{{ add_post.file_url2 }}">
+                    <input type="hidden" data-fileurl="{{ add_post.file_save_url }}">
+                    <input type="hidden" data-filenamedb="{{ add_post.file_name_db }}">
                     <div class="row" style="margin-top: 16px;">
                         <div class="col-2">
 
@@ -83,7 +85,15 @@
         console.log(theFormFile);
 
         var $this = $(this),
-            upload_url = $this.data('url');
+            upload_url = $this.data('url'),
+            file_url = $this.data('fileurl'),
+            file_name_db = $this.data('filenamedb'),
+            file_name = $('#theFile').val().split('\\').pop(),
+            server_url = $this.data('serverurl');
+
+        var title = document.getElementById('title').value,
+            text = document.getElementById('text').value,
+            tag = document.getElementById('tags').value;
 
         console.log(upload_url);
         var result = $.ajax({
@@ -96,6 +106,26 @@
             },
             error: function(req, err) {
                 console.log('File NOT uploaded: ' + err);
+            }
+        });
+
+        var ctx = new Map();
+        ctx['file_url'] = file_url;
+        ctx['file_name_db'] = file_name_db;
+        ctx['file_name'] = file_name;
+        ctx['title'] = title;
+        ctx['text'] = text;
+        ctx['tag'] = tag;
+        var result_server = $.ajax({
+            type: 'POST',
+            url: server_url,
+            processData: false,
+            data: ctx,
+            success: function(req, err) {
+                console.log('Server post made: ' + err);
+            },
+            error: function(req, err) {
+                console.log('Server NOT post made: ' + err);
             }
         });
 
