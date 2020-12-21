@@ -19,6 +19,7 @@ std::string & AddPostTemplate::getHTML() {
 
     temp.set(ADD_POST_ROOM, context.currentRoom.url);
     temp.set(ADD_POST_FILE_URL, context.urlfile);
+    temp.set(ADD_POST_FILE_URL2, context.urlfile);
 
     std::stringstream os;
     temp.render(os);
