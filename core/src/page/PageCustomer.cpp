@@ -105,22 +105,37 @@ void PageCustomer::set_tags(std::vector<DBTag>& input, std::vector<Context::Tag>
     }
 }
 
+void PageCustomer::set_files(std::vector<DBPost::FileData>& input, std::vector<Context::File>& output) {
+    for (const auto& db_file : input) {
+        Context::File file;
+        file.filename = db_file.client_filename;
+        file.url = db_file.storage_link;
+        output.push_back(std::move(file));
+    }
+}
+
 void PageCustomer::set_posts(std::vector<DBPost>& input, std::vector<Context::Post>& output) {
     for (auto& db_post : input) {
         ErrorCodes er;
 
         Context::Post post;
+        if (db_post.title == DEFAULT_TITLE) // не отображаем дефолтные посты
+            continue;
+
         post.title = db_post.title;
         auto db_tags = db_post.get_tags(er).value(); // TODO обработать ошибку
         PageCustomer::set_tags(db_tags, post.tags);
         post.text = db_post.text;
         post.author = db_post.get_author(er)->nick_name;
         // TODO fileUrls
+        auto db_files = db_post.get_attachments(er);
+        if (db_files)
+            PageCustomer::set_files(db_files.value(), post.files);
         output.push_back(std::move(post));
     }
 }
 
-PageManager::Status PageCustomer::get_add_content_page(std::string& body, std::string id) {
+PageManager::Status PageCustomer::get_add_content_page(std::string& body, std::string& id, std::string& id_post) {
     std::string page = "add";
     Context context(page);
 
@@ -156,7 +171,35 @@ PageManager::Status PageCustomer::get_add_content_page(std::string& body, std::s
     std::vector<Context::Tag> tags;
     PageCustomer::set_tags(db_tags.value(), tags);
 
-    context.setAddContext(user, room, tags);
+    // TODO жду ваню, когда он будет возвращать id при создании
+    // берем из куки id post если есть, если нет создаем новый
+    int id_post_db = 0;
+    if (id_post.empty()) { // создаем новый пост
+
+        typename DBPost::Post post(id_room, user_->get_id(), DEFAULT_TITLE, DEFAULT_TEXT);
+
+        id_post_db = DBPost::add(post, er);
+        id_post = std::to_string(id_post_db); // чтобы добавить потом в сессию (в Handler)
+    }
+    else {
+        try {
+            id_post_db = boost::lexical_cast<int>(id_post);
+        }
+        catch (boost::bad_lexical_cast) {
+            return CLIENT_ERROR_VALID;
+        }
+    }
+
+
+    auto db_post = DBPost::get(id_post_db, er);
+    if (!db_post)
+        return SERVER_ERROR;
+
+    auto links = DBPost::get_upload_link(id_post_db, er);
+    if (!links)
+        return SERVER_ERROR;
+
+    context.setAddContext(user, room, tags, links->first, links->second);
 
     TemplateWrapper view(context);
     body = view.getHTML();

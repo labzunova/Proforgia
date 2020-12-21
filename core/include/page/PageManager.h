@@ -33,7 +33,7 @@ public:
 
     virtual Status get_profile_page(std::string& body);
     virtual Status get_room_page(std::string& body, std::string id_room);
-    virtual Status get_add_content_page(std::string& body, std::string id_room);
+    virtual Status get_add_content_page(std::string& body, std::string& id_room, std::string& id_post);
     virtual Status get_favorite_page(std::string& body);
     virtual Status get_deadline_page(std::string& body);
     virtual Status get_signup_page(std::string& body);

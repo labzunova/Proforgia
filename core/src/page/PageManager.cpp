@@ -12,7 +12,7 @@ PageManager::Status PageManager::get_room_page(std::string &body, std::string id
     return PageManager::CLIENT_ERROR_RIGHT;
 }
 
-PageManager::Status PageManager::get_add_content_page(std::string &body, std::string id_room) {
+PageManager::Status PageManager::get_add_content_page(std::string &body, std::string& id_room, std::string& id_post) {
     return PageManager::CLIENT_ERROR_RIGHT;
 }
 

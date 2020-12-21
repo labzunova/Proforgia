@@ -23,7 +23,7 @@ public:
 
     Status get_room_page(std::string& body, std::string id) override;
 
-    Status get_add_content_page(std::string& body, std::string id_room) override;
+    Status get_add_content_page(std::string& body, std::string& id_room, std::string& id_post) override;
 
     Status get_favorite_page(std::string& body) override;
 
@@ -41,7 +41,11 @@ private:
 
     static void set_tags(std::vector<DBTag>& input, std::vector<Context::Tag>& output);
     static void set_posts(std::vector<DBPost>& input, std::vector<Context::Post>& output);
+    static void set_files(std::vector<DBPost::FileData>& input, std::vector<Context::File>& output);
 
 private:
     std::shared_ptr<DBUser> user_;
+
+    inline static const std::string DEFAULT_TITLE = "__imaginary";
+    inline static const std::string DEFAULT_TEXT = "";
 };

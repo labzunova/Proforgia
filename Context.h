@@ -70,12 +70,11 @@ struct Context {
     Room currentRoom;
     std::vector<Tag> tags;
 
-    void setAddContext(User& user_, Room& currentRoom_, std::vector<Tag>& tags_, std::string& urlUploadFile_,
+    void setAddContext(User& user_, Room& currentRoom_, std::vector<Tag>& tags_,
                        std::string& urlSaveFile_, std::string filenameDB_) {
         user = user_;
         currentRoom = currentRoom_;
         tags = tags_;
-        urlUploadFile = urlUploadFile_;
         urlSaveFile = urlSaveFile_;
         filenameDB = filenameDB_;
     }

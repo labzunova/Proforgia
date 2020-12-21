@@ -93,13 +93,15 @@ std::string Handler::get_response() {
         else if(context_["path"] == "add") {
             auto code = activity_manager_->add_content();
             if(code == ActivityManager::CLIENT_ERROR)
-                page_manager_->get_add_content_page(body, context_["room"]);
+                page_manager_->get_add_content_page(body, context_["room"], context_["postID"]);
 
             else if(code == ActivityManager::SERVER_ERROR)
                 page_manager_->get_server_err(body);
 
-            else
+            else {
+                context_["new_postID"] = "";
                 return redirect("/room/" + context_["room"]);
+            }
         }
 
     }
@@ -164,7 +166,9 @@ std::string Handler::get_response() {
             return redirect("/profile");
 
         } else if (context_["path"] == "add") {
-            auto status = page_manager_->get_add_content_page(body, context_["room"]);
+            auto status = page_manager_->get_add_content_page(body, context_["room"], context_["postID"]);
+
+            context_["new_postID"] = context_["postID"];
 
             if (status == PageManager::CLIENT_ERROR_RIGHT)
                 return redirect("/login");
@@ -265,6 +269,14 @@ void Handler::set_header_data(ContextMap& context) {
                 + "HttpOnly; "
                 + "Max - Age = " + std::to_string(LIVE_TIME.total_seconds()) + "; "
                 + "Path =/; ";
+    }
+    if(context_.find("new_postID") != context_.end()) {
+        auto time = second_clock::local_time() + LIVE_TIME;
+        context["Set-Cookie"] = "postID=" + context_["new_postID"] + "; "
+                                + "expires=Thu," + to_simple_string(time) + "; "
+                                + "HttpOnly; "
+                                + "Max - Age = " + std::to_string(LIVE_TIME.total_seconds()) + "; "
+                                + "Path =/; ";
     }
 }
 

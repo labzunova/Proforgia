@@ -40,13 +40,10 @@ ActivityManager::Status ActivityUser::signUp(std::string& session) {
     typename DBUser::User user(login, email, password);
     BOOST_LOG_TRIVIAL(debug) << "Password: " + password;
 
-    bool ex = DBUser::add(user, er);
+    int id_user = DBUser::add(user, er);
 
-    if (!ex)
+    if (!id_user)
         return SERVER_ERROR;
-
-    auto db_user = DBUser::get(login, er);
-    int id_user = db_user->get_id(); // TODO как то по другому получить id
 
     session = create_session();
     save_session(id_user, session);

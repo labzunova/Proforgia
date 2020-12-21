@@ -148,6 +148,7 @@ void Request_handler::fill_GET_room_adding()
     to_put_in_loop.emplace( "room", room );
     to_put_in_loop.emplace( "path", "add" );
     to_put_in_loop.emplace( "session", get_cookie("session" ) );
+    to_put_in_loop.emplace( "postID", get_cookie("postID" ) );
 }
 
 void Request_handler::fill_GET_exit()
@@ -201,7 +202,7 @@ void Request_handler::fill_POST_room()
     to_put_in_loop.emplace( "path", "add" );
     to_put_in_loop.emplace( "room", room );
     to_put_in_loop.emplace( "session", get_cookie("session" ) );
-    to_put_in_loop.emplace( "id_post", get_cookie("id_post" ) );
+    to_put_in_loop.emplace( "postID", get_cookie("postID" ) );
     to_put_in_loop.emplace("title", get_data( "title" ) );
     to_put_in_loop.emplace( "tag", get_data(  "tag" ) );
     to_put_in_loop.emplace( "text", get_data( "text" ) ); // text и fileurl не обязательно будут
