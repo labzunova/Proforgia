@@ -22,6 +22,13 @@ bool DBUser::remove(int id, ErrorCodes &error) {
     return DataManager::getInstance().remove_user(id, error);
 }
 
+bool DBSession::remove(string _session_identificator, ErrorCodes &error) {
+    auto session = DataManager::getInstance().get_session_info(_session_identificator, error);
+    if (!session)
+        return false;
+    return DataManager::getInstance().remove_session(session->id, error);
+}
+
 bool DBUser::update(ErrorCodes &error) {
     return DataManager::getInstance().edit_user(id, User(nick_name, email, password), error);
 }

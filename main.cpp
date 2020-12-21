@@ -11,6 +11,7 @@ int main()
     std::cout << DBPost::add(DBPost::Post(1, 1, "testpost13", "aaaaaa"), error) << " ";
     std::cout << DBUser::add(DBUser::User("eeee", "eeeee", "xxx"), error) << " ";
     std::cout << DBSession::add(DBSession::Session("ewrerewrwerreer", 1), error) << " ";
+    std::cout << DBSession::remove("ewrerewrwerreer", error);
 
     return 0;
 }

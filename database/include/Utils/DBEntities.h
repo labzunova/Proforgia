@@ -250,6 +250,7 @@ struct DBSession : public DBEntity {
     static shared_ptr<DBSession> get(string _session_identificator, ErrorCodes &error);
 	static int add(Session _session, ErrorCodes &error);
 	static bool remove(int id, ErrorCodes &error);
+	static bool remove(string _session_identificator, ErrorCodes &error);
 	bool update(ErrorCodes &error) override; // поля сессии менять нельзя, всегда вернет false
 
 	// методы получения связанных полей 
