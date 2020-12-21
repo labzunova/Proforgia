@@ -12,7 +12,6 @@ CREATE TABLE rooms (
 	id serial primary key,
 	create_time timestamp with time zone NOT NULL DEFAULT current_timestamp,
 	room_name varchar(100) NOT NULL,
-	UNIQUE (room_name),
 	room_description varchar(1000)
 );
 

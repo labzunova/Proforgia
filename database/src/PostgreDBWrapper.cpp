@@ -148,7 +148,7 @@ shared_ptr<DBUser> PostgreDBWrapper::get_user_info(const string &nickname, Error
     }
 }
 
-bool PostgreDBWrapper::add_user(const DBUser::User &user_info, ErrorCodes &error) {
+int PostgreDBWrapper::add_user(const DBUser::User &user_info, ErrorCodes &error) {
     std::shared_ptr<PGconn> connection;
     try {
         connection = get_connection();
@@ -162,19 +162,18 @@ bool PostgreDBWrapper::add_user(const DBUser::User &user_info, ErrorCodes &error
     string query = "insert into users (nickname, email, password) values "
                    "('" + user_info.nick_name +
             "', '" + user_info.email +
-            "', '" + user_info.password + "');";
+            "', '" + user_info.password + "') returning id;";
 
     auto res_deleter = [](PGresult* r) { PQclear(r);};
     std::cout << query.c_str() << std::endl;
     std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
-    auto val = PQresultStatus(result.get());
-    std::cout << PQresStatus(val) << std::endl;
-    if (val != PGRES_COMMAND_OK) {
+
+    if (PQresultStatus(result.get()) != PGRES_TUPLES_OK) {
         error = ErrorCodes::UNKNOWN_DB_ERROR;
-        return false;
+        return 0;
     }
 
-    return true;
+    return std::stoi(PQgetvalue(result.get(), 0, 0));
 }
 
 bool PostgreDBWrapper::remove_user(const int& user_id, ErrorCodes &error) {
@@ -304,7 +303,7 @@ shared_ptr<DBRoom> PostgreDBWrapper::get_room_info(const int& room_id, ErrorCode
     }
 }
 
-bool PostgreDBWrapper::add_room(const DBRoom::Room &room_info, ErrorCodes &error) {
+int PostgreDBWrapper::add_room(const DBRoom::Room &room_info, ErrorCodes &error) {
     std::shared_ptr<PGconn> connection;
     try {
         connection = get_connection();
@@ -317,16 +316,18 @@ bool PostgreDBWrapper::add_room(const DBRoom::Room &room_info, ErrorCodes &error
 
     string query = "insert into rooms (room_name, room_description) values "
                    "('" + room_info.room_name +
-                   "', '" + room_info.description + "');";
+                   "', '" + room_info.description + "') returning id;";
 
     auto res_deleter = [](PGresult* r) { PQclear(r);};
     std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
-    if (PQresultStatus(result.get()) != PGRES_COMMAND_OK) {
-        error = ErrorCodes::UNKNOWN_DB_ERROR;
-        return false;
+
+    if (PQresultStatus(result.get()) != PGRES_TUPLES_OK) {
+        std::cout << PQresultErrorMessage(result.get());
+        error = ErrorCodes::DB_VIOLATE_UNIQUE_CONSTRAINT;
+        return 0;
     }
 
-    return true;
+    return std::stoi(PQgetvalue(result.get(), 0, 0));
 }
 
 bool PostgreDBWrapper::remove_room(const int &room_id, ErrorCodes &error) {
@@ -554,7 +555,7 @@ std::optional<vector<DBTag> > PostgreDBWrapper::get_room_tags(const int &room_id
 }
 
 // TODO: в БД нет проверки на то что пост может быть добавлен только юзером который состоит в комнате room_id
-bool PostgreDBWrapper::add_post(const DBPost::Post &post_info, ErrorCodes &error) {
+int PostgreDBWrapper::add_post(const DBPost::Post &post_info, ErrorCodes &error) {
     std::shared_ptr<PGconn> connection;
     try {
         connection = get_connection();
@@ -571,16 +572,16 @@ bool PostgreDBWrapper::add_post(const DBPost::Post &post_info, ErrorCodes &error
                    "(" + s_user_id +
                    ", " + s_room_id +
                    ", '" + post_info.title +
-                   "', '" + post_info.text + "');";
+                   "', '" + post_info.text + "') returning id;";
 
     auto res_deleter = [](PGresult* r) { PQclear(r);};
     std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
-    if (PQresultStatus(result.get()) != PGRES_COMMAND_OK) {
+    if (PQresultStatus(result.get()) != PGRES_TUPLES_OK) {
         error = ErrorCodes::UNKNOWN_DB_ERROR;
-        return false;
+        return 0;
     }
 
-    return true;
+    return std::stoi(PQgetvalue(result.get(), 0, 0));
 }
 
 bool PostgreDBWrapper::remove_post(const int &post_id, ErrorCodes &error) {
@@ -1026,7 +1027,7 @@ bool PostgreDBWrapper::remove_session(const int &session_id, ErrorCodes &error) 
     return true;
 }
 
-bool PostgreDBWrapper::add_session(const DBSession::Session &session_info, ErrorCodes &error) {
+int PostgreDBWrapper::add_session(const DBSession::Session &session_info, ErrorCodes &error) {
     std::shared_ptr<PGconn> connection;
     try {
         connection = get_connection();
@@ -1040,16 +1041,16 @@ bool PostgreDBWrapper::add_session(const DBSession::Session &session_info, Error
     string s_user_id = std::to_string(session_info.user_id);
     string query = "insert into sessions (user_id, session_id) values "
                    "(" + s_user_id +
-                   ", '" + session_info.session_identificator + "');";
+                   ", '" + session_info.session_identificator + "') returning id;";
 
     auto res_deleter = [](PGresult* r) { PQclear(r);};
     std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
-    if (PQresultStatus(result.get()) != PGRES_COMMAND_OK) {
+    if (PQresultStatus(result.get()) != PGRES_TUPLES_OK) {
         error = ErrorCodes::UNKNOWN_DB_ERROR;
         return false;
     }
 
-    return true;
+    return std::stoi(PQgetvalue(result.get(), 0, 0));
 }
 
 shared_ptr<DBSession> PostgreDBWrapper::get_session_info(const string &session_identificator, ErrorCodes &error) const {
