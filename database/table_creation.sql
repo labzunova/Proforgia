@@ -32,12 +32,14 @@ CREATE TABLE posts (
 	post_text text
 );
 
+CREATE TYPE fileType AS ENUM ('image', 'file');
 CREATE TABLE files (
 	id serial primary key,
 	post_id integer NOT NULL REFERENCES posts ON DELETE CASCADE,
 	filename varchar(200) NOT NULL,
 	filename_storage varchar(200) NOT NULL,
-	UNIQUE(post_id, filename)
+	UNIQUE(post_id, filename),
+	file_type fileType NOT NULL DEFAULT 'file'
 );
 
  CREATE TABLE sessions (

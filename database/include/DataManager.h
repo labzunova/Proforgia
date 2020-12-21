@@ -27,7 +27,8 @@ public:
 	int add_user( const DBUser::User& user_info, ErrorCodes &error ) const;
 	int add_room( const DBRoom::Room& room_info, ErrorCodes &error ) const;
 	int add_post( const DBPost::Post& post_info, ErrorCodes &error ) const;
-    bool add_file( const string& client_name, const string& storage_name, int post_id, ErrorCodes &error ) const;
+    bool add_file(const string &client_name, const string &storage_name, int post_id, DBPost::FileType fileType,
+                  ErrorCodes &error) const;
 	int add_session( const DBSession::Session& session_info, ErrorCodes &error ) const;
 	bool add_user_to_room( const int& room_id, const int& user_id, Rights user_rights, ErrorCodes &error ) const;
     bool add_tags_to_post( std::vector<std::string>& _tags, const int& post_id, const int& room_id, ErrorCodes &error ) const;
@@ -52,7 +53,7 @@ public:
     shared_ptr<DBPost> get_post_info( const int& post_id, ErrorCodes &error ) const;
     std::optional< vector<DBPost> > get_posts_by_tags(vector<string>& _tags, int room_id, ErrorCodes &error) const;
     std::optional< std::vector<DBTag> > get_post_tags(int post_id, ErrorCodes &error) const;
-    std::optional< std::vector<std::string> > get_post_attachments(int post_id, ErrorCodes &error) const;
+    std::optional< std::vector<DBPost::FileData> > get_post_attachments(int post_id, ErrorCodes &error) const;
     shared_ptr<DBTag> get_tag_info( const int& tag_id, ErrorCodes &error ) const;
     shared_ptr<DBSession> get_session_info( const int& session_id, ErrorCodes &error ) const;
     shared_ptr<DBSession> get_session_info( const string& session_identificator, ErrorCodes &error ) const;
