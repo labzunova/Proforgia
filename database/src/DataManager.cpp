@@ -28,7 +28,7 @@ bool DataManager::remove_user(const int& user_id, ErrorCodes &error) const {
     return database->remove_user(user_id, error);
 }
 
-bool DataManager::add_user(const DBUser::User &user_info, ErrorCodes &error) const {
+int DataManager::add_user(const DBUser::User &user_info, ErrorCodes &error) const {
     return database->add_user(user_info, error);
 }
 
@@ -44,7 +44,7 @@ shared_ptr<DBRoom> DataManager::get_room_info(const int &room_id, ErrorCodes &er
     return database->get_room_info(room_id, error);
 }
 
-bool DataManager::add_room(const DBRoom::Room &room_info, ErrorCodes &error) const {
+int DataManager::add_room(const DBRoom::Room &room_info, ErrorCodes &error) const {
     return database->add_room(room_info, error);
 }
 
@@ -77,7 +77,7 @@ std::optional<vector<DBPost>> DataManager::get_room_posts(const int &room_id, Er
     return database->get_room_posts(room_id, error);
 }
 
-bool DataManager::add_post(const DBPost::Post &post_info, ErrorCodes &error) const {
+int DataManager::add_post(const DBPost::Post &post_info, ErrorCodes &error) const {
     return database->add_post(post_info, error);
 }
 
@@ -191,7 +191,7 @@ bool DataManager::remove_session(const int &session_id, ErrorCodes &error) {
     return database->remove_session(session_id, error);
 }
 
-bool DataManager::add_session(const DBSession::Session &session_info, ErrorCodes &error) const {
+int DataManager::add_session(const DBSession::Session &session_info, ErrorCodes &error) const {
     return database->add_session(session_info, error);
 }
 

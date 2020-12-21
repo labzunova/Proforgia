@@ -67,7 +67,7 @@ struct DBUser : public DBEntity {
     // TODO: email should be unique to allow get method work with email, make email unique
 	static shared_ptr<DBUser> get(std::string _nickname, ErrorCodes &error);
 
-	static bool add(User _user, ErrorCodes &error);
+	static int add(User _user, ErrorCodes &error);
 	static bool remove(int id, ErrorCodes &error);
 	bool update(ErrorCodes &error) override;
 
@@ -147,7 +147,7 @@ struct DBRoom : public DBEntity {
     std::string description;
 
 	static shared_ptr<DBRoom> get(int _id, ErrorCodes &error);
-	static bool add(Room _room, ErrorCodes &error);
+	static int add(Room _room, ErrorCodes &error);
 	static bool remove(int id, ErrorCodes &error);
 
 	static bool add_user(const int& room_id, const int& user_id, Rights user_rights, ErrorCodes &error);
@@ -193,7 +193,7 @@ struct DBPost : public DBEntity {
 	std::string text;
 
 	static shared_ptr<DBPost> get(int _id, ErrorCodes &error);
-	static bool add(const Post& _post, ErrorCodes &error);
+	static int add(const Post& _post, ErrorCodes &error);
 	static bool remove(int id, ErrorCodes &error);
 	bool update(ErrorCodes &error) override;
 
@@ -216,6 +216,7 @@ struct DBPost : public DBEntity {
     shared_ptr<DBRoom> get_room(ErrorCodes &error);
     shared_ptr<DBUser> get_author(ErrorCodes &error);
     std::optional< vector<DBTag> > get_tags(ErrorCodes &error);
+    // TODO: отдавать с каждой ссылкой клиентское имя а также enum файл/фотка
     std::optional< vector<std::string> > get_attachments(ErrorCodes &error); // list of links to storage locations of files
 
 
@@ -247,7 +248,7 @@ struct DBSession : public DBEntity {
 
 	static shared_ptr<DBSession> get(int _id, ErrorCodes &error);
     static shared_ptr<DBSession> get(string _session_identificator, ErrorCodes &error);
-	static bool add(Session _session, ErrorCodes &error);
+	static int add(Session _session, ErrorCodes &error);
 	static bool remove(int id, ErrorCodes &error);
 	bool update(ErrorCodes &error) override; // поля сессии менять нельзя, всегда вернет false
 

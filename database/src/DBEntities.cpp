@@ -14,7 +14,7 @@ shared_ptr<DBUser> DBUser::get(std::string _nickname, ErrorCodes &error) {
     return DataManager::getInstance().get_user_info(_nickname, error);
 }
 
-bool DBUser::add(DBUser::User _user, ErrorCodes &error) {
+int DBUser::add(DBUser::User _user, ErrorCodes &error) {
     return DataManager::getInstance().add_user(_user, error);
 }
 
@@ -43,7 +43,7 @@ shared_ptr<DBPost> DBPost::get(int _id, ErrorCodes &error) {
     return DataManager::getInstance().get_post_info(_id, error);
 }
 
-bool DBPost::add(const DBPost::Post& _post, ErrorCodes &error) {
+int DBPost::add(const DBPost::Post& _post, ErrorCodes &error) {
     return DataManager::getInstance().add_post(_post, error);
 }
 
@@ -112,7 +112,7 @@ shared_ptr<DBRoom> DBRoom::get(int _id, ErrorCodes &error) {
     return DataManager::getInstance().get_room_info(_id, error);
 }
 
-bool DBRoom::add(DBRoom::Room _room, ErrorCodes &error) {
+int DBRoom::add(DBRoom::Room _room, ErrorCodes &error) {
     return DataManager::getInstance().add_room(_room, error);
 }
 
@@ -185,7 +185,7 @@ bool DBSession::remove(int id, ErrorCodes &error) {
     return DataManager::getInstance().remove_session(id, error);
 }
 
-bool DBSession::add(DBSession::Session _session, ErrorCodes &error) {
+int DBSession::add(DBSession::Session _session, ErrorCodes &error) {
     return DataManager::getInstance().add_session(_session, error);
 }
 
