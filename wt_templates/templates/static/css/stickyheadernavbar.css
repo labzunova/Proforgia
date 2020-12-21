@@ -1,0 +1,44 @@
+
+main > .container {
+  padding: 100px 12px 0;
+}
+
+.name-page {
+  margin-bottom: 32px;
+}
+
+.navbar-brand{
+  padding-left: 20px;
+  font-size: 24px;
+}
+
+.head-nav{
+  display: flex;
+  flex-direction: row;
+  padding-right: 52px;
+}
+
+.avatar-name{
+  margin-bottom: 0;
+  margin-top: -4px;
+}
+
+.avatar-img {
+  max-height: 20px;
+}
+
+.head-box{
+  display: flex;
+  flex-direction: column;
+  max-height: 40px;
+  margin-left: 12px;
+}
+
+.head-link{
+  margin-right: 8px;
+}
+
+.head-container{
+  display: flex;
+  flex-direction: row;
+}

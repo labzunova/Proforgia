@@ -1,0 +1,11 @@
+<header>
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top container bg-dark justify-content-md-between">
+        <div class="">
+            <p><a class="navbar-brand" href="#">Proforgia</a></p>
+        </div>
+        {% block logged_block %}
+            {% include ../wt_templates/templates/inc/header_logged.html %}
+        {% endblock %}
+    </nav>
+</header>

@@ -6,8 +6,24 @@ set(CMAKE_CXX_STANDARD 14)
 set(UNIT_TESTS
         tests/tests.cpp
         )
+#------------------tempates engine---------------------
+set(wt_views
+        wt_templates/NLTemplate.cpp
+        wt_templates/BaseTemplate.cpp
+        wt_templates/NotFound/NotFoundTemplate.cpp
+        wt_templates/Login/LoginTemplate.cpp
+        wt_templates/SignUp/SignUpTemplate.cpp
+        wt_templates/Profile/ProfileTemplate.cpp
+        wt_templates/Main/MainTemplate.cpp
+        wt_templates/AddPost/AddPostTemplate.cpp
+        wt_templates/TemplateWrapper.cpp)
+include_directories(wt_templates)
+
+add_library(TemplatesEngine ${wt_views})
 
 add_executable(Proforgia main.cpp)
+target_link_libraries(Proforgia TemplatesEngine)
+
 
 #---------------------------google-tests---------------------------
 
@@ -15,16 +31,16 @@ add_executable(Proforgia main.cpp)
 configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
 execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
         RESULT_VARIABLE result
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
-if(result)
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download)
+if (result)
     message(FATAL_ERROR "CMake step for googletest failed: ${result}")
-endif()
+endif ()
 execute_process(COMMAND ${CMAKE_COMMAND} --build .
         RESULT_VARIABLE result
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
-if(result)
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download)
+if (result)
     message(FATAL_ERROR "Build step for googletest failed: ${result}")
-endif()
+endif ()
 
 # Prevent overriding the parent project's compiler/linker
 # settings on Windows
@@ -41,7 +57,7 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
 # later. Otherwise we have to add them here ourselves.
 if (CMAKE_VERSION VERSION_LESS 2.8.11)
     include_directories("${gtest_SOURCE_DIR}/include")
-endif()
+endif ()
 
 # Now simply link against gtest or gtest_main as needed. Eg
 #target_link_libraries(example gtest_main)
