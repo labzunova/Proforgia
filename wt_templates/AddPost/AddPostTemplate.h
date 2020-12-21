@@ -7,7 +7,6 @@
 #define ADD_POST_WAY "../wt_templates/templates/add_post.html"
 #define ADD_POST_ROOM "add_post.room"
 #define ADD_POST_FILE_UPLOAD_URL "add_post.file_upload_url"
-#define ADD_POST_FILE_SAVE_URL "add_post.file_save_url"
 #define ADD_POST_FILE_NAME_DB "add_post.file_name_db"
 
 class AddPostTemplate : public BaseTemplate {

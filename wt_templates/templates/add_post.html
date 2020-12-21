@@ -35,7 +35,6 @@
                             <input id="theFile" type="file" name="uploadInput">
                         </div>
                     </div>
-                    <input type="hidden" data-fileurl="{{ add_post.file_save_url }}">
                     <input type="hidden" data-filenamedb="{{ add_post.file_name_db }}">
                     <div class="row" style="margin-top: 16px;">
                         <div class="col-2">
@@ -86,7 +85,7 @@
 
         var $this = $(this),
             upload_url = $this.data('url'),
-            file_url = $this.data('fileurl'),
+            //file_url = $this.data('fileurl'),
             file_name_db = $this.data('filenamedb'),
             file_name = $('#theFile').val().split('\\').pop(),
             server_url = $this.data('serverurl');
@@ -110,7 +109,7 @@
         });
 
         var ctx = new Map();
-        ctx['file_url'] = file_url;
+        //ctx['file_url'] = file_url;
         ctx['file_name_db'] = file_name_db;
         ctx['file_name'] = file_name;
         ctx['title'] = title;

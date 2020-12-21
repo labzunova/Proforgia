@@ -79,8 +79,7 @@ struct Context {
         filenameDB = filenameDB_;
     }
 
-    std::string urlUploadFile; // ссылка на загрузку на амазон
-    std::string urlSaveFile; // ссылка на скачивание файла
+    std::string urlSaveFile; // ссылка на загрузку на амазон
     std::string filenameDB; // имя в БД
 
     std::vector<Post> posts;

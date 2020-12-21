@@ -18,8 +18,7 @@ std::string & AddPostTemplate::getHTML() {
     setRightBlock(temp);
 
     temp.set(ADD_POST_ROOM, context.currentRoom.url);
-    temp.set(ADD_POST_FILE_UPLOAD_URL, context.urlUploadFile);
-    temp.set(ADD_POST_FILE_SAVE_URL, context.urlSaveFile);
+    temp.set(ADD_POST_FILE_UPLOAD_URL, context.urlSaveFile);
     temp.set(ADD_POST_FILE_NAME_DB, context.filenameDB);
 
     std::stringstream os;
