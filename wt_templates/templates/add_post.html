@@ -8,7 +8,7 @@
     <div class="row container-fluid d-flex justify-content-between" style="margin: 64px">
         <div class="col-6">
             <div>
-                <form method="post" action="{{ add_post.room }}">
+                <form method="post" enctype="multipart/form-data" action="{{ add_post.room }}/add" data-url="{{ add_post.file_url }}">
                     <h1 class="h3 mb-3 font-weight-normal">New post</h1>
                     <div class="form-group row" style="margin-top: 16px;">
                         <label for="title" class="col-sm-3 col-form-label">Title</label>
@@ -31,7 +31,7 @@
 					<div class="form-group row" style="margin-top: 16px;">
                         <label for="tags" class="col-sm-3 col-form-label">Tags</label>
                         <div class="col-sm-9">
-                            <input type="file" name="files" multiple>
+                            <input type="file" name="uploadInput">
                         </div>
                     </div>
 
@@ -67,5 +67,40 @@
 <script src="../js/jquery.slim.min.js"></script>
 <script src="../js/popper.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    // working version
+
+    $(function() {
+        $('#theForm').on('submit', sendFile);
+    });
+
+    function sendFile(e) {
+        e.preventDefault();
+        console.log('Sending file');
+
+        var theFormFile = $('#theFile').get()[0].files[0];
+        console.log(theFormFile);
+
+        var $this = $(this),
+            upload_url = $this.data('url');
+
+        console.log(upload_url);
+        var result = $.ajax({
+            type: 'PUT',
+            url: upload_url,
+            processData: false,
+            data: theFormFile,
+            success: function(req, err) {
+                console.log('File uploaded: ' + err);
+            },
+            error: function(req, err) {
+                console.log('File NOT uploaded: ' + err);
+            }
+        });
+
+        return false;
+    }
+</script>
 </body>
 </html>

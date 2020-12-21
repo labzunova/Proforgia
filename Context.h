@@ -70,11 +70,11 @@ struct Context {
     Room currentRoom;
     std::vector<Tag> tags;
 
-    void setAddContext(User& user_, Room& currentRoom_, std::vector<Tag>& tags_) {
+    void setAddContext(User& user_, Room& currentRoom_, std::vector<Tag>& tags_, std::string& urlfile_) {
         user = user_;
         currentRoom = currentRoom_;
         tags = tags_;
-//        urlfile = urlfile_;
+        urlfile = urlfile_;
     }
 
     std::string urlfile;
