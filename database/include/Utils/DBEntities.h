@@ -201,12 +201,16 @@ struct DBPost : public DBEntity {
     static std::optional< vector<DBPost> > get(std::vector<std::string> _tags, int room_id, ErrorCodes &error);
 
     // чтобы отдать ссылку нужно знать название файла (сейчас название генерится рандомно формата "posts/<post_id>/RaNdOmHhhNnN")
-    // возвращает pair<"ссылку", "само с которым оно загрузиться в хралище">
+    // возвращает pair<"ссылку", "имя с которым оно загрузится в хралище">
     static std::optional< std::pair<string, string> > get_upload_link(int post_id, ErrorCodes &error);
 
+    enum FileType{
+        FILE,
+        IMAGE,
+    };
     // добавление записи о файле в БД
     // client_name - название файла для клиента; storage_name - название файла, с которым он был загружен в хранилище вида "posts/<post_id>/random_name"
-    static bool add_file_to_db(string client_name, string storage_name, int post_id, ErrorCodes &error);
+    static bool add_file_to_db(string client_name, string storage_name, int post_id, FileType fileType, ErrorCodes &error);
     static bool remove_file_from_db(string client_filename, string storage_filename, ErrorCodes &error);
     static bool remove_file_from_st(string storage_filename, ErrorCodes &error); // storage_filename - имя файла, с которым он загрузился в Хранилище
 
@@ -217,8 +221,23 @@ struct DBPost : public DBEntity {
     shared_ptr<DBRoom> get_room(ErrorCodes &error);
     shared_ptr<DBUser> get_author(ErrorCodes &error);
     std::optional< vector<DBTag> > get_tags(ErrorCodes &error);
-    // TODO: отдавать с каждой ссылкой клиентское имя а также enum файл/фотка
-    std::optional< vector<std::string> > get_attachments(ErrorCodes &error); // list of links to storage locations of files
+
+    // отдает массив вспомогательных структур FileData, каждая предоставляет из себя данные файла, необходимые для отдачи на клиент
+    struct FileData {
+        FileData(const string &clientFilename, const string &storageLink, FileType fileType) : client_filename(
+                clientFilename), storage_link(storageLink), fileType(fileType) {}
+
+        std::string client_filename;
+        std::string storage_link;
+        FileType fileType;
+
+        void print() {
+            std::cout << client_filename << std::endl;
+            std::cout << fileType << std::endl;
+            std::cout << storage_link << std::endl;
+        }
+    };
+    std::optional< vector<FileData> > get_attachments(ErrorCodes &error); // list of links to storage locations of files
 
 
     void print() {
@@ -251,6 +270,7 @@ struct DBSession : public DBEntity {
     static shared_ptr<DBSession> get(string _session_identificator, ErrorCodes &error);
 	static int add(Session _session, ErrorCodes &error);
 	static bool remove(int id, ErrorCodes &error);
+	static bool remove(string _session_identificator, ErrorCodes &error);
 	bool update(ErrorCodes &error) override; // поля сессии менять нельзя, всегда вернет false
 
 	// методы получения связанных полей 

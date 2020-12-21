@@ -816,7 +816,9 @@ bool PostgreDBWrapper::add_tags_to_post(vector<std::string> &_tags, const int &p
     return true;
 }
 
-bool PostgreDBWrapper::add_file(const string &client_name, const string &storage_name, int post_id, ErrorCodes &error) {
+bool PostgreDBWrapper::add_file(const string &client_name, const string &storage_name, int post_id,
+                                DBPost::FileType fileType,
+                                ErrorCodes &error) {
     std::shared_ptr<PGconn> connection;
     try {
         connection = get_connection();
@@ -827,10 +829,15 @@ bool PostgreDBWrapper::add_file(const string &client_name, const string &storage
         return false;
     }
 
-    string query = "insert into files (post_id, filename, filename_storage) values "
+    string file_type_s;
+    if (fileType == DBPost::FileType::IMAGE)
+        file_type_s = "image";
+    else file_type_s = "file";
+    string query = "insert into files (post_id, filename, filename_storage, file_type) values "
                    "(" + std::to_string(post_id) +
                    ", '" + client_name +
-                   "', '" + storage_name + "');";
+                   "', '" + storage_name +
+                   "', '" + file_type_s + "');";
 
     auto res_deleter = [](PGresult* r) { PQclear(r);};
     std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
@@ -936,7 +943,7 @@ std::optional<vector<int> > PostgreDBWrapper::get_post_tags_ids(int post_id, Err
     return tags_ids;
 }
 
-std::optional<std::vector<std::string> > PostgreDBWrapper::get_post_attachments(int post_id, ErrorCodes &error) const {
+std::optional<std::vector<DBWrapper::FileInfo> > PostgreDBWrapper::get_post_attachments(int post_id, ErrorCodes &error) const {
     std::shared_ptr<PGconn> connection;
     try {
         connection = get_connection();
@@ -948,7 +955,7 @@ std::optional<std::vector<std::string> > PostgreDBWrapper::get_post_attachments(
     }
 
     std::string s_id = std::to_string(post_id);
-    std::string query = "select filename from files where post_id = " + s_id + ";";
+    std::string query = "select filename_storage, filename, file_type from files where post_id = " + s_id + ";";
 
     auto res_deleter = [](PGresult* r) { PQclear(r);};
     std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
@@ -958,11 +965,18 @@ std::optional<std::vector<std::string> > PostgreDBWrapper::get_post_attachments(
         return std::nullopt;
     }
 
-    std::vector<std::string> files_names_in_storage;
+    std::vector<FileInfo> files_names_in_storage;
     int number_of_rows = PQntuples(result.get());
     for (int i = 0; i < number_of_rows; i++) {
-        string filename = PQgetvalue(result.get(), i, 0);
-        files_names_in_storage.push_back(filename);
+        string filename_storage = PQgetvalue(result.get(), i, 0);
+        string filename_client = PQgetvalue(result.get(), i, 1);
+        string file_type_s = PQgetvalue(result.get(), i, 2);
+        DBPost::FileType fileType;
+        if (file_type_s == "image")
+            fileType = DBPost::FileType::IMAGE;
+        else fileType = DBPost::FileType::FILE;
+        FileInfo file(filename_storage, filename_client, fileType);
+        files_names_in_storage.push_back(file);
     }
 
     return files_names_in_storage;

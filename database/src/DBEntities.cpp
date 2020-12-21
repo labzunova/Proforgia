@@ -22,6 +22,13 @@ bool DBUser::remove(int id, ErrorCodes &error) {
     return DataManager::getInstance().remove_user(id, error);
 }
 
+bool DBSession::remove(string _session_identificator, ErrorCodes &error) {
+    auto session = DataManager::getInstance().get_session_info(_session_identificator, error);
+    if (!session)
+        return false;
+    return DataManager::getInstance().remove_session(session->id, error);
+}
+
 bool DBUser::update(ErrorCodes &error) {
     return DataManager::getInstance().edit_user(id, User(nick_name, email, password), error);
 }
@@ -63,9 +70,9 @@ std::optional< std::pair<string, string> > DBPost::get_upload_link(int post_id, 
     return DataManager::getInstance().get_file_upload_link(post_id, error);
 }
 
-bool DBPost::add_file_to_db(string client_name, string storage_name, int post_id, ErrorCodes &error) {
+bool DBPost::add_file_to_db(string client_name, string storage_name, int post_id, FileType fileType, ErrorCodes &error) {
     // добавить запись о файле в БД
-    return DataManager::getInstance().add_file(client_name, storage_name, post_id, error);
+    return DataManager::getInstance().add_file(client_name, storage_name, post_id, fileType, error);
 }
 
 // TODO: добавлять путь posts/<post_id> уже на моей реализации, чтобы в параметрах достаточно было указать только название файла и айди поста
@@ -90,7 +97,7 @@ std::optional< std::vector<DBTag> > DBPost::get_tags(ErrorCodes &error) {
     return DataManager::getInstance().get_post_tags(id, error);
 }
 
-std::optional< std::vector<std::string> > DBPost::get_attachments(ErrorCodes &error) {
+std::optional< std::vector<DBPost::FileData> > DBPost::get_attachments(ErrorCodes &error) {
     return DataManager::getInstance().get_post_attachments(id, error);
 }
 

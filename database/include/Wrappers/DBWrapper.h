@@ -18,7 +18,8 @@ public:
     virtual int add_user(const DBUser::User& user_info, ErrorCodes &error ) = 0;
 	virtual int add_room(const DBRoom::Room& room_info, ErrorCodes &error ) = 0;
 	virtual int add_post(const DBPost::Post& post_info, ErrorCodes &error ) = 0;
-    virtual bool add_file(const string &client_name, const string &storage_name, int post_id, ErrorCodes &error) = 0;
+    virtual bool add_file(const string &client_name, const string &storage_name, int post_id, DBPost::FileType fileType,
+                          ErrorCodes &error) = 0;
 	virtual bool add_user_to_room( const int& room_id, const int& user_id, Rights user_rights, ErrorCodes &error ) = 0;
 	virtual bool add_tags_to_post( std::vector<std::string>& _tags, const int& post_id, const int& room_id, ErrorCodes &error ) = 0;
 	virtual int add_session(const DBSession::Session& session_info, ErrorCodes &error ) = 0;
@@ -40,7 +41,16 @@ public:
 	virtual shared_ptr<DBPost> get_post_info( const int& post_id, ErrorCodes &error ) const = 0;
 	virtual std::optional< vector<int> > get_posts_by_tags(std::vector<std::string>& _tags, int room_id, ErrorCodes &error) const = 0;
     virtual std::optional< vector<int> > get_post_tags_ids(int post_id, ErrorCodes &error) const = 0;
-    virtual std::optional< std::vector<std::string> > get_post_attachments(int post_id, ErrorCodes &error) const = 0;
+
+    struct FileInfo {
+        FileInfo(const string &filenameStorage, const string &filenameClient, DBPost::FileType fileType)
+                : filename_storage(filenameStorage), filename_client(filenameClient), fileType(fileType) {}
+
+        std::string filename_storage;
+        std::string filename_client;
+        DBPost::FileType fileType;
+    };
+    virtual std::optional< std::vector<FileInfo> > get_post_attachments(int post_id, ErrorCodes &error) const = 0;
     virtual shared_ptr<DBTag> get_tag_info( const int& tag_id, ErrorCodes &error ) const = 0;
 	virtual shared_ptr<DBSession> get_session_info( const int& session_id, ErrorCodes &error ) const = 0;
 	virtual shared_ptr<DBSession> get_session_info( const string& session_identificator, ErrorCodes &error ) const = 0;
