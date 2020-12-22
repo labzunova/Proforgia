@@ -15,8 +15,12 @@ int main()
 
     // DBPost::add_file_to_db("catty.jpg", "posts/4/KJHKJHjhjh6b7", 4, DBPost::FileType::IMAGE, error);
 
-    auto files = DBPost::get(4, error)->get_attachments(error);
-    files.value()[1].print();
+//    auto files = DBPost::get(4, error)->get_attachments(error);
+//    files.value()[1].print();
+
+    auto post = DBPost::get(3, error);
+    post->print();
+    post->update_tags({"матан", "амбразура", "тесты"}, error);
 
     return 0;
 }
