@@ -30,10 +30,16 @@ struct Context {
     };
 
     struct File {
+        enum Type {
+            IMAGE,
+            FILE,
+        };
+
+        Type type;
         std::string filename;
         std::string url;
 
-        File(std::string& filename_, std::string& url_) : filename(filename_), url(url_) {}
+        File(std::string& filename_, std::string& url_, Type type_) : filename(filename_), url(url_), type(type_) {}
 
         File() {}
     };

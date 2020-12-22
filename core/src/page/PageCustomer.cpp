@@ -110,6 +110,7 @@ void PageCustomer::set_files(std::vector<DBPost::FileData>& input, std::vector<C
         Context::File file;
         file.filename = db_file.client_filename;
         file.url = db_file.storage_link;
+        file.type = (db_file.fileType == DBPost::IMAGE) ? Context::File::IMAGE : Context::File::FILE;
         output.push_back(std::move(file));
     }
 }
