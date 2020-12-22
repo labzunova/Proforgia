@@ -206,7 +206,8 @@ void Request_handler::fill_POST_room()
     to_put_in_loop.emplace("title", get_data( "title" ) );
     to_put_in_loop.emplace( "tag", get_data(  "tag" ) );
     to_put_in_loop.emplace( "text", get_data( "text" ) ); // text и fileurl не обязательно будут
-    to_put_in_loop.emplace( "fileurl", get_data( "fileurl" ) );
+    to_put_in_loop.emplace( "file_name_db", get_data( "file_name_db" ) );
+    to_put_in_loop.emplace( "file_name", get_data( "file_name" ) );
 }
 
 void Request_handler::fill_POST_create_room()
