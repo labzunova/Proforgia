@@ -9,7 +9,7 @@
         <div class="col-6">
             <div>
                 <form id="theForm" method="post" enctype="multipart/form-data" data-serverurl="{{ add_post.room }}"
-                      data-url="{{ add_post.file_upload_url }}">
+                      data-url="{{ add_post.file_upload_url }}" data-filenamedb="{{ add_post.file_name_db }}">
                     <h1 class="h3 mb-3 font-weight-normal">New post</h1>
                     <div class="form-group row" style="margin-top: 16px;">
                         <label for="title" class="col-sm-3 col-form-label">Title</label>
@@ -35,7 +35,7 @@
                             <input id="theFile" type="file" name="uploadInput">
                         </div>
                     </div>
-                    <input type="hidden" data-filenamedb="{{ add_post.file_name_db }}">
+<!--                    <input type="hidden" data-filenamedb="{{ add_post.file_name_db }}">-->
                     <div class="row" style="margin-top: 16px;">
                         <div class="col-2">
 

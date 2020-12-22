@@ -1,12 +1,12 @@
 #include "Parser.h"
 
 
-const string Parser::parse_method()
+string Parser::parse_method() const
 {
     return request.substr( 0, request.find(' '));// первое слово до пробела в запросе - метод
 }
 
-const string Parser::parse_path()
+string Parser::parse_path() const
 {
     string  temp = request,
             path;
@@ -17,7 +17,7 @@ const string Parser::parse_path()
     return path;
 }
 
-const std::pair<string, string> Parser::parse_room_properties( string& path )
+std::pair<string, string> Parser::parse_room_properties( string& path ) const
 {
     string room,
            tag;
@@ -33,7 +33,7 @@ const std::pair<string, string> Parser::parse_room_properties( string& path )
     return properties;
 }
 
-const unordered_map<string, string> Parser::parse_cookies()
+unordered_map<string, string> Parser::parse_cookies() const
 {
     unordered_map<string, string> cookie_values;
     if ( request.find( "\r\nCookie:" ) != -1)
@@ -56,7 +56,7 @@ const unordered_map<string, string> Parser::parse_cookies()
     return cookie_values;
 }
 
-const unordered_map<string, string> Parser::parse_body()
+unordered_map<string, string> Parser::parse_body() const
 {
     string request_ = request;
     unordered_map<string, string> data;
@@ -70,14 +70,25 @@ const unordered_map<string, string> Parser::parse_body()
         int endpos = body.find( '&' );
         if( endpos == -1 ) endpos = body.length(); // если последний параметр
         value = body.substr( index + 1, endpos - index - 1 );
+        value = replace_pluses( value );
         data.insert(std::make_pair( key, value ));
         body.erase( 0, endpos + 1 );
     }
     return data;
 }
 
-const string Parser::parse_room_to_delete( string& path )
+string Parser::parse_room_to_delete( string& path ) const
 {
     path.erase(0, path.find('/') + 1);
     return path;
+}
+
+string Parser::replace_pluses( string sentence ) const
+{
+    for( auto i = sentence.begin(); i < sentence.end(); i++ )
+    {
+        if ( *i == '+' )
+            *i = ' ';
+    }
+    return sentence;
 }
