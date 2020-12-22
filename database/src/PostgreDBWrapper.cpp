@@ -801,7 +801,7 @@ bool PostgreDBWrapper::add_tags_to_post(vector<std::string> &_tags, const int &p
 
     // вставить актуальные записи связей тэгов с этим постом
     if (tags_ids.empty()) return true;
-    s_id = std::to_string(room_id);
+    s_id = std::to_string(post_id);
     query = "insert into tags_to_posts (tag_id, post_id) values (" + std::to_string(tags_ids[0]) + ", " + s_id + ")";
     for (int i = 1; i < tags_ids.size(); i++) {
         query += ", (" + std::to_string(tags_ids[i]) + ", " + s_id + ")";
