@@ -10,8 +10,6 @@
 #include "DBEntities.h"
 #include "ErrorCodes.h"
 
-using std::string;
-
 typedef std::map<std::string, std::string> ContextMap;
 
 class ActivityManager {
@@ -28,9 +26,10 @@ protected:
 public:
     virtual ~ActivityManager() = default;
 
-    virtual Status signUp(string& session);
-    virtual Status login(string& session);
+    virtual Status signUp(std::string& session);
+    virtual Status login(std::string& session);
     virtual Status exit();
+    virtual Status exit_room();
     virtual Status add_room();
     virtual Status add_content();
     virtual Status create_room();

@@ -1,8 +1,8 @@
-//#include <iostream>
-//#include "Server.h"
-//#include "Handler.h"
-//#include "Worker.cpp"
-// #include "database/include/Utils/DBEntities.h"
+#include <iostream>
+#include "Server.h"
+#include "Handler.h"
+#include "Worker.cpp"
+
 
 //typedef std::unordered_map<std::string, std::string> ContextMap;
 //class TestHandler {
@@ -29,14 +29,14 @@ int main( int argc, char* argv[] ) {
   //  if ( argc != 2 )
   //      std::cout << "enter an address and port";
   //  else
-//    {
-//        std::shared_ptr<Connection_queue> queue = std::make_shared<Connection_queue>();
-//        Work<Connection_queue, Handler> work;
-//        work.start_work(queue);
-//        Server server("127.0.0.1", "5000", queue);
-//        // Server server( argv[0], argv[1], queue );
-//        server.start_server();
-//    }
 
+    {
+        std::shared_ptr<Connection_queue> queue = std::make_shared<Connection_queue>();
+        Work<Connection_queue, Handler> work;
+        work.start_work(queue);
+        Server server("127.0.0.1", "5000", queue);
+        // Server server( argv[0], argv[1], queue );
+        server.start_server();
+    }
     return 0;
 }

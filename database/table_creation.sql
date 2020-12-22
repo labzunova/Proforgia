@@ -5,14 +5,13 @@ CREATE TABLE users (
 	UNIQUE (email),
 	email varchar(50) NOT NULL,
 	create_time timestamp with time zone NOT NULL DEFAULT current_timestamp,
-	password varchar(50) NOT NULL
+	password varchar(200) NOT NULL
 );
 
 CREATE TABLE rooms (
 	id serial primary key,
 	create_time timestamp with time zone NOT NULL DEFAULT current_timestamp,
 	room_name varchar(100) NOT NULL,
-	UNIQUE (room_name),
 	room_description varchar(1000)
 );
 
@@ -33,11 +32,14 @@ CREATE TABLE posts (
 	post_text text
 );
 
+CREATE TYPE fileType AS ENUM ('image', 'file');
 CREATE TABLE files (
 	id serial primary key,
 	post_id integer NOT NULL REFERENCES posts ON DELETE CASCADE,
 	filename varchar(200) NOT NULL,
-	UNIQUE(post_id, filename)
+	filename_storage varchar(200) NOT NULL,
+	UNIQUE(post_id, filename),
+	file_type fileType NOT NULL DEFAULT 'file'
 );
 
  CREATE TABLE sessions (

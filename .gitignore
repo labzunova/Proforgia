@@ -4,6 +4,9 @@ cmake-build-debug
 CMakeFiles/
 build/
 
+database/aws-sdk-cpp
+openssl/
+
 .DS_Store
 */.DS_Store
 

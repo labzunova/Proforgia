@@ -2,8 +2,6 @@
 // Created by sergei on 28.11.2020.
 //
 
-#define CRYPTOPP_ENABLE_NAMESPACE_WEAK 1
-
 #include "ActivityUser.h"
 #include <boost/log/trivial.hpp>
 #include <openssl/sha.h>
@@ -16,50 +14,72 @@ string SHA(string data)
 
     byte ab_digest[SHA_DIGEST_LENGTH];
     SHA1(pb_data, data_len, ab_digest);
+    ab_digest[SHA_DIGEST_LENGTH - 1] = 0;
 
-    return string((char*)ab_digest);
+    std::string hash_pas = std::string((char*)ab_digest);
+    for (int i = 0; i < SHA_DIGEST_LENGTH - 1; ++i)
+        hash_pas[i] = abs(hash_pas[i]) % 93 + 33;
+
+    return hash_pas;
 }
 
-ActivityManager::Status ActivityUser::signUp(string& session) {
+ActivityManager::Status ActivityUser::signUp(std::string& session) {
     if(!validate_signUp())
         return CLIENT_ERROR;
 
     std::string login = context_["login"];
     std::string email = context_["mail"];
-    std::string password = SHA(context_["password"]);
-    typename DBUser::User user(email, login, password);
-    BOOST_LOG_TRIVIAL(debug) << password;
 
     ErrorCodes er;
-//    int id = DBUser::add(user, er); // TODO проверка на то прошло ли сохранение, вернуться когда будет бд
+    if (DBUser::get(login, er))
+        return CLIENT_ERROR;
 
-    int id = 0; /// временное решение
+
+    BOOST_LOG_TRIVIAL(debug) << std::to_string(context_["password"].size());
+    std::string password = SHA(context_["password"]);
+    typename DBUser::User user(login, email, password);
+    BOOST_LOG_TRIVIAL(debug) << "Password: " + password;
+
+    int id_user = DBUser::add(user, er);
+
+    if (!id_user)
+        return SERVER_ERROR;
 
     session = create_session();
-    save_session(id, session);
+    save_session(id_user, session);
     return OK;
 }
 
-ActivityManager::Status ActivityUser::login(string& session) {
+ActivityManager::Status ActivityUser::login(std::string& session) {
     if(!validate_signIn())
         return CLIENT_ERROR;
 
-    string login = context_["login"];
-    string password = SHA(context_["password"]);
+    std::string login = context_["login"];
+
+    std::string password = SHA(context_["password"]);
     ErrorCodes er;
-    auto user = DBUser::get(login, er); // TODO проверка на то пришел ли User
+    auto user = DBUser::get(login, er);
+    if (!user) {
+        if (er == DB_ENTITY_NOT_FOUND)
+            return CLIENT_ERROR;
+        else
+            return SERVER_ERROR;
+    }
     if(user->password != password)
         return CLIENT_ERROR;
 
-    //session = create_session(user.id);
+    int id_user = user->get_id();
+
+    session = create_session();
+    save_session(id_user, session);
     return OK;
 }
 
 ActivityUser::ActivityUser(ContextMap &context) : ActivityManager(context) {
 }
 
+// валидация при регистрации
 bool ActivityUser::validate_signUp() {
-    // TODO добавить еще разные проверки
     auto end = context_.end();
     if((context_.find("login") == end) ||
         (context_.find("password") == end) ||
@@ -67,12 +87,19 @@ bool ActivityUser::validate_signUp() {
 
         return false;
 
+    if(context_["password"].size() < 4) // проверка на длину пароля
+        return false;
+
+    auto mail = context_["mail"];
+    if(mail.find('%') == std::string::npos)
+        return false;
+
     return true;
 }
 
-// создание случайных байт для сессии
+// создание случайных символов для сессии
 string ActivityUser::create_session() {
-    const int size_session = 40;
+    const int size_session = 40; // длина строки сессии
 
     srand( time(0) );
 
@@ -90,8 +117,8 @@ string ActivityUser::create_session() {
     return str;
 }
 
+// валидация при входе
 bool ActivityUser::validate_signIn() {
-    // TODO добавить еще разные проверки
     auto end = context_.end();
     if((context_.find("login") == end) ||
        (context_.find("password") == end))
@@ -101,9 +128,10 @@ bool ActivityUser::validate_signIn() {
     return true;
 }
 
-// TODO вернуться когда будет готов интерфейс сессии
 // сохранение в базу данных сессии
-void ActivityUser::save_session(int& id_user, string& str_session) {
-//    typename DBSession::Session session(id, str_session);
-//    DBSession::add(session);
+void ActivityUser::save_session(int& id_user, std::string& str_session) {
+    typename DBSession::Session session(str_session, id_user);
+
+    ErrorCodes er;
+    DBSession::add(session, er);
 }

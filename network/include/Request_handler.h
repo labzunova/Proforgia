@@ -19,9 +19,15 @@ private:
     void fill_GET_signup();
     void fill_GET_profile();
     void fill_GET_room();
+    void fill_GET_room_adding();
+    void fill_GET_exit();
+    void fill_GET_logout();
     void fill_POST_login();
     void fill_POST_signup();
     void fill_POST_room();
+    void fill_POST_create_room();
+    void fill_POST_join_room();
+    void fill_GET_delete_room();
 
     std::unordered_map<std::string, std::string> data;
     std::unordered_map<std::string, std::string> cookies;

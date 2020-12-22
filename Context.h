@@ -13,14 +13,14 @@ struct Context {
     struct Room {
         std::string title;
         std::string url;
+        bool isAdmin;
 
-        Room(std::string& title_, std::string& url_) : title(title_), url(url_) {}
+        Room(std::string& title_, std::string& url_, bool& isAdmin_) : title(title_), url(url_), isAdmin(isAdmin_)  {}
 
         Room() {}
     };
 
     struct Tag {
-
         std::string tag;
         std::string url;
 
@@ -29,26 +29,35 @@ struct Context {
         Tag() {}
     };
 
+    struct File {
+        std::string filename;
+        std::string url;
+
+        File(std::string& filename_, std::string& url_) : filename(filename_), url(url_) {}
+
+        File() {}
+    };
+
     struct Post {
         std::string title;
         std::string author;
         std::vector<Tag> tags;
         std::string text;
-        std::vector<std::string> fileUrls;
+        std::vector<File> files;
 
         Post(std::string& title_,
              std::string& author_,
              std::vector<Tag>& tags_,
              std::string& text_,
-             std::vector<std::string>& fileUrls_) : title(title_), author(author_), tags(tags_), text(text_),
-                                                    fileUrls(fileUrls_) {}
+             std::vector<File>& files_) : title(title_), author(author_), tags(tags_), text(text_),
+                                          files(files_) {}
 
         Post() {}
     };
 
     std::string page;
 
-    explicit Context(std::string& page_) : page(page_) {}
+    Context(std::string& page_) : page(page_) {}
 
     User user;
     std::vector<Room> rooms;
@@ -61,11 +70,17 @@ struct Context {
     Room currentRoom;
     std::vector<Tag> tags;
 
-    void setAddContext(User& user_, Room& currentRoom_, std::vector<Tag>& tags_) {
+    void setAddContext(User& user_, Room& currentRoom_, std::vector<Tag>& tags_,
+                       std::string& urlSaveFile_, std::string filenameDB_) {
         user = user_;
         currentRoom = currentRoom_;
         tags = tags_;
+        urlSaveFile = urlSaveFile_;
+        filenameDB = filenameDB_;
     }
+
+    std::string urlSaveFile; // ссылка на загрузку на амазон
+    std::string filenameDB; // имя в БД
 
     std::vector<Post> posts;
 

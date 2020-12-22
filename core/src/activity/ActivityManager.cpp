@@ -4,11 +4,11 @@
 
 #include "ActivityManager.h"
 
-ActivityManager::Status ActivityManager::signUp(string& session) {
+ActivityManager::Status ActivityManager::signUp(std::string& session) {
     return ActivityManager::CLIENT_ERROR;
 }
 
-ActivityManager::Status ActivityManager::login(string& session) {
+ActivityManager::Status ActivityManager::login(std::string& session) {
     return ActivityManager::CLIENT_ERROR;
 }
 
@@ -37,5 +37,9 @@ ActivityManager::Status ActivityManager::add_favorite() {
 }
 
 ActivityManager::Status ActivityManager::add_deadline() {
+    return ActivityManager::CLIENT_ERROR;
+}
+
+ActivityManager::Status ActivityManager::exit_room() {
     return ActivityManager::CLIENT_ERROR;
 }

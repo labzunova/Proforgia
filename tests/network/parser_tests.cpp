@@ -46,7 +46,7 @@ const static string POST_request_signup = "POST /signup HTTP/1.1\r\n"
                                           "Connection: Keep-Alive\r\n\r\n"
                                           "login=name&mail=name@gmail.com&password=12345";
 
-const static string POST_request_addpost = "POST /rooms/room1 HTTP/1.1\r\n"
+const static string POST_request_addpost = "POST /room/room1 HTTP/1.1\r\n"
                                            "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
                                            "Host: www.example.com\r\n"
                                            "Content-Type: application/x-www-form-urlencoded\r\n"
@@ -57,13 +57,32 @@ const static string POST_request_addpost = "POST /rooms/room1 HTTP/1.1\r\n"
                                            "Cookie: session=dfsd54h4telngdfjgod5\r\n\r\n"
                                            "title=first&text=hello!&fileurl=s3url&tag=math";
 
-const static string GET_request_room = "GET /rooms/room1 HTTP/1.1\r\n"
+const static string POST_create_room = "POST /create HTTP/1.1\r\n"
+                                       "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
+                                       "Host: www.example.com\r\n"
+                                       "Content-Type: application/x-www-form-urlencoded\r\n"
+                                       "Content-Length: length\r\n"
+                                       "Accept-Language: ru-ru\r\n"
+                                       "Accept-Encoding: gzip, deflate\r\n"
+                                       "Connection: Keep-Alive\r\n"
+                                       "Cookie: session=dfsd54h4telngdfjgod5\r\n\r\n"
+                                       "title=newroomtojoin";
+
+const static string GET_request_room = "GET /room/room1 HTTP/1.1\r\n"
                                    "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
                                    "Host: www.example.com\r\n"
                                    "Accept-Language: ru-ru\r\n"
                                    "Accept-Encoding: gzip, deflate\r\n"
                                    "Connection: Keep-Alive\r\n"
                                    "Cookie: session=12345\r\n\r\n";
+
+const static string GET_request_delete_room = "GET /delete_room/room1 HTTP/1.1\r\n"
+                                       "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
+                                       "Host: www.example.com\r\n"
+                                       "Accept-Language: ru-ru\r\n"
+                                       "Accept-Encoding: gzip, deflate\r\n"
+                                       "Connection: Keep-Alive\r\n"
+                                       "Cookie: session=12345\r\n\r\n";
 
 const static string GET_request2 = "GET /room/room1/math HTTP/1.1\r\n"
                                    "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\r\n"
@@ -160,7 +179,7 @@ TEST( full_parse_tests, GET_room ) // запрос на получение ко�
     string method = parser.parse_method();
     ASSERT_EQ( method, "GET" );
     string path = parser.parse_path();
-    ASSERT_EQ( "rooms/room1", path );
+    ASSERT_EQ( "room/room1", path );
     std::pair<string, string> room = parser.parse_room_properties( path );
     ASSERT_EQ( "room1", room.first );
     ASSERT_EQ( "", room.second );
@@ -180,6 +199,19 @@ TEST( full_parse_tests, GET_room_tag ) // запрос на получение �
     ASSERT_EQ( "math", room.second );
     unordered_map<string, string> cookies = parser.parse_cookies();
     ASSERT_EQ( "sessionforroom", cookies["session"] );
+}
+
+TEST( full_parse_tests, GET_delete_room ) // запрос на получение конкретной комнаты
+{
+    Parser parser( GET_request_delete_room );
+    string method = parser.parse_method();
+    ASSERT_EQ( method, "GET" );
+    string path = parser.parse_path();
+    ASSERT_EQ( "delete_room/room1", path );
+    string room = parser.parse_room_to_delete( path );
+    ASSERT_EQ( "room1", room );
+    unordered_map<string, string> cookies = parser.parse_cookies();
+    ASSERT_EQ( "12345", cookies["session"] );
 }
 
 
@@ -214,7 +246,7 @@ TEST( full_parse_tests, POST_addpost ) // запрос на добавление
     string method = parser.parse_method();
     ASSERT_EQ( method, "POST" );
     string path = parser.parse_path();
-    ASSERT_EQ( "rooms/room1", path );
+    ASSERT_EQ( "room/room1", path );
     string room = parser.parse_room_properties( path ).first;
     ASSERT_EQ( "room1", room );
     unordered_map<string, string> data = parser.parse_body();
@@ -222,6 +254,20 @@ TEST( full_parse_tests, POST_addpost ) // запрос на добавление
     ASSERT_EQ( "hello!", data["text"] );
     ASSERT_EQ( "math", data["tag"] );
     ASSERT_EQ( "s3url", data["fileurl"] );
+    unordered_map<string, string> cookies = parser.parse_cookies();
+    ASSERT_EQ( "dfsd54h4telngdfjgod5", cookies["session"] );
+}
+
+
+TEST( full_parse_tests, POST_createroom ) // запрос на создание комнаты
+{
+    Parser parser( POST_create_room );
+    string method = parser.parse_method();
+    ASSERT_EQ( method, "POST" );
+    string path = parser.parse_path();
+    ASSERT_EQ( "create", path );
+    unordered_map<string, string> data = parser.parse_body();
+    ASSERT_EQ( "newroomtojoin", data["title"] );
     unordered_map<string, string> cookies = parser.parse_cookies();
     ASSERT_EQ( "dfsd54h4telngdfjgod5", cookies["session"] );
 }

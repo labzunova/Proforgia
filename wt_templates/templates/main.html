@@ -4,9 +4,9 @@
             {% include ../wt_templates/templates/static/css/right_block.css %}
         </style>
 
-        <main role="main" class="d-flex justify-content-center container">
-            <div class="row container d-flex justify-content-between">
-                <div class="col-9">
+        <main role="main" class="d-flex justify-content-center container-fluid" >
+            <div class="row container-fluid d-flex justify-content-between" style="margin: 64px">
+                <div class="col-6" style="border-right: 1px solid #ccc;">
                     <div class="row">
                         <h4>{{ main_title }}</h4>
                     </div>
@@ -16,9 +16,20 @@
                         {% endblock %}
                     </div>
                 </div>
+
+                <div class="col-3" style="border-right: 1px solid #ccc;">
+                    <h2 class="best-members">Tags</h2>
+                    <ul class="list-unstyled">
+                        {% block right_block.tags %}
+                        <a href="{{ room_src }}/{{ tag.url }}"><li>{{ tag }}</li></a>
+                        {% endblock %}
+                    </ul>
+                </div>
+
                 <div class="col-3">
                     {% include ../wt_templates/templates/inc/right_block.html %}
                 </div>
+
             </div>
         </main>
     </body>

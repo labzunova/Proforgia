@@ -8,26 +8,101 @@
 #include <boost/lexical_cast.hpp>
 
 ActivityManager::Status ActivityCustomer::exit() {
-    string session = context_["session"];
-    //DBSession::remove(session);
+    std::string session = context_["session"];
+
+    ErrorCodes er;
+    DBSession::remove(session, er);
+
     return CLIENT_ERROR;
+}
+
+ActivityManager::Status ActivityCustomer::exit_room() {
+    if(context_.find("roomID") == context_.end())
+        return CLIENT_ERROR;
+
+    int id_room = 0;
+    try {
+        id_room = boost::lexical_cast<int>(context_["roomID"]);
+    }
+    catch (boost::bad_lexical_cast) {
+        return CLIENT_ERROR;
+    }
+
+    ErrorCodes er;
+    auto room = DBRoom::get(id_room, er);
+    if (!room) {
+        if (er == DB_ENTITY_NOT_FOUND)
+            return CLIENT_ERROR;
+        else
+            return SERVER_ERROR;
+    }
+
+    bool valid = DBRoom::remove_user(id_room, user_->get_id(), er);
+    if (!valid)
+        return SERVER_ERROR;
+
+    return OK;
 }
 
 ActivityManager::Status ActivityCustomer::add_room() {
     if(context_.find("roomID") == context_.end())
         return CLIENT_ERROR;
-    int id_room = boost::lexical_cast<int>(context_["id_room"]); /// возможно какой то другой индификатор который вводит пользователь
+
+    int id_room = 0;
+    try {
+        id_room = boost::lexical_cast<int>(context_["roomID"]); /// возможно какой то другой индификатор который вводит пользователь
+    }
+    catch (boost::bad_lexical_cast) {
+        return CLIENT_ERROR;
+    }
     ErrorCodes er;
-    auto room = DBRoom::get(id_room, er); // TODO проверка существует ли комната
-    //room->add_user(user_.id);
-    //user_.add_room(id_room);
-    //user_.update(); // TODO проверка прошло ли сохранение
+    auto room = DBRoom::get(id_room, er);
+    if (!room) {
+        if (er == DB_ENTITY_NOT_FOUND)
+            return CLIENT_ERROR;
+        else
+            return SERVER_ERROR;
+    }
+
+    bool valid = DBRoom::add_user(id_room, user_->get_id(), MEMBER, er);
+    if (!valid)
+        return SERVER_ERROR;
+
     return OK;
 }
 
-// TODO пока не понятно в каком виде придут данные
 ActivityManager::Status ActivityCustomer::add_content() {
-    return CLIENT_ERROR;
+    // TODO подумать надо ли проверять что существует данная комнта (наверное да)
+
+    int id_post = boost::lexical_cast<int>(context_["postID"]);
+//    int id_room = boost::lexical_cast<int>(context_["room"]);
+
+    ErrorCodes er;
+    auto db_post = DBPost::get(id_post, er);
+    if (!db_post)
+        return SERVER_ERROR;
+
+    db_post->title = context_["title"];
+    db_post->text = context_["text"];
+    bool valid = db_post->update(er);
+    if (!valid)
+        return SERVER_ERROR;
+//    typename DBPost::Post post(id_room, user_->get_id(), context_["title"], context_["text"]);
+
+    // добавление в бд поста
+//    bool valid = DBPost::add(post, er);
+//    if (!valid) {
+//        return SERVER_ERROR;
+//    }
+
+    // добавление tag в бд
+    std::vector<std::string> tags;
+    tags.push_back(context_["tag"]);
+    valid = db_post->update_tags(tags, er);
+    if (!valid)
+        return SERVER_ERROR;
+
+    return OK;
 }
 
 ActivityManager::Status ActivityCustomer::create_room() {
@@ -35,10 +110,15 @@ ActivityManager::Status ActivityCustomer::create_room() {
         return CLIENT_ERROR;
 
     typename DBRoom::Room room(context_["title"]);
-    //int id_room = room.add(room); // TODO проверка на ошибку добавления
-    // TODO возможно выделение админа как то отдельно в комнате
-    //DBRoom::add_user(id_room, user_.id); // TODO проверка на ошибку добавления
-    //DBUser::add_room(user_.id, id_room); // TODO проверка прошло ли сохранение
+
+    ErrorCodes er;
+    int id_room = DBRoom::add(room, er);
+    if (!id_room)
+        return SERVER_ERROR;
+
+    bool valid = DBRoom::add_user(id_room, user_->get_id(), ADMIN, er);
+    if (!valid)
+        return SERVER_ERROR;
 
     return OK;
 }
@@ -71,4 +151,5 @@ ActivityManager::Status ActivityCustomer::add_deadline() {
 ActivityCustomer::ActivityCustomer(ContextMap &context, shared_ptr<DBUser> user)
         : ActivityManager(context)
         , user_(user) {}
+
 

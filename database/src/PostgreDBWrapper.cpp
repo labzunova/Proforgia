@@ -49,9 +49,12 @@ std::shared_ptr<PGconn> PostgreDBWrapper::get_connection() const {
 // TODO: переделать, чтобы работала для всех форматов с зоной через нахождение подстроки +/- например
 // !!! работает только для формата "2020-12-08 22:39:52.074377+03" (дефолтный формат timestamp with timezone в Postgres)
 // для остальных форматов в БД буст будет кидать эксепшен,
-// поэтому хранить только автоматически созданный timestamp или строго в это формате
+// поэтому хранить только автоматически созданный timestamp или строго в этом формате или мне надо написать нормальную функцию парсировки временной зоны :)
 local_date_time parse_timestamp_to_local_date_time(string& str) {
-    ptime pt(boost::posix_time::time_from_string(str));
+    string ptime_str = str;
+    for (int i = 3; i > 0; i--)
+        ptime_str.pop_back();
+    ptime pt(boost::posix_time::time_from_string(ptime_str));
     string timezone_str;
     for (int i = 2; i > 0; i--)
         timezone_str.push_back(str[str.size() - i]);
@@ -145,7 +148,7 @@ shared_ptr<DBUser> PostgreDBWrapper::get_user_info(const string &nickname, Error
     }
 }
 
-bool PostgreDBWrapper::add_user(const DBUser::User &user_info, ErrorCodes &error) {
+int PostgreDBWrapper::add_user(const DBUser::User &user_info, ErrorCodes &error) {
     std::shared_ptr<PGconn> connection;
     try {
         connection = get_connection();
@@ -159,16 +162,18 @@ bool PostgreDBWrapper::add_user(const DBUser::User &user_info, ErrorCodes &error
     string query = "insert into users (nickname, email, password) values "
                    "('" + user_info.nick_name +
             "', '" + user_info.email +
-            "', '" + user_info.password + "');";
+            "', '" + user_info.password + "') returning id;";
 
     auto res_deleter = [](PGresult* r) { PQclear(r);};
+    std::cout << query.c_str() << std::endl;
     std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
-    if (PQresultStatus(result.get()) != PGRES_COMMAND_OK) {
+
+    if (PQresultStatus(result.get()) != PGRES_TUPLES_OK) {
         error = ErrorCodes::UNKNOWN_DB_ERROR;
-        return false;
+        return 0;
     }
 
-    return true;
+    return std::stoi(PQgetvalue(result.get(), 0, 0));
 }
 
 bool PostgreDBWrapper::remove_user(const int& user_id, ErrorCodes &error) {
@@ -298,7 +303,7 @@ shared_ptr<DBRoom> PostgreDBWrapper::get_room_info(const int& room_id, ErrorCode
     }
 }
 
-bool PostgreDBWrapper::add_room(const DBRoom::Room &room_info, ErrorCodes &error) {
+int PostgreDBWrapper::add_room(const DBRoom::Room &room_info, ErrorCodes &error) {
     std::shared_ptr<PGconn> connection;
     try {
         connection = get_connection();
@@ -311,16 +316,18 @@ bool PostgreDBWrapper::add_room(const DBRoom::Room &room_info, ErrorCodes &error
 
     string query = "insert into rooms (room_name, room_description) values "
                    "('" + room_info.room_name +
-                   "', '" + room_info.description + "');";
+                   "', '" + room_info.description + "') returning id;";
 
     auto res_deleter = [](PGresult* r) { PQclear(r);};
     std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
-    if (PQresultStatus(result.get()) != PGRES_COMMAND_OK) {
-        error = ErrorCodes::UNKNOWN_DB_ERROR;
-        return false;
+
+    if (PQresultStatus(result.get()) != PGRES_TUPLES_OK) {
+        std::cout << PQresultErrorMessage(result.get());
+        error = ErrorCodes::DB_VIOLATE_UNIQUE_CONSTRAINT;
+        return 0;
     }
 
-    return true;
+    return std::stoi(PQgetvalue(result.get(), 0, 0));
 }
 
 bool PostgreDBWrapper::remove_room(const int &room_id, ErrorCodes &error) {
@@ -548,7 +555,7 @@ std::optional<vector<DBTag> > PostgreDBWrapper::get_room_tags(const int &room_id
 }
 
 // TODO: в БД нет проверки на то что пост может быть добавлен только юзером который состоит в комнате room_id
-bool PostgreDBWrapper::add_post(const DBPost::Post &post_info, ErrorCodes &error) {
+int PostgreDBWrapper::add_post(const DBPost::Post &post_info, ErrorCodes &error) {
     std::shared_ptr<PGconn> connection;
     try {
         connection = get_connection();
@@ -565,16 +572,16 @@ bool PostgreDBWrapper::add_post(const DBPost::Post &post_info, ErrorCodes &error
                    "(" + s_user_id +
                    ", " + s_room_id +
                    ", '" + post_info.title +
-                   "', '" + post_info.text + "');";
+                   "', '" + post_info.text + "') returning id;";
 
     auto res_deleter = [](PGresult* r) { PQclear(r);};
     std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
-    if (PQresultStatus(result.get()) != PGRES_COMMAND_OK) {
+    if (PQresultStatus(result.get()) != PGRES_TUPLES_OK) {
         error = ErrorCodes::UNKNOWN_DB_ERROR;
-        return false;
+        return 0;
     }
 
-    return true;
+    return std::stoi(PQgetvalue(result.get(), 0, 0));
 }
 
 bool PostgreDBWrapper::remove_post(const int &post_id, ErrorCodes &error) {
@@ -809,7 +816,9 @@ bool PostgreDBWrapper::add_tags_to_post(vector<std::string> &_tags, const int &p
     return true;
 }
 
-bool PostgreDBWrapper::add_file(const string &filename, int post_id, ErrorCodes &error) {
+bool PostgreDBWrapper::add_file(const string &client_name, const string &storage_name, int post_id,
+                                DBPost::FileType fileType,
+                                ErrorCodes &error) {
     std::shared_ptr<PGconn> connection;
     try {
         connection = get_connection();
@@ -820,9 +829,38 @@ bool PostgreDBWrapper::add_file(const string &filename, int post_id, ErrorCodes 
         return false;
     }
 
-    string query = "insert into files (post_id, filename) values "
+    string file_type_s;
+    if (fileType == DBPost::FileType::IMAGE)
+        file_type_s = "image";
+    else file_type_s = "file";
+    string query = "insert into files (post_id, filename, filename_storage, file_type) values "
                    "(" + std::to_string(post_id) +
-                   "', '" + filename + "');";
+                   ", '" + client_name +
+                   "', '" + storage_name +
+                   "', '" + file_type_s + "');";
+
+    auto res_deleter = [](PGresult* r) { PQclear(r);};
+    std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
+    if (PQresultStatus(result.get()) != PGRES_COMMAND_OK) {
+        error = ErrorCodes::UNKNOWN_DB_ERROR;
+        return false;
+    }
+
+    return true;
+}
+
+bool PostgreDBWrapper::remove_file(const std::string& client_name, const std::string& storage_filename, ErrorCodes &error) {
+    std::shared_ptr<PGconn> connection;
+    try {
+        connection = get_connection();
+    }
+    catch(std::exception &exc) {
+        error = ErrorCodes::DB_CONNECTION_ERROR;
+        std::cout << exc.what();
+        return false;
+    }
+
+    string query = "delete from files where filename ='" + client_name + "' and filename_storage = '" + storage_filename + "';";
 
     auto res_deleter = [](PGresult* r) { PQclear(r);};
     std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
@@ -905,7 +943,7 @@ std::optional<vector<int> > PostgreDBWrapper::get_post_tags_ids(int post_id, Err
     return tags_ids;
 }
 
-std::optional<std::vector<std::string> > PostgreDBWrapper::get_post_attachments(int post_id, ErrorCodes &error) const {
+std::optional<std::vector<DBWrapper::FileInfo> > PostgreDBWrapper::get_post_attachments(int post_id, ErrorCodes &error) const {
     std::shared_ptr<PGconn> connection;
     try {
         connection = get_connection();
@@ -917,7 +955,7 @@ std::optional<std::vector<std::string> > PostgreDBWrapper::get_post_attachments(
     }
 
     std::string s_id = std::to_string(post_id);
-    std::string query = "select filename from files where post_id = " + s_id + ";";
+    std::string query = "select filename_storage, filename, file_type from files where post_id = " + s_id + ";";
 
     auto res_deleter = [](PGresult* r) { PQclear(r);};
     std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
@@ -927,11 +965,18 @@ std::optional<std::vector<std::string> > PostgreDBWrapper::get_post_attachments(
         return std::nullopt;
     }
 
-    std::vector<std::string> files_names_in_storage;
+    std::vector<FileInfo> files_names_in_storage;
     int number_of_rows = PQntuples(result.get());
     for (int i = 0; i < number_of_rows; i++) {
-        string filename = PQgetvalue(result.get(), i, 0);
-        files_names_in_storage.push_back(filename);
+        string filename_storage = PQgetvalue(result.get(), i, 0);
+        string filename_client = PQgetvalue(result.get(), i, 1);
+        string file_type_s = PQgetvalue(result.get(), i, 2);
+        DBPost::FileType fileType;
+        if (file_type_s == "image")
+            fileType = DBPost::FileType::IMAGE;
+        else fileType = DBPost::FileType::FILE;
+        FileInfo file(filename_storage, filename_client, fileType);
+        files_names_in_storage.push_back(file);
     }
 
     return files_names_in_storage;
@@ -996,7 +1041,7 @@ bool PostgreDBWrapper::remove_session(const int &session_id, ErrorCodes &error) 
     return true;
 }
 
-bool PostgreDBWrapper::add_session(const DBSession::Session &session_info, ErrorCodes &error) {
+int PostgreDBWrapper::add_session(const DBSession::Session &session_info, ErrorCodes &error) {
     std::shared_ptr<PGconn> connection;
     try {
         connection = get_connection();
@@ -1010,14 +1055,49 @@ bool PostgreDBWrapper::add_session(const DBSession::Session &session_info, Error
     string s_user_id = std::to_string(session_info.user_id);
     string query = "insert into sessions (user_id, session_id) values "
                    "(" + s_user_id +
-                   ", '" + session_info.session_identificator + "');";
+                   ", '" + session_info.session_identificator + "') returning id;";
 
     auto res_deleter = [](PGresult* r) { PQclear(r);};
     std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
-    if (PQresultStatus(result.get()) != PGRES_COMMAND_OK) {
+    if (PQresultStatus(result.get()) != PGRES_TUPLES_OK) {
         error = ErrorCodes::UNKNOWN_DB_ERROR;
         return false;
     }
 
-    return true;
+    return std::stoi(PQgetvalue(result.get(), 0, 0));
+}
+
+shared_ptr<DBSession> PostgreDBWrapper::get_session_info(const string &session_identificator, ErrorCodes &error) const {
+    std::shared_ptr<PGconn> connection;
+    try {
+        connection = get_connection();
+    }
+    catch(std::exception &exc) {
+        error = ErrorCodes::DB_CONNECTION_ERROR;
+        std::cout << exc.what();
+        return nullptr;
+    }
+
+    std::string query = "select * from sessions where session_id='" + session_identificator + "';";
+
+    auto res_deleter = [](PGresult* r) { PQclear(r);};
+    std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
+
+    if ((PQresultStatus(result.get()) != PGRES_TUPLES_OK) && (PQntuples(result.get()) > 1)) {
+        error = ErrorCodes::UNKNOWN_DB_ERROR;
+        return nullptr;
+    }
+
+    if (PQntuples(result.get()) == 0) {
+        error = ErrorCodes::DB_ENTITY_NOT_FOUND;
+        return nullptr;
+    }
+    else {
+        int id = std::stoi(PQgetvalue(result.get(), 0, 0));
+        string session_id_str = PQgetvalue(result.get(), 0, 1);
+        int user_id = std::stoi(PQgetvalue(result.get(), 0, 2));
+        string create_time = PQgetvalue(result.get(), 0, 3);
+
+        return std::make_shared<DBSession>(id, parse_timestamp_to_local_date_time(create_time), session_id_str, user_id);
+    }
 }

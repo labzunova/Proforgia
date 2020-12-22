@@ -10,6 +10,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(wt_views
         wt_templates/NLTemplate.cpp
         wt_templates/BaseTemplate.cpp
+        wt_templates/NotFound/NotFoundTemplate.cpp
         wt_templates/Login/LoginTemplate.cpp
         wt_templates/SignUp/SignUpTemplate.cpp
         wt_templates/Profile/ProfileTemplate.cpp

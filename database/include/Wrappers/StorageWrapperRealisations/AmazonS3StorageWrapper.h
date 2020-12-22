@@ -10,7 +10,7 @@ public:
 
 public:
     std::string get_file_link( const std::string& filename, ErrorCodes &error ) const override;
-    std::string get_file_upload_link( const std::string& filename, ErrorCodes &error ) const override;
+    std::optional< std::pair<std::string, std::string> > get_file_upload_link(int post_id, ErrorCodes &error ) const override;
 
     // true if file was deleted, or there was not such file to delete
     // able to remove folders

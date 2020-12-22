@@ -9,8 +9,6 @@
 #include <string>
 #include "DBEntities.h"
 
-using std::string;
-
 class ActivityCustomer : public ActivityManager {
 public:
     ActivityCustomer(ContextMap &context, shared_ptr<DBUser> user);
@@ -22,6 +20,8 @@ public:
     Status exit() override;
 
     Status add_room() override;
+
+    Status exit_room() override;
 
     Status add_content() override;
 

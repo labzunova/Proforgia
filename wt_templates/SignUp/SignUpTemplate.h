@@ -3,6 +3,8 @@
 
 #include "BaseTemplate.h"
 
+#define SIGNUP_WAY "../wt_templates/templates/signup.html"
+
 class SignUpTemplate : public BaseTemplate {
 public:
     SignUpTemplate(Context& context);

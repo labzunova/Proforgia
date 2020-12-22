@@ -6,10 +6,9 @@
 #include <string>
 #include <map>
 
-using std::string;
-typedef std::map<string, string> ContextMap;
+typedef std::map<std::string, std::string> ContextMap;
 
 class HttpResponse {
 public:
-    static string get_response(ContextMap& context);
+    static std::string get_response(ContextMap& context);
 };

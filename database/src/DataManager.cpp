@@ -28,7 +28,7 @@ bool DataManager::remove_user(const int& user_id, ErrorCodes &error) const {
     return database->remove_user(user_id, error);
 }
 
-bool DataManager::add_user(const DBUser::User &user_info, ErrorCodes &error) const {
+int DataManager::add_user(const DBUser::User &user_info, ErrorCodes &error) const {
     return database->add_user(user_info, error);
 }
 
@@ -44,7 +44,7 @@ shared_ptr<DBRoom> DataManager::get_room_info(const int &room_id, ErrorCodes &er
     return database->get_room_info(room_id, error);
 }
 
-bool DataManager::add_room(const DBRoom::Room &room_info, ErrorCodes &error) const {
+int DataManager::add_room(const DBRoom::Room &room_info, ErrorCodes &error) const {
     return database->add_room(room_info, error);
 }
 
@@ -77,7 +77,7 @@ std::optional<vector<DBPost>> DataManager::get_room_posts(const int &room_id, Er
     return database->get_room_posts(room_id, error);
 }
 
-bool DataManager::add_post(const DBPost::Post &post_info, ErrorCodes &error) const {
+int DataManager::add_post(const DBPost::Post &post_info, ErrorCodes &error) const {
     return database->add_post(post_info, error);
 }
 
@@ -132,16 +132,22 @@ std::string DataManager::get_file_link(const std::string &filename, ErrorCodes &
     return storage->get_file_link(filename, error);
 }
 
-std::string DataManager::get_file_upload_link(const std::string &filename, ErrorCodes &error) const {
-    return storage->get_file_upload_link(filename, error);
+std::optional< std::pair<std::string, std::string> > DataManager::get_file_upload_link(int post_id, ErrorCodes &error) const {
+    return storage->get_file_upload_link(post_id, error);
 }
 
 bool DataManager::remove_file_from_storage(const std::string &filename, ErrorCodes &error) const {
     return storage->remove_file_from_storage(filename, error);
 }
 
-bool DataManager::add_file(const string& filename, int post_id, ErrorCodes &error) const {
-    return database->add_file(filename, post_id, error);
+bool DataManager::remove_file_from_database(const std::string& client_name, const std::string& storage_filename, ErrorCodes &error) {
+    return database->remove_file(client_name, storage_filename, error);
+}
+
+bool
+DataManager::add_file(const string &client_name, const string &storage_name, int post_id, DBPost::FileType fileType,
+                      ErrorCodes &error) const {
+    return database->add_file(client_name, storage_name, post_id, fileType, error);
 }
 
 shared_ptr<DBTag> DataManager::get_tag_info(const int &tag_id, ErrorCodes &error) const {
@@ -164,17 +170,20 @@ std::optional<std::vector<DBTag> > DataManager::get_post_tags(int post_id, Error
     return tags;
 }
 
-std::optional<std::vector<std::string> > DataManager::get_post_attachments(int post_id, ErrorCodes &error) const {
+std::optional<std::vector<DBPost::FileData> > DataManager::get_post_attachments(int post_id, ErrorCodes &error) const {
     // беру из БД название файлов
     auto filenames = database->get_post_attachments(post_id, error);
     if (!filenames)
         return std::nullopt;
     // получаю ccылки на эти файлы в хранилище
-    std::vector<string> attachments_links;
+    std::vector<DBPost::FileData> attachments_links;
     for (int i = 0; i < filenames->size(); i++) {
-        string storage_path = POSTS_TABLE_NAME + "/" + std::to_string(post_id) + "/" + filenames.value()[i];
-        string link = get_file_link(storage_path, error);
-        attachments_links.push_back(link);
+        string link = get_file_link(filenames.value()[i].filename_storage, error);
+        string client_name = filenames.value()[i].filename_client;
+        auto file_type = filenames.value()[i].fileType;
+
+        DBPost::FileData file(client_name, link, file_type);
+        attachments_links.push_back(file);
     }
     return attachments_links;
 }
@@ -187,8 +196,12 @@ bool DataManager::remove_session(const int &session_id, ErrorCodes &error) {
     return database->remove_session(session_id, error);
 }
 
-bool DataManager::add_session(const DBSession::Session &session_info, ErrorCodes &error) const {
+int DataManager::add_session(const DBSession::Session &session_info, ErrorCodes &error) const {
     return database->add_session(session_info, error);
+}
+
+shared_ptr<DBSession> DataManager::get_session_info(const string &session_identificator, ErrorCodes &error) const {
+    return database->get_session_info(session_identificator, error);
 }
 
 

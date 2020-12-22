@@ -17,8 +17,6 @@
 #include "boost/date_time/local_time/local_time.hpp"
 #include "boost/date_time/posix_time/posix_time.hpp"
 
-using std::string;
-using namespace boost::posix_time;
 
 typedef std::map<std::string, std::string> ContextMap;
 
@@ -40,7 +38,7 @@ public:
 
 private:
     void start_session();
-    Status check_session(DBSession& session);
+    Status check_session(std::shared_ptr<DBSession>& session);
     string redirect(const string& page);
     void set_user_right();
     void set_customer_right(std::shared_ptr<DBUser>& user);

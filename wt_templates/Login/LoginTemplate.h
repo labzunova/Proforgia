@@ -4,6 +4,8 @@
 #include "NLTemplate.h"
 #include "BaseTemplate.h"
 
+#define LOGIN_WAY "../wt_templates/templates/login.html"
+
 class LoginTemplate : public BaseTemplate {
 public:
     LoginTemplate(Context& context);

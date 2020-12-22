@@ -6,9 +6,9 @@
 #include <boost/log/trivial.hpp>
 
 
-string HttpResponse::get_response(ContextMap& context) {
+std::string HttpResponse::get_response(ContextMap& context) {
 
-    string response = "HTTP/1.1 " + context["Code"] + "\n";
+    std::string response = "HTTP/1.1 " + context["Code"] + "\n";
 
     for(auto & item : context)
         if(item.first != "Body")

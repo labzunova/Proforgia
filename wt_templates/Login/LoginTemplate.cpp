@@ -12,7 +12,9 @@ std::string& LoginTemplate::getHTML() {
     Template temp(loader);
 
     temp.load("../wt_templates/templates/login.html");
-    
+
+    temp.load(LOGIN_WAY);
+
     offLoggedNavBar(temp);
 
     std::stringstream os;
