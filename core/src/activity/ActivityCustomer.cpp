@@ -95,6 +95,15 @@ ActivityManager::Status ActivityCustomer::add_content() {
 //        return SERVER_ERROR;
 //    }
 
+    // добавление файлов в бд
+    if (!context_["file_name_db"].empty()) {
+        DBPost::add_file_to_db(context_["file_name"],
+                               context_["file_name_db"],
+                               id_post,
+                               DBPost::IMAGE,
+                               er);
+    }
+
     // добавление tag в бд
     std::vector<std::string> tags;
     tags.push_back(context_["tag"]);
