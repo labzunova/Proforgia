@@ -21,7 +21,7 @@
                     <h2 class="best-members">Tags</h2>
                     <ul class="list-unstyled">
                         {% block right_block.tags %}
-                        <a href="{{ room_src }}/{{ tag.url }}"><li>{{ tag }}</li></a>
+                        <a href="/room/{{ room_src }}/{{ tag.url }}"><li>{{ tag }}</li></a>
                         {% endblock %}
                     </ul>
                 </div>
