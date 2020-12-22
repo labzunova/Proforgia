@@ -9,7 +9,12 @@
             </div>
             {% block post.files %}
                 <div class="row">
-                    <a href="{{ file.url }}">{{ file.name }}</a>
+                    {% block post.files.file %}
+                        <a href="{{ file.url }}">{{ file.name }}</a>
+                    {% endblock %}
+                    {% block post.files.img %}
+                        <img src="{{ file.url }}" alt="{{ file.name }}"/>
+                    {% endblock %}
                 </div>
             {% endblock %}
         </div>
