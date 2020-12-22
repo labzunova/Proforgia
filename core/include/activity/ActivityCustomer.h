@@ -35,4 +35,5 @@ public:
 
 private:
     std::shared_ptr<DBUser> user_;
+    static Type type_is(const std::string& file_name);
 };
