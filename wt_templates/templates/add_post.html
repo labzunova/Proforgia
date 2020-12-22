@@ -120,6 +120,7 @@
                 },
             success: function(req, err) {
                 console.log('Server post made: ' + err);
+                window.location.href = 'room/' + server_url;
             },
             error: function(req, err) {
                 console.log('Server NOT post made: ' + err);
