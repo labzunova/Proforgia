@@ -132,7 +132,7 @@ void Request_handler::fill_GET_room()
 {
     to_put_in_loop.emplace( "method", "GET" );
     to_put_in_loop.emplace( "room", room );
-    if ( tag != "" )
+    if ( tag != "" ) 
     {
         to_put_in_loop["path"] = "roomtag";
         to_put_in_loop.emplace( "tag", tag );

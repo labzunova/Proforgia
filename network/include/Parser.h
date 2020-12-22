@@ -52,6 +52,7 @@ public:
     std::pair<string, string> parse_room_properties( string& path ) const;
 private:
     string request;
+    string decode( const string& sentence ) const;
     string replace_pluses( string sentence ) const;
 };
 

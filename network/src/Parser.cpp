@@ -1,4 +1,5 @@
 #include "Parser.h"
+#include <curl/curl.h>
 
 
 string Parser::parse_method() const
@@ -70,6 +71,7 @@ unordered_map<string, string> Parser::parse_body() const
         int endpos = body.find( '&' );
         if( endpos == -1 ) endpos = body.length(); // если последний параметр
         value = body.substr( index + 1, endpos - index - 1 );
+        value = decode( value );
         value = replace_pluses( value );
         data.insert(std::make_pair( key, value ));
         body.erase( 0, endpos + 1 );
@@ -81,6 +83,17 @@ string Parser::parse_room_to_delete( string& path ) const
 {
     path.erase(0, path.find('/') + 1);
     return path;
+}
+
+string Parser::decode( const string& sentence ) const
+{
+    CURL *curl = curl_easy_init();
+    int outlength;
+    char *cres = curl_easy_unescape( curl, sentence.c_str(), sentence.length(), &outlength );
+    string res(cres, cres + outlength);
+    curl_free(cres);
+    curl_easy_cleanup(curl);
+    return res;
 }
 
 string Parser::replace_pluses( string sentence ) const
