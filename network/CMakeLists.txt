@@ -33,5 +33,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 add_library(${SERVER_LIB} STATIC ${SOURCE_FILES_SERVER} ${HEADER_FILES_SERVER})
 target_include_directories(${SERVER_LIB} PUBLIC ${INCLUDE} ${UNIT_TESTS})
 
+target_link_libraries(${SERVER_LIB} curl)
+
 #add_executable(tests_core ${SOURCE_FILES_TESTS})
 #target_link_libraries(tests_core gtest gmock gtest_main rt -ldl pthread ${CORE_LIB})
