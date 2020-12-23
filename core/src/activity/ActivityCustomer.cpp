@@ -96,7 +96,7 @@ ActivityManager::Status ActivityCustomer::add_content() {
 //    }
 
     // добавление файлов в бд
-    if (!context_["file_name_db"].empty()) {
+    if (!context_["file_name"].empty()) {
         auto valid = DBPost::add_file_to_db(context_["file_name"],
                                context_["file_name_db"],
                                id_post,
