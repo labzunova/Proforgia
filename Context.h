@@ -1,6 +1,8 @@
 #ifndef PROFORGIA_CONTEXT_H
 #define PROFORGIA_CONTEXT_H
 
+#include <vector>
+
 struct Context {
     struct User {
         std::string username;
