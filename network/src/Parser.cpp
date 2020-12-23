@@ -27,6 +27,7 @@ std::pair<string, string> Parser::parse_room_properties( string& path ) const
     {
         room = path.substr( 0, path.find( '/' ) );
         tag = path.erase( 0, path.find( '/' ) + 1 );
+        tag = decode( tag );
     }
     else // если получить нужно просто конкретную комнату
         room = path;
