@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.15)
 project(Proforgia)
 
 set(MYCOMPILE_FLAGS " -lpthread -o -std=c++17")
+
 add_definitions(${MYCOMPILE_FLAGS})
 
 set(CMAKE_CXX_STANDARD 17)

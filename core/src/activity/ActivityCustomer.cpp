@@ -95,6 +95,18 @@ ActivityManager::Status ActivityCustomer::add_content() {
 //        return SERVER_ERROR;
 //    }
 
+    // добавление файлов в бд
+    if (!context_["file_name"].empty()) {
+        auto valid = DBPost::add_file_to_db(context_["file_name"],
+                               context_["file_name_db"],
+                               id_post,
+                               (type_is(context_["file_name"]) == IMAGE) ? DBPost::IMAGE : DBPost::FILE,
+                               er);
+
+        if(!valid)
+            return SERVER_ERROR;
+    }
+
     // добавление tag в бд
     std::vector<std::string> tags;
     tags.push_back(context_["tag"]);
@@ -103,6 +115,17 @@ ActivityManager::Status ActivityCustomer::add_content() {
         return SERVER_ERROR;
 
     return OK;
+}
+
+ActivityManager::Type ActivityCustomer::type_is(const std::string& file_name) {
+    std::string extension = file_name.substr(file_name.find('.'));
+    boost::algorithm::to_lower(extension);
+    if ((extension == ".jpeg") ||
+        (extension == ".jpg") ||
+        (extension == ".png"))
+        return IMAGE;
+    else
+        return FILE;
 }
 
 ActivityManager::Status ActivityCustomer::create_room() {

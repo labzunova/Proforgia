@@ -21,6 +21,12 @@ public:
     };
 
 protected:
+    enum Type {
+        IMAGE,
+        FILE,
+    };
+
+protected:
     explicit ActivityManager(ContextMap& context) : context_(context) {};
 
 public:

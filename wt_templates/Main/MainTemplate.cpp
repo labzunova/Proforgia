@@ -34,8 +34,19 @@ std::string& MainTemplate::getHTML() {
         auto& block_files = block_posts[i].block(MAIN_POSTS_BLOCK_FILES_BLOCK);
         block_files.repeat(context.posts[i].files.size());
         for (int j = 0; j < context.posts[i].files.size(); j++) {
-            block_files[j].set(MAIN_POSTS_BLOCK_FILES_BLOCK_SRC, context.posts[i].files[j].url);
-            block_files[j].set(MAIN_POSTS_BLOCK_FILES_BLOCK_NAME, context.posts[i].files[j].filename);
+            if (context.posts[i].files[j].type == Context::File::IMAGE) {
+                auto& block_file = block_files[j].block(MAIN_POSTS_BLOCK_FILES_BLOCK_IMG_BLOCK);
+                block_files[j].block(MAIN_POSTS_BLOCK_FILES_BLOCK_FILE_BLOCK).disable();
+
+                block_file.set(MAIN_POSTS_BLOCK_FILES_BLOCK_SRC, context.posts[i].files[j].url);
+                block_file.set(MAIN_POSTS_BLOCK_FILES_BLOCK_NAME, context.posts[i].files[j].filename);
+            } else {
+                auto& block_file = block_files[j].block(MAIN_POSTS_BLOCK_FILES_BLOCK_FILE_BLOCK);
+                block_files[j].block(MAIN_POSTS_BLOCK_FILES_BLOCK_IMG_BLOCK).disable();
+
+                block_file.set(MAIN_POSTS_BLOCK_FILES_BLOCK_SRC, context.posts[i].files[j].url);
+                block_file.set(MAIN_POSTS_BLOCK_FILES_BLOCK_NAME, context.posts[i].files[j].filename);
+            }
         }
 
         auto& block_tags = block_posts[i].block(MAIN_POSTS_BLOCK_TAGS_BLOCK);

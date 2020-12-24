@@ -3,7 +3,6 @@
 #include "Handler.h"
 #include "Worker.cpp"
 
-
 //typedef std::unordered_map<std::string, std::string> ContextMap;
 //class TestHandler {
 //public:

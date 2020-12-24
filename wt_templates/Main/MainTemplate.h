@@ -13,6 +13,8 @@
 #define MAIN_POSTS_BLOCK_TEXT "post.text"
 #define MAIN_POSTS_BLOCK_AUTHOR "post.author"
 #define MAIN_POSTS_BLOCK_FILES_BLOCK "post.files"
+#define MAIN_POSTS_BLOCK_FILES_BLOCK_FILE_BLOCK "post.files.file"
+#define MAIN_POSTS_BLOCK_FILES_BLOCK_IMG_BLOCK "post.files.img"
 #define MAIN_POSTS_BLOCK_FILES_BLOCK_NAME "file.name"
 #define MAIN_POSTS_BLOCK_FILES_BLOCK_SRC "file.url"
 #define MAIN_POSTS_BLOCK_TAGS_BLOCK "post.tags"
@@ -32,16 +34,6 @@ protected:
 private:
     std::string mainHTML;
     std::string title;
-
-    struct Post {
-        std::string title;
-        std::string author;
-        std::vector<std::string> tags;
-
-        Post(std::string& title,
-        std::string& author,
-        std::vector<std::string>& tags) : title(title), author(author), tags(tags) {}
-    };
 };
 
 

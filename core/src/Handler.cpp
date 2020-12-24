@@ -145,7 +145,7 @@ std::string Handler::get_response() {
             tags->push_back(context_["tag"]);
 
             // boost::lexical_cast<int>(context_["id_room"])
-            auto status = page_manager_->get_info_tags(body, context_["roomID"], std::move(tags));
+            auto status = page_manager_->get_info_tags(body, context_["room"], std::move(tags));
 
             if (status == PageManager::CLIENT_ERROR_RIGHT)
                 return redirect("/login");

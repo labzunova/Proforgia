@@ -100,7 +100,8 @@ void PageCustomer::set_tags(std::vector<DBTag>& input, std::vector<Context::Tag>
     for (const auto& db_tag : input) {
         Context::Tag tag;
         tag.tag = db_tag.getName();
-        tag.url = std::to_string(db_tag.get_id());
+        tag.url = db_tag.getName();
+//        tag.url = std::to_string(db_tag.get_id());
         output.push_back(std::move(tag));
     }
 }
@@ -110,6 +111,7 @@ void PageCustomer::set_files(std::vector<DBPost::FileData>& input, std::vector<C
         Context::File file;
         file.filename = db_file.client_filename;
         file.url = db_file.storage_link;
+        file.type = (db_file.fileType == DBPost::IMAGE) ? Context::File::IMAGE : Context::File::FILE;
         output.push_back(std::move(file));
     }
 }
@@ -261,25 +263,27 @@ PageManager::Status PageCustomer::get_info_tags(std::string& body, std::string i
     std::vector<Context::Post> posts;
     PageCustomer::set_posts(db_posts.value(), posts);
 
-    int id_tag = 0;
-    try {
-        id_tag = boost::lexical_cast<int>((*tags)[0]);
-    }
-    catch (boost::bad_lexical_cast) {
-        return CLIENT_ERROR_VALID;
-    }
-
-    shared_ptr<DBTag> tag_cur_db = DBTag::get(id_tag, er);
-    if (!tag_cur_db) {
-        if (er == DB_ENTITY_NOT_FOUND)
-            return CLIENT_ERROR_VALID;
-        else
-            return SERVER_ERROR;
-    }
+//    int id_tag = 0;
+//    try {
+//        id_tag = boost::lexical_cast<int>((*tags)[0]);
+//    }
+//    catch (boost::bad_lexical_cast) {
+//        return CLIENT_ERROR_VALID;
+//    }
+//
+//    shared_ptr<DBTag> tag_cur_db = DBTag::get(id_tag, er);
+//    if (!tag_cur_db) {
+//        if (er == DB_ENTITY_NOT_FOUND)
+//            return CLIENT_ERROR_VALID;
+//        else
+//            return SERVER_ERROR;
+//    }
 
     Context::Tag tag_cur;
-    tag_cur.tag = tag_cur_db->getName();
-    tag_cur.url = std::to_string(tag_cur_db->get_id());
+//    tag_cur.tag = tag_cur_db->getName();
+//    tag_cur.url = std::to_string(tag_cur_db->get_id());
+    tag_cur.tag = (*tags)[0];
+    tag_cur.url = (*tags)[0];
 
     context.setTagContext(user, room, new_tags, posts, tag_cur);
     TemplateWrapper view(context);

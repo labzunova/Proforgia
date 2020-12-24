@@ -44,15 +44,16 @@ class Parser
 {
 public:
     Parser( string request_ ): request( std::move( request_ ) ) {};
-    const unordered_map<string, string> parse_cookies();
-    const unordered_map<string, string> parse_body();
-    const string parse_method();
-    const string parse_path(); // все пути в нашем приложении - или одно слово, или rooms/some_room или rooms/some_room/tag
-    const string parse_room_to_delete( string& path );
-    const std::pair<string, string> parse_room_properties(string& path );
-
+    unordered_map<string, string> parse_cookies() const;
+    unordered_map<string, string> parse_body() const;
+    string parse_method() const;
+    string parse_path() const; // все пути в нашем приложении - или одно слово, или rooms/some_room или rooms/some_room/tag
+    string parse_room_to_delete( string& path ) const;
+    std::pair<string, string> parse_room_properties( string& path ) const;
 private:
     string request;
+    string decode( const string& sentence ) const;
+    string replace_pluses( string sentence ) const;
 };
 
 #endif //PROFORGIA_PARSER_H
