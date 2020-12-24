@@ -74,8 +74,14 @@ ActivityManager::Status ActivityCustomer::add_room() {
 ActivityManager::Status ActivityCustomer::add_content() {
     // TODO подумать надо ли проверять что существует данная комнта (наверное да)
 
-    int id_post = boost::lexical_cast<int>(context_["postID"]);
-//    int id_room = boost::lexical_cast<int>(context_["room"]);
+    int id_post = 0, id_room = 0;
+    try {
+        id_post = boost::lexical_cast<int>(context_["postID"]);
+        id_room = boost::lexical_cast<int>(context_["room"]);
+    }
+    catch (boost::bad_lexical_cast) {
+        return CLIENT_ERROR;
+    }
 
     ErrorCodes er;
     auto db_post = DBPost::get(id_post, er);
@@ -84,6 +90,7 @@ ActivityManager::Status ActivityCustomer::add_content() {
 
     db_post->title = context_["title"];
     db_post->text = context_["text"];
+    db_post->room_id = id_room;
     bool valid = db_post->update(er);
     if (!valid)
         return SERVER_ERROR;

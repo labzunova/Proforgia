@@ -178,7 +178,7 @@ PageManager::Status PageCustomer::get_add_content_page(std::string& body, std::s
     int id_post_db = 0;
     if (id_post.empty()) { // создаем новый пост
 
-        typename DBPost::Post post(id_room, user_->get_id(), DEFAULT_TITLE, DEFAULT_TEXT);
+        typename DBPost::Post post(user_->get_id(), DEFAULT_TITLE, DEFAULT_TEXT);
 
         id_post_db = DBPost::add(post, er);
         id_post = std::to_string(id_post_db); // чтобы добавить потом в сессию (в Handler)
