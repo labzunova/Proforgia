@@ -566,13 +566,21 @@ int PostgreDBWrapper::add_post(const DBPost::Post &post_info, ErrorCodes &error)
         return false;
     }
 
+    string query;
     string s_user_id = std::to_string(post_info.user_id);
-    string s_room_id = std::to_string(post_info.room_id);
-    string query = "insert into posts (user_id, room_id, title, post_text) values "
-                   "(" + s_user_id +
-                   ", " + s_room_id +
-                   ", '" + post_info.title +
-                   "', '" + post_info.text + "') returning id;";
+    if (post_info.room_id != 0) {
+        string s_room_id = std::to_string(post_info.room_id);
+        query = "insert into posts (user_id, room_id, title, post_text) values "
+                       "(" + s_user_id +
+                       ", " + s_room_id +
+                       ", '" + post_info.title +
+                       "', '" + post_info.text + "') returning id;";
+    } else {
+        query = "insert into posts (user_id, title, post_text) values "
+                       "(" + s_user_id +
+                       ", '" + post_info.title +
+                       "', '" + post_info.text + "') returning id;";
+    }
 
     auto res_deleter = [](PGresult* r) { PQclear(r);};
     std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);
@@ -639,7 +647,10 @@ shared_ptr<DBPost> PostgreDBWrapper::get_post_info(const int &post_id, ErrorCode
         string s_create_time = PQgetvalue(result.get(), 0, 1);
         auto create_time = parse_timestamp_to_local_date_time(s_create_time);
         int user_id = std::stoi(PQgetvalue(result.get(), 0, 2));
-        int _room_id = std::stoi(PQgetvalue(result.get(), 0, 3));
+        string _room_id_s = PQgetvalue(result.get(), 0, 3);
+        int _room_id;
+        if (!_room_id_s.empty()) _room_id = std::stoi(_room_id_s);
+        else _room_id = 0;
         string title = PQgetvalue(result.get(), 0, 4);
         string text = PQgetvalue(result.get(), 0, 5);
 
@@ -658,9 +669,18 @@ bool PostgreDBWrapper::edit_post(const int& id, const DBPost::Post &post_info, E
         std::cout << exc.what();
         return false;
     }
-
+    string query;
     string s_id = std::to_string(id);
-    string query = "update posts set title='" + post_info.title + "', post_text='" + post_info.text + "' where id=" + s_id + ";";
+    // if room_id is not NULL
+    if (post_info.room_id != 0)
+        query = "update posts set title='" + post_info.title + "', post_text='" + post_info.text +
+                "', room_id=" + std::to_string(post_info.room_id) + " where id=" + s_id + ";";
+    else {
+        error = ErrorCodes::DB_UPDATE_POST_WITH_NULL_ROOM_ID;
+        return false;
+    }
+
+
 
     auto res_deleter = [](PGresult* r) { PQclear(r);};
     std::unique_ptr <PGresult, decltype(res_deleter)> result(PQexec(connection.get(), query.c_str()), res_deleter);

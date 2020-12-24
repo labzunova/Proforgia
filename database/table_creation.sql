@@ -27,10 +27,11 @@ CREATE TABLE posts (
 	id serial primary key,
 	create_time timestamp with time zone NOT NULL DEFAULT current_timestamp,
 	user_id integer NOT NULL REFERENCES users ON DELETE CASCADE,
-	room_id integer NOT NULL REFERENCES rooms ON DELETE CASCADE,
+	room_id integer REFERENCES rooms ON DELETE CASCADE,
 	title varchar(100) NOT NULL,
 	post_text text
 );
+alter table posts alter column room_id drop NOT NULL;
 
 CREATE TYPE fileType AS ENUM ('image', 'file');
 CREATE TABLE files (
