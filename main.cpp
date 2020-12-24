@@ -4,9 +4,10 @@
 
 int main()
 {
-    ErrorCodes error;
+      ErrorCodes error;
 //    AmazonS3StorageWrapper storage;
-//    std::cout << storage.get_file_link("posts/2/2J9hyP65z8", error);
+//    std::cout << storage.get_file_upload_link(120, error).value().first << std::endl;
+//    std::cout << storage.get_file_link("test7.jpg", error);
 
 //    std::cout << DBPost::add(DBPost::Post(1, 1, "testpost13", "aaaaaa"), error) << " ";
 //    std::cout << DBUser::add(DBUser::User("eeee", "eeeee", "xxx"), error) << " ";
@@ -18,9 +19,18 @@ int main()
 //    auto files = DBPost::get(4, error)->get_attachments(error);
 //    files.value()[1].print();
 
-    auto post = DBPost::get(3, error);
+//    auto post = DBPost::get(3, error);
+//    post->print();
+//    post->update_tags({"матан", "амбразура", "тесты"}, error);
+
+    // DBPost::add(DBPost::Post(1, "test null room_id", ""), error);
+    auto post = DBPost::get(7, error);
     post->print();
-    post->update_tags({"матан", "амбразура", "тесты"}, error);
+    post->room_id = 0;
+    auto res = post->update(error);
+    post = DBPost::get(7, error);
+    if (!res) std::cout << "not res" << std::endl;
+    post->print();
 
     return 0;
 }

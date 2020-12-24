@@ -176,7 +176,7 @@ private:
 const static string POSTS_TABLE_NAME = "posts";
 struct DBPost : public DBEntity {
 	struct Post {
-        Post(int roomId, int userId, const string &title, const string &text);
+        Post(int userId, string title, string text, int roomId = 0);
 
 		int room_id;
 		int user_id; // post author
@@ -189,6 +189,8 @@ struct DBPost : public DBEntity {
             DBEntity(id), room_id(_room_id), user_id(_user_id), title(_title), text(_text), publication_date(_ldt)
 	{}
 
+	// room_id == 0 means room_id is NULL in DB
+    int room_id;
 	std::string title;
 	std::string text;
 
@@ -250,7 +252,6 @@ struct DBPost : public DBEntity {
     }
 
 private:
-    int room_id;
     int user_id; // post author
     local_date_time publication_date;
 };

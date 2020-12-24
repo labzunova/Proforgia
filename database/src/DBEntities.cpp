@@ -59,7 +59,7 @@ bool DBPost::remove(int id, ErrorCodes &error) {
 }
 
 bool DBPost::update(ErrorCodes &error) {
-    return DataManager::getInstance().edit_post(id, Post(room_id, user_id, title, text), error);
+    return DataManager::getInstance().edit_post(id, Post(user_id, title, text, room_id), error);
 }
 
 bool DBPost::update_tags(vector<string> new_tags, ErrorCodes &error) {
@@ -176,7 +176,7 @@ int DBTag::getRoomId() const {
     return room_id;
 }
 
-DBPost::Post::Post(int roomId, int userId, const string &title, const string &text) : room_id(roomId), user_id(userId),
+DBPost::Post::Post(int userId, string title, string text, int roomId) : room_id(roomId), user_id(userId),
                                                                                       title(title), text(text) {}
 
 DBSession::Session::Session(const string sessionId, int userId) : session_identificator(sessionId), user_id(userId) {}
