@@ -13,7 +13,7 @@ template<class Queue, class Handler>
 void Work<Queue, Handler>::start_work(std::shared_ptr<Queue> queue) {
     exit_flag = false;
     unsigned int max_thread = std::thread::hardware_concurrency();
-    for(int i = 0; i < 1; ++i) {
+    for(int i = 0; i < max_thread; ++i) {
         workers.push_back(std::make_shared<Worker<Queue, Handler>>(queue));
     }
     checker = std::make_shared<Checker<Queue>>(queue);
