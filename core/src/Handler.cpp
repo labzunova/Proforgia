@@ -158,6 +158,7 @@ std::string Handler::get_response() {
             activity_manager_->exit();
 
             context_["new_session"] = "";
+            context_["new_postID"] = "";
             return redirect("/login");
 
         } else if (context_["path"] == "exit") { // выход из комнаты

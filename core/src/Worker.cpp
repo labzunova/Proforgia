@@ -13,7 +13,7 @@ template<class Queue, class Handler>
 void Work<Queue, Handler>::start_work(std::shared_ptr<Queue> queue) {
     exit_flag = false;
     unsigned int max_thread = std::thread::hardware_concurrency();
-    for(int i = 0; i < 1; i++) {
+    for(int i = 0; i < 1; ++i) {
         workers.push_back(std::make_shared<Worker<Queue, Handler>>(queue));
     }
     checker = std::make_shared<Checker<Queue>>(queue);
@@ -56,11 +56,7 @@ void Worker<Queue, Handler>::run() {
             request = new typename Queue::Event(queue_->pop_front());
         }
 
-//        context = {{"method", "GET"},    // релиз
-//                           {"action", "MAIN"}};    // релиз
-        Handler handler(request->data);   // релиз
-//        std::map<std::string, std::string> ctx = {{"method", "GET"}, {"action", "MAIN"}};     // для тестов
-//        Handler handler(ctx);   // для тестов
+        Handler handler(request->data);
         request->callback(handler.get_response());
     }
     BOOST_LOG_TRIVIAL(info) << ("Delete worker: " + boost::lexical_cast<std::string>(std::this_thread::get_id()));
