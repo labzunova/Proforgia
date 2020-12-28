@@ -1,0 +1,145 @@
+{% include ../wt_templates/templates/inc/base_header.html %}
+
+<style type="text/css">
+    {% include ../wt_templates/templates/static/css/add_post.css %}
+</style>
+
+<main role="main" class="d-flex justify-content-center container-fluid" >
+    <div class="row container-fluid d-flex justify-content-between" style="margin: 64px">
+        <div class="col-6">
+            <div>
+                <form id="theForm" method="post" enctype="multipart/form-data" data-serverurl="{{ add_post.room }}"
+                      data-url="{{ add_post.file_upload_url }}" data-filenamedb="{{ add_post.file_name_db }}">
+                    <h1 class="h3 mb-3 font-weight-normal">New post</h1>
+                    <div class="form-group row" style="margin-top: 16px;">
+                        <label for="title" class="col-sm-3 col-form-label">Title</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="title" name="title">
+                        </div>
+                    </div>
+                    <div class="form-group row" style="margin-top: 16px;">
+                        <label for="text" class="col-sm-3 col-form-label">Text</label>
+                        <div class="col-sm-9">
+                            <textarea type="text" id="text" name="text"> </textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row" style="margin-top: 16px;">
+                        <label for="tags" class="col-sm-3 col-form-label">Tag</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="tags" name="tag">
+                        </div>
+                    </div>
+					<div class="form-group row" style="margin-top: 16px;">
+                        <label for="tags" class="col-sm-3 col-form-label">File</label>
+                        <div class="col-sm-9">
+                            <input id="theFile" type="file" name="uploadInput">
+                        </div>
+                    </div>
+<!--                    <input type="hidden" data-filenamedb="{{ add_post.file_name_db }}">-->
+                    <div class="row" style="margin-top: 16px;">
+                        <div class="col-2">
+
+                        </div>
+                        <div class="col-2">
+                            <button id="theButton" type="submit" value="Submit" class="page_btn btn btn-outline-secondary">ADD POST!</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-3" style="border-right: 1px solid #ccc;">
+            <h2 class="best-members">Tags</h2>
+            <ul class="list-unstyled">
+                {% block right_block.tags %}
+                <a href="/room/{{ room_src }}/{{ tag.url }}"><li>{{ tag }}</li></a>
+                {% endblock %}
+            </ul>
+        </div>
+        <div class="col-3">
+            {% include ../wt_templates/templates/inc/right_block.html %}
+        </div>
+    </div>
+
+</main>
+<footer class="d-flex container justify-content-center">
+
+</footer>
+<script src="../js/jquery.slim.min.js"></script>
+<script src="../js/popper.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    // working version
+
+    $(function() {
+        $('#theForm').on('submit', sendFile);
+    });
+
+    function sleep (time) {
+        return new Promise((resolve) => setTimeout(resolve, time));
+    }
+
+    function sendFile(e) {
+        e.preventDefault();
+        console.log('Sending file');
+
+        var theFormFile = $('#theFile').get()[0].files[0];
+        console.log(theFormFile);
+        const f = () => console.log('hey!');
+        var $this = $(this),
+            upload_url = $this.data('url'),
+            //file_url = $this.data('fileurl'),
+            file_name_db = $this.data('filenamedb'),
+            file_name = $('#theFile').val().split('\\').pop(),
+            server_url = $this.data('serverurl');
+
+        var title = document.getElementById('title').value,
+            text = document.getElementById('text').value,
+            tag = document.getElementById('tags').value;
+
+        setTimeout(f, 1000);
+        console.log(upload_url);
+        var result = $.ajax({
+            type: 'PUT',
+            url: upload_url,
+            processData: false,
+            data: theFormFile,
+            success: function(req, err) {
+                console.log('File uploaded: ' + err);
+            },
+            error: function(req, err) {
+                console.log('File NOT uploaded: ' + err);
+            }
+        });
+        setTimeout(f, 1000);
+
+        console.log(' file_name_db: ', file_name_db,
+            ' file_name: ', file_name,
+            ' title: ', title,
+            ' text: ',text,
+            ' tag: ' , tag);
+        var result_server = $.ajax({
+            method: 'POST',
+            url: server_url,
+            data: {
+                'file_name_db': file_name_db,
+                'file_name': file_name,
+                'title': title,
+                'text': text,
+                'tag': tag
+                },
+            success: function(req, err) {
+                console.log('Server post made: ' + err);
+                // window.location.href = '/room/' + server_url;
+            },
+            error: function(req, err) {
+                console.log('Server NOT post made: ' + err);
+            }
+        });
+
+        return false;
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+.card{
+    background-color: #e3e3e3;
+    padding: 16px;
+}
+
+.card-tags{
+    float: right;
+}
+
+.inline{
+    display: inline;
+}
+
+a{
+    color: #4db6ac;
+}
+
+a:hover{
+    color: #212121
+}

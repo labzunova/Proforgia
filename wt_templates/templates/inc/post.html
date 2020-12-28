@@ -1,0 +1,38 @@
+<div class="card container-fluid" style="margin-right: 64px; margin-top: 16px">
+    <div class="card-body row">
+        <div class="col-9">
+            <div class="row">
+                <h4> {{ post.title }} </h4>
+            </div>
+            <div class="row">
+                {{ post.text }}
+            </div>
+            {% block post.files %}
+                <div class="row">
+                    {% block post.files.file %}
+                        <a href="{{ file.url }}">{{ file.name }}</a>
+                    {% endblock %}
+                    {% block post.files.img %}
+                        <img style="padding-right: 16px" class="card-img-bottom" src="{{ file.url }}" alt="{{ file.name }}"/>
+                    {% endblock %}
+                </div>
+            {% endblock %}
+        </div>
+
+        <div class="col-3 card-tags">
+            <div class="row">
+                <h6 class="inline">Added by</h6>
+                <h4 class="badge badge-pill badge-light">{{ post.author }}</h4>
+            </div>
+            <div class="row" style="margin-top: 16px;">
+                <h6 class="inline">tag: </h6>
+                {% block post.tags %}
+                <div class="col tag">
+                    <a href="{{ room.url }}/{{ tag.url }}" class="badge badge-pill badge-dark">{{ tag }}</a>
+                </div>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</div>
+

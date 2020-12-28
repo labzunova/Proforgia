@@ -1,0 +1,16 @@
+.ui {
+    margin-top: 20px;
+}
+
+.card{
+    background-color: #e3e3e3;
+    padding: 16px;
+}
+
+a{
+    color: #212121;
+}
+
+a:hover{
+    color: #4db6ac;
+}

@@ -1,0 +1,39 @@
+ {% include ../wt_templates/templates/inc/base_header.html %}
+
+ <style type="text/css">
+   {% include ../wt_templates/templates/static/css/login.css %}
+ </style>
+
+  <!-- Begin page content -->
+  <main role="main" class="d-flex justify-content-center container">
+      <div class="row container d-flex justify-content-between">
+        <div class="col-9">
+          <div class="name-page col-12">
+            <h2>Authorization</h2>
+          </div>
+
+          <form class="col-12" method="post" action="login">
+            <div class="form-group">
+              <label for="login">Login</label>
+              <input type="form-control" class="form-control" id="login" name="login">
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" class="form-control" id="password" name="password">
+            </div>
+            <button type="submit" class="btn btn-primary btn-dark">Log in</button>
+            <div class="new-account">
+              <a href="/signup" class="text-dark">create new account</a>
+            </div>
+          </form>
+        </div>
+      </div>
+  </main>
+  <footer class="d-flex container justify-content-center">
+
+  </footer>
+  <script src="../js/jquery.slim.min.js"></script>
+  <script src="../js/popper.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  </body>
+</html>

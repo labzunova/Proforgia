@@ -1,0 +1,18 @@
+<div style="text-align: center; margin-bottom: 64px">
+    <form method="get" action="/room/add/{{ room_src }}">
+        <button type="submit" class="btn btn-outline-dark btn-lg">Add post</button>
+    </form>
+</div>
+<div class="card">
+    <div class="card-body row">
+        <form method="get" action="/profile">
+            <button type="submit" class="btn btn-outline-dark">Choose another room</button>
+        </form>
+    </div>
+    <div class="card-body row">
+        <form method="get" action="exit/{{ room_src }}">
+            <button type="submit" class="btn btn-outline-danger">Leave this room</button>
+        </form>
+    </div>
+</div>
+

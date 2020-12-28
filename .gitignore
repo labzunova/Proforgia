@@ -1,2 +1,17 @@
 cmake-build-debug
 .idea
+
+CMakeFiles/
+build/
+
+database/aws-sdk-cpp
+openssl/
+
+.DS_Store
+*/.DS_Store
+
+database/.DS_Store
+database/include/.DS_Store
+database/aws-sdk-cpp
+cryptopp
+openssl
