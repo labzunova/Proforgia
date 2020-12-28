@@ -261,7 +261,7 @@ void Handler::set_customer_right(std::shared_ptr<DBUser>& user) {
 
 void Handler::set_header_data(ContextMap& context) {
     context["Date"] = to_simple_string(second_clock::local_time());
-    context["Server"] = "OurBestServer 0.1";
+    context["Server"] = "Proforgia";
     context["Content-Type"] = "text/html; charset=utf-8";
     if(context_.find("new_session") != context_.end()) {
         auto time = second_clock::local_time() + LIVE_TIME;
