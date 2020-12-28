@@ -13,7 +13,7 @@
                         <a href="{{ file.url }}">{{ file.name }}</a>
                     {% endblock %}
                     {% block post.files.img %}
-                        <img src="{{ file.url }}" alt="{{ file.name }}"/>
+                        <img style="padding-right: 16px" class="card-img-bottom" src="{{ file.url }}" alt="{{ file.name }}"/>
                     {% endblock %}
                 </div>
             {% endblock %}
@@ -25,7 +25,7 @@
                 <h4 class="badge badge-pill badge-light">{{ post.author }}</h4>
             </div>
             <div class="row" style="margin-top: 16px;">
-                <h6 class="inline">tags: </h6>
+                <h6 class="inline">tag: </h6>
                 {% block post.tags %}
                 <div class="col tag">
                     <a href="{{ room.url }}/{{ tag.url }}" class="badge badge-pill badge-dark">{{ tag }}</a>

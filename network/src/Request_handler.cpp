@@ -1,12 +1,15 @@
 #include "Request_handler.h"
 #include "Parser.h"
 
+#include "unistd.h"
+
 Request_handler::Request_handler( const string &request )
 {
     Parser parser( request );
     method = parser.parse_method();
     path = parser.parse_path();
     if( method == "POST" )
+//        sleep(1);
         data = parser.parse_body();
     if( path =="delete_room" )
     {

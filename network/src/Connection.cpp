@@ -53,7 +53,6 @@ void Connection::handle_read( const Connection::error_code &e, std::size_t bytes
     Request_handler request( request_ ); // внутри реквеста вызывается парсер и записывает в поля реквеста готовые значения
     std::map<string, string> to_put_in_loop = request.get_map();  // эта мапа передается в воркеры для обработки апи
 
+//    sleep(1);
     connection_queue->push_back( to_put_in_loop, socket_ ); // пихаем в очередь мапу и сокет для колбэка: моя обработка данного запроса окончена, отправит уже колбэк
 }
-
-
